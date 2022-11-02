@@ -1,3 +1,3 @@
 # P1---Project
 
-Fryd dine øjne på den tredje ost, og lad vidunderligheden sprydle
+Fryd dine øjne på den tredje ost, og lad vidunderligheden sprudle
