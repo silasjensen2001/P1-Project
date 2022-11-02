@@ -3,7 +3,6 @@
 //theiisis
 //Hej med dig du er sej
 //First a few libraries need to be imported
-
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
@@ -13,7 +12,7 @@
 //Its attributes keep track of variables like current angle and position
 class Rockxanne {
 
-
+    
     private:
         //Zumo objects
         Zumo32U4Encoders Encoders;
