@@ -3,6 +3,7 @@
 //theiisis
 //Hej med dig du er sej
 //First a few libraries need to be imported
+//hej thor
 
 #include "arduino.h"
 #include <Wire.h>
