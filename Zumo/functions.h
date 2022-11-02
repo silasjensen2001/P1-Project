@@ -1,6 +1,7 @@
 //This header file contains the "Rockxanne" class with its respective attributes and methods
 //This is a comment for testing GIT :O
 //theiisis
+//Hej med dig du er sej
 //First a few libraries need to be imported
 
 #include "arduino.h"
