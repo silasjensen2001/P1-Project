@@ -1,9 +1,6 @@
-//This header file contains the "Rockxanne" class with its respective attributes and methods
-//This is a comment for testing GIT :O
-//theiisis
-//Hej med dig
+//This header contains all the methods for steering the zumo
+//It also has the variables that keep track of position and angle
 //First a few libraries need to be imported
-
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
@@ -11,11 +8,11 @@
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class Rockxanne {
+class ZumoDrive {
 
     //Private members can't be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value
-    private:
+    protected:
         //Zumo objects
         Zumo32U4Encoders Encoders;
         Zumo32U4IMU IMU;
@@ -62,22 +59,17 @@ class Rockxanne {
         }
 
 
-
     public:
 
         //The constructor
-        Rockxanne(){
+        ZumoDrive(){
             
         }
 
 
         //---------------------Public methods---------------------//
 
-        void init(){
-            LCD.clear();
-            LCD.gotoXY(0,0);
-            LCD.print("Opsætter");
-
+        void initDrive(){
             counts_rotation = 909;
             len_rotation = 11.5;
 
@@ -88,10 +80,6 @@ class Rockxanne {
 
             calibrate_gyro();
             reset();
-
-            LCD.clear();
-            LCD.gotoXY(0,0);
-            LCD.print("Klar");
         }
 
         

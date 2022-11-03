@@ -1,7 +1,7 @@
 //The main program where all header files are merged
 #include <Wire.h>
 #include <Zumo32U4.h>
-#include "functions.h"
+#include "Zumo.h"
 
 
 
@@ -16,7 +16,7 @@ float sten[4][2] = {{80,80},{10,80},{10,10},{50,50}};
 
 void setup(){
     Serial.begin(9600);
-    Rockxan.init();
+    Rockxan.initAll();
 
 }
 
