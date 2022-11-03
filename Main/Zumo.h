@@ -6,12 +6,13 @@
 #include <Wire.h>
 #include <Zumo32U4.h>
 #include "ZumoDrive.h"
+#include "RoutePlanner.h"
 
 
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class Rockxanne: public ZumoDrive {
+class Rockxanne: public ZumoDrive, public RoutePlanner {
 
     //Private members can't be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value

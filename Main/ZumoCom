@@ -9,7 +9,7 @@
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class RoutePlanner{
+class ZumoCom{
 
     //Protected er ligesom private blot at hovedeklassen har adgang til dem
     protected:
@@ -18,7 +18,7 @@ class RoutePlanner{
     public:
 
         //Denne funktion 
-        void sort_for_freemove()(
+        void OLED()(
             
         )
 
