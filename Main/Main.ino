@@ -34,7 +34,7 @@ void loop(){
 
     if (But_B.isPressed()){
         delay(500);
-        Rockxan.reset();
+        Rockxan.gyro_drift();
     }
 
     if (But_C.isPressed()){

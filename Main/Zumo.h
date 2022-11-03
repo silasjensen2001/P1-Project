@@ -7,13 +7,14 @@
 #include <Zumo32U4.h>
 #include "ZumoDrive.h"
 #include "RoutePlanner.h"
+#include "ZumoCom.h"
 
 
 
 //The Rockxanne class includes all the classes
 class Rockxanne: public ZumoDrive, public RoutePlanner, public ZumoCom {
 
-    //Private members can't be accesed with ex. Rockxan."member" 
+    //Private members can NOT be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value
     private:
 
@@ -24,7 +25,6 @@ class Rockxanne: public ZumoDrive, public RoutePlanner, public ZumoCom {
         Rockxanne(){
             
         }
-
 
         //---------------------Public methods---------------------//
 
@@ -41,6 +41,9 @@ class Rockxanne: public ZumoDrive, public RoutePlanner, public ZumoCom {
             LCD.gotoXY(0,0);
             LCD.print("Klar");
         }
+
+
+        
 
         
 };

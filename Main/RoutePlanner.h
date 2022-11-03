@@ -11,16 +11,16 @@
 //Its attributes keep track of variables like current angle and position
 class RoutePlanner{
 
-    //Protected er ligesom private blot at hovedeklassen har adgang til dem
+    //Protected is like privat members except that iherited classes can acces these members
     protected:
 
-    //Herunder placeres alle metoderne/funktionerne 
+    //Under here are all methods/functions defined
     public:
 
-        //Denne funktion 
-        void sort_for_freemove()(
-            
-        )
+        //This is an example function
+        void sort_for_freemove(){
+            Serial.println("Hello World");
+        }
 
 
 };

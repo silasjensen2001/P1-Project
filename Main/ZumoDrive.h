@@ -247,6 +247,19 @@ class ZumoDrive {
         }
 
 
+
+        void gyro_drift(){
+            for (int s = 0; s < 100; s++){
+                while (!IMU.gyroDataReady()) {}
+                updateAngleGyro();
+
+                Serial.println(current_angle);
+                delay(100);
+            }
+        }
+
+
+
         void koortilkordinat(float coords[2], float speed){
             int x_vec[2] = {1, 0};
             int x = coords[0] - current_pos[0];

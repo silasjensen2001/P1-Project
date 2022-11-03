@@ -14,13 +14,12 @@ class ZumoCom{
     //Protected er ligesom private blot at hovedeklassen har adgang til dem
     protected:
 
-    //Herunder placeres alle metoderne/funktionerne 
+    //Under public are all functions/methods defined
     public:
 
-        //Denne funktion 
-        void OLED()(
-            
-        )
+        void example(){
+            Serial.println("Hello world");
+        }
 
 
 };
