@@ -1,5 +1,4 @@
 {
     "port": "COM6",
-    "board": "pololu-a-star:avr:a-star32U4",
-    "sketch": "Main\\Main.ino"
+    "board": "pololu-a-star:avr:a-star32U4"
 }
