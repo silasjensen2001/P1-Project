@@ -142,11 +142,7 @@ class ZumoDrive: public ZumoCom{
                 right_speed = speed;
             }
 
-
             display_print((String)current_angle, 0,0);
-            //LCD.clear();
-            //LCD.gotoXY(0,0);
-            //LCD.print(current_angle);
 
             dist = (dist/len_rotation)*counts_rotation;
 
@@ -158,9 +154,7 @@ class ZumoDrive: public ZumoCom{
                 }
 
                 if (100 < millis()-t2){
-                    //LCD.clear();
-                    //LCD.gotoXY(0,0);
-                    //LCD.print(current_angle);
+                    display_print((String)current_angle, 0, 0);
                     t2 = millis();
                 }
 
@@ -181,9 +175,7 @@ class ZumoDrive: public ZumoCom{
                     updateAngleGyro();
 
                     if (100 < millis()-t2){
-                        //LCD.clear();
-                        //LCD.gotoXY(0,0);
-                        //LCD.print(current_angle);
+                        display_print((String)current_angle, 0, 0);
                         t2 = millis();
                     }
 
@@ -271,11 +263,6 @@ class ZumoDrive: public ZumoCom{
             float dot_prod = x_vec[0]*x + x_vec[1]*y;
             float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
             
-            //LCD.clear();
-            //LCD.gotoXY(0,0);
-            //LCD.print(dot_prod);
-            //LCD.gotoXY(0,1);
-            //LCD.print(norm_prod);
             delay(5000);
 
             float angle = acos(dot_prod/norm_prod)*180/M_PI;
@@ -284,9 +271,7 @@ class ZumoDrive: public ZumoCom{
                 angle = -angle;
             }
 
-            //LCD.clear();
-            //LCD.gotoXY(0,0);
-            //LCD.print(angle);
+            display_print((String)angle, 0, 0);
             delay(5000);
 
             turn_to(angle);
