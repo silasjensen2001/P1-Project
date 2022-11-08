@@ -33,7 +33,7 @@ class ZumoCom{
 
         //This functions prints to the display
         //It takes into consideration whether a OLED or LCD is used
-        void display_print(String text, int posX, int posY){
+        void display_print(String text, int posX = 0, int posY = 0){
             if (oled) {
                 //Oled print functions
             } else {

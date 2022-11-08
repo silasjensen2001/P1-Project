@@ -6,8 +6,6 @@
 #include <Zumo32U4.h>
 #include "ZumoDrive.h"
 #include "RoutePlanner.h"
-//#include "ZumoCom.h"
-
 
 
 //The Rockxanne class includes all the classes
@@ -33,9 +31,12 @@ class Rockxanne: public ZumoDrive, public RoutePlanner{    //, public ZumoCom
             //This init is found in ZumoCom.h
             initDisplay(display);               //takes parameter "OLED" or "LCD"
 
-            //This function is found in "ZumoDrive.h"
+            display_print("Ik Klar", 0, 0);
+
+            //This init is found in "ZumoDrive.h"
             initDrive();
             
+            display_print("Klar", 0, 0);
         }
 
 

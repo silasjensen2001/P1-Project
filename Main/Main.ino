@@ -28,7 +28,7 @@ void loop(){
         delay(500);
 
         while(i < 4){
-            Rockxan.koortilkordinat(sten[i], 25);
+            Rockxan.koortilkordinat(sten[i], 15);
             delay(500); 
             i++;
         }       

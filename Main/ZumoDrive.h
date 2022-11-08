@@ -262,8 +262,6 @@ class ZumoDrive: public ZumoCom{
 
             float dot_prod = x_vec[0]*x + x_vec[1]*y;
             float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
-            
-            delay(5000);
 
             float angle = acos(dot_prod/norm_prod)*180/M_PI;
 
@@ -272,13 +270,13 @@ class ZumoDrive: public ZumoCom{
             }
 
             display_print((String)angle, 0, 0);
-            delay(5000);
+            delay(2000);
 
             turn_to(angle);
             drive_straight(norm, speed);
 
-            current_pos[0] = x;
-            current_pos[1] = y;
+            current_pos[0] = coords[0];
+            current_pos[1] = coords[1];
 
         }
 
