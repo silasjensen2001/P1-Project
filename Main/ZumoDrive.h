@@ -22,7 +22,7 @@ class ZumoDrive: public ZumoCom{
         Zumo32U4ButtonB But_B;
         Zumo32U4ButtonC But_C;
 
-        //Variables 
+        //Variables  /attributes 
         float current_pos[2];      //{x,y} [cm]  
         float current_angle;       //degrees
         float gyro_offset_z;
@@ -45,7 +45,7 @@ class ZumoDrive: public ZumoCom{
 
 
 
-        //---------------------Private methods---------------------//
+        //---------------------Protected methods---------------------//
 
 
         //Translates zumo speed values to physical speed [cm/s]
@@ -112,7 +112,7 @@ class ZumoDrive: public ZumoCom{
             //The angle change can now be calculated
             //Every raw reading can be translated to degrees with the factor 0,07 deg/s
             //Datasheet https://www.pololu.com/file/0J731/L3GD20H.pdf)
-            current_angle += (((float)IMU.g.z - gyro_offset_z- (gyro_drift_z/3)) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
+            current_angle += (((float)IMU.g.z - gyro_offset_z - (gyro_drift_z/3)) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
 
 
             if (current_angle < -360){
@@ -144,7 +144,7 @@ class ZumoDrive: public ZumoCom{
 
             display_print((String)current_angle, 0,0);
 
-            dist = (dist/len_rotation)*counts_rotation;
+            dist = (dist/len_rotation)*counts_rotation;  //we get the distance but expresed in counts
 
             while(dist > left_counts){
                 left_counts = Encoders.getCountsLeft();
@@ -153,7 +153,7 @@ class ZumoDrive: public ZumoCom{
                     gyro_correction();
                 }
 
-                if (100 < millis()-t2){
+                if (100 < millis()-t2){ //for each 100 millis we print the angle
                     display_print((String)current_angle, 0, 0);
                     t2 = millis();
                 }
@@ -170,7 +170,7 @@ class ZumoDrive: public ZumoCom{
             unsigned long t2 = millis();
 
 
-            if (end_angle > current_angle+angle_thresh or end_angle < current_angle-angle_thresh){
+            if (end_angle > current_angle + angle_thresh or end_angle < current_angle-angle_thresh){
                 while(true){
                     updateAngleGyro();
 
@@ -217,7 +217,7 @@ class ZumoDrive: public ZumoCom{
         //The gyro needs be calibrated
         //This is due to an offset reading and a drifting value
         void calibrate_gyro(){
-            //Kalibrering af gyro (Vi ønsker 0, når den står stille, så vi skal finde et gns. offset)
+            //Kalibrering af gyro (Vi ønsker 0, når den står stille, så vi skal finde et gns. offset) // TODO: ret thor skrev på dansk adddrrr
             for (uint16_t i = 0; i < 2048; i++){
                 //Venter indtil den har læst en ny værdi for gyroskopet
                 while(!IMU.gyroDataReady()){}
@@ -229,7 +229,7 @@ class ZumoDrive: public ZumoCom{
 
             gyro_offset_z /= 2048;
 
-            for (int s = 0; s < 9; s++){
+            for (int s = 0; s < 9; s++){   //work in progress dont judge
                 while (!IMU.gyroDataReady()) {}
                 IMU.readGyro();
 
@@ -242,7 +242,7 @@ class ZumoDrive: public ZumoCom{
 
 
 
-        void gyro_drift(){
+        void gyro_drift(){ //delete posibily 
             for (int s = 0; s < 100; s++){
                 while (!IMU.gyroDataReady()) {}
                 updateAngleGyro();
@@ -254,7 +254,7 @@ class ZumoDrive: public ZumoCom{
 
 
 
-        void koortilkordinat(float coords[2], float speed){
+        void koortilkordinat(float coords[2], float speed){ //Speed = cm/s
             int x_vec[2] = {1, 0};
             int x = coords[0] - current_pos[0];
             int y = coords[1] - current_pos[1];
@@ -277,6 +277,10 @@ class ZumoDrive: public ZumoCom{
 
             current_pos[0] = coords[0];
             current_pos[1] = coords[1];
+
+        }
+
+        void driveXY(){
 
         }
 
