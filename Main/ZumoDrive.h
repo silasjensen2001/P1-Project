@@ -268,13 +268,6 @@ class ZumoDrive {
 
             float dot_prod = x_vec[0]*x + x_vec[1]*y;
             float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
-            
-            LCD.clear();
-            LCD.gotoXY(0,0);
-            LCD.print(dot_prod);
-            LCD.gotoXY(0,1);
-            LCD.print(norm_prod);
-            delay(5000);
 
             float angle = acos(dot_prod/norm_prod)*180/M_PI;
 
