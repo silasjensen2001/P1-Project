@@ -1,15 +1,14 @@
 //This header contains all the methods for steering the zumo
 //It also has the variables that keep track of position and angle
-//First a few libraries need to be imported
+//First a few libraries need to be imported ækmnh
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
-#include "ZumoCom.h"
 
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class ZumoDrive: public ZumoCom{
+class ZumoDrive {
 
     //Private members can't be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value
@@ -17,6 +16,7 @@ class ZumoDrive: public ZumoCom{
         //Zumo objects
         Zumo32U4Encoders Encoders;
         Zumo32U4IMU IMU;
+        Zumo32U4LCD LCD;
         Zumo32U4Motors Motors;
         Zumo32U4ButtonA But_A;
         Zumo32U4ButtonB But_B;
@@ -142,7 +142,9 @@ class ZumoDrive: public ZumoCom{
                 right_speed = speed;
             }
 
-            display_print((String)current_angle, 0,0);
+            LCD.clear();
+            LCD.gotoXY(0,0);
+            LCD.print(current_angle);
 
             dist = (dist/len_rotation)*counts_rotation;
 
@@ -154,7 +156,9 @@ class ZumoDrive: public ZumoCom{
                 }
 
                 if (100 < millis()-t2){
-                    display_print((String)current_angle, 0, 0);
+                    LCD.clear();
+                    LCD.gotoXY(0,0);
+                    LCD.print(current_angle);
                     t2 = millis();
                 }
 
@@ -175,7 +179,9 @@ class ZumoDrive: public ZumoCom{
                     updateAngleGyro();
 
                     if (100 < millis()-t2){
-                        display_print((String)current_angle, 0, 0);
+                        LCD.clear();
+                        LCD.gotoXY(0,0);
+                        LCD.print(current_angle);
                         t2 = millis();
                     }
 
@@ -262,6 +268,13 @@ class ZumoDrive: public ZumoCom{
 
             float dot_prod = x_vec[0]*x + x_vec[1]*y;
             float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
+            
+            LCD.clear();
+            LCD.gotoXY(0,0);
+            LCD.print(dot_prod);
+            LCD.gotoXY(0,1);
+            LCD.print(norm_prod);
+            delay(5000);
 
             float angle = acos(dot_prod/norm_prod)*180/M_PI;
 
@@ -269,17 +282,16 @@ class ZumoDrive: public ZumoCom{
                 angle = -angle;
             }
 
-            display_print((String)angle, 0, 0);
-            delay(2000);
+            LCD.clear();
+            LCD.gotoXY(0,0);
+            LCD.print(angle);
+            delay(5000);
 
             turn_to(angle);
             drive_straight(norm, speed);
 
-            current_pos[0] = coords[0];
-            current_pos[1] = coords[1];
+            current_pos[0] = x;
+            current_pos[1] = y;
 
         }
-
-
-
 };

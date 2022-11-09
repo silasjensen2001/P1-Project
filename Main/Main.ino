@@ -18,7 +18,7 @@ float sten[4][2] = {{80,80},{10,80},{10,10},{50,50}};
 
 void setup(){
     Serial.begin(9600);
-    Rockxan.initAll();
+    Rockxan.initAll("LCD");
 
 }
 
@@ -28,7 +28,7 @@ void loop(){
         delay(500);
 
         while(i < 4){
-            Rockxan.koortilkordinat(sten[i], 25);
+            Rockxan.koortilkordinat(sten[i], 15);
             delay(500); 
             i++;
         }       
