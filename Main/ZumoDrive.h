@@ -31,6 +31,7 @@ class ZumoDrive: public ZumoCom{
         float angle_thresh;        //degrees
         float target_angle;        //degrees
         float len_rotation;        //cm
+        int min_speed;             //zumo value (minimum speed needed for zumo to drive)
        
 
         int counts_rotation;
@@ -92,6 +93,7 @@ class ZumoDrive: public ZumoCom{
             right_counts = 0;
             angle_thresh = 0.2;
             gyro_correction_time = 5;
+            min_speed = 80;
 
             Encoders.getCountsAndResetLeft();
             Encoders.getCountsAndResetRight();
@@ -125,9 +127,14 @@ class ZumoDrive: public ZumoCom{
 
         //Drives straight for a given distance [cm] with a given speed [cm/s]
         //Max speed is 50 cm/s
-        void drive_straight(float dist, float speed, bool correction_active = true){
-            unsigned long t2 = millis();
+        void drive_straight(float dist, float speed, bool correction_active = true, float acc = 0, float deacc = 0){
             float angle_store = current_angle;
+            float start_at = 0;
+            float acc_zumo_value = 0;
+            float deacc_zumo_value = 0;
+            uint16_t t2 = millis();
+            uint16_t t_acc = millis();
+            uint16_t t_deacc = millis();
 
             updateAngleGyro();
             speed = applied_speed(speed);
@@ -146,15 +153,44 @@ class ZumoDrive: public ZumoCom{
 
             dist = (dist/len_rotation)*counts_rotation;  //we get the distance but expresed in counts
 
+
+            if(acc != 0){
+                acc_zumo_value = applied_speed(acc);  //zumo values pr. sec.
+                left_speed = right_speed = min_speed;
+            } else {
+                left_speed = right_speed = speed;
+            } 
+            if(deacc != 0){
+                deacc_zumo_value = applied_speed(deacc);                  //zumo values pr. sec.
+                start_at = fabs((pow(min_speed, 2) - pow(speed, 2))/(2*deacc_zumo_value));  //dist needed to deacc in counts
+            }
+
+            Motors.setSpeeds(left_speed, right_speed);
+
             while(dist > left_counts){
                 left_counts = Encoders.getCountsLeft();
 
                 if(correction_active){
                     gyro_correction();
                 }
+                if(acc != 0 && millis() > t_acc+100 && left_speed <= speed){
+                    right_speed += int(acc_zumo_value/10);
+                    left_speed += int(acc_zumo_value/10);
+                    Motors.setSpeeds(left_speed, right_speed);
+                    t_acc = millis();
+                }
+                if(deacc != 0 && left_counts >= dist - start_at && millis() > t_deacc+100 && left_speed > min_speed){
+                    right_speed -= deacc_zumo_value/10;
+                    left_speed -= deacc_zumo_value/10;
+                    Motors.setSpeeds(left_speed, right_speed);
+                    display_print((String)left_speed, 0, 0);
+                    t_deacc = millis();
+                    acc = 0;
+                }
 
                 if (100 < millis()-t2){ //for each 100 millis we print the angle
-                    display_print((String)current_angle, 0, 0);
+                    display_print((String)start_at, 0, 0);
+                    display_print((String)left_counts, 0, 1);
                     t2 = millis();
                 }
 
@@ -283,7 +319,5 @@ class ZumoDrive: public ZumoCom{
         void driveXY(){
 
         }
-
-
 
 };

@@ -37,7 +37,8 @@ class ZumoCom{
             if (oled) {
                 //Oled print functions
             } else {
-                LCD.clear();
+                LCD.gotoXY(posX,posY);
+                LCD.print("        ");
                 LCD.gotoXY(posX,posY);
                 LCD.print(text);
             }
