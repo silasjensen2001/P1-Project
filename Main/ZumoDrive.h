@@ -127,17 +127,17 @@ class ZumoDrive: public ZumoCom{
 
         //Drives straight for a given distance [cm] with a given speed [cm/s]
         //Max speed is 50 cm/s
-        void drive_straight(float dist, float speed, bool correction_active = true, float acc = 0, float deacc = 0){
+        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
             float angle_store = current_angle;
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
+            float speed = applied_speed(real_speed);
             uint16_t t2 = millis();
             uint16_t t_acc = millis();
             uint16_t t_deacc = millis();
 
             updateAngleGyro();
-            speed = applied_speed(speed);
             Motors.setSpeeds(speed, speed);
     
             Encoders.getCountsAndResetLeft();
@@ -162,7 +162,7 @@ class ZumoDrive: public ZumoCom{
             } 
             if(deacc != 0){
                 deacc_zumo_value = applied_speed(deacc);                  //zumo values pr. sec.
-                start_at = fabs((pow(min_speed, 2) - pow(speed, 2))/(2*deacc_zumo_value));  //dist needed to deacc in counts
+                start_at = dist - fabs(((pow(8, 2) - pow(real_speed, 2))/(2*deacc))/len_rotation * counts_rotation);  //dist needed to deacc in counts
             }
 
             Motors.setSpeeds(left_speed, right_speed);
@@ -179,18 +179,17 @@ class ZumoDrive: public ZumoCom{
                     Motors.setSpeeds(left_speed, right_speed);
                     t_acc = millis();
                 }
-                if(deacc != 0 && left_counts >= dist - start_at && millis() > t_deacc+100 && left_speed > min_speed){
+                if(deacc != 0 && left_counts >= start_at && millis() > t_deacc+100 && left_speed > min_speed){
                     right_speed -= deacc_zumo_value/10;
                     left_speed -= deacc_zumo_value/10;
                     Motors.setSpeeds(left_speed, right_speed);
-                    display_print((String)left_speed, 0, 0);
                     t_deacc = millis();
                     acc = 0;
                 }
 
                 if (100 < millis()-t2){ //for each 100 millis we print the angle
-                    display_print((String)start_at, 0, 0);
-                    display_print((String)left_counts, 0, 1);
+                    display_print((String)deacc_zumo_value, 0, 0);
+                    display_print((String)dist, 0, 1);
                     t2 = millis();
                 }
 

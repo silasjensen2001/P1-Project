@@ -36,7 +36,7 @@ void loop(){
 
     if (But_B.isPressed()){
         delay(500);
-        Rockxan.drive_straight(200, 40, true, 8, 8);
+        Rockxan.drive_straight(200, 40, true, 12, 12);
     }
 
     if (But_C.isPressed()){
