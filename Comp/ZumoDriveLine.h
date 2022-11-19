@@ -4,12 +4,12 @@
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
-#include "ZumoCom.h"
+#include "ZumoComLine.h"
 
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class ZumoDrive: public ZumoCom{
+class ZumoDriveLine: public ZumoComLine{
 
     //Private members can't be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value
@@ -18,9 +18,8 @@ class ZumoDrive: public ZumoCom{
         Zumo32U4Encoders Encoders;
         Zumo32U4IMU IMU;
         Zumo32U4Motors Motors;
-        Zumo32U4ButtonA But_A;
-        Zumo32U4ButtonB But_B;
-        Zumo32U4ButtonC But_C;
+        Zumo32U4LineSensors LineSensors;
+        
 
         //Variables  /attributes 
         float current_pos[2];      //{x,y} [cm]  
@@ -40,6 +39,9 @@ class ZumoDrive: public ZumoCom{
         int right_speed;
         int left_speed;
         int gyro_correction_time;   //ms
+        
+        uint16_t thresh;
+        uint16_t values[5];
        
 
         unsigned long gyro_timer;   //ms
@@ -61,9 +63,12 @@ class ZumoDrive: public ZumoCom{
 
 
     public:
+        Zumo32U4ButtonA But_A;
+        Zumo32U4ButtonB But_B;
+        Zumo32U4ButtonC But_C;
 
         //The constructor
-        ZumoDrive(){
+        ZumoDriveLine(){
             
         }
 
@@ -79,6 +84,9 @@ class ZumoDrive: public ZumoCom{
             IMU.enableDefault();
             IMU.configureForTurnSensing();
 
+            LineSensors.initFiveSensors();
+
+            thresh = 400;
             calibrate_gyro();
             reset();
         }
@@ -114,7 +122,7 @@ class ZumoDrive: public ZumoCom{
             //The angle change can now be calculated
             //Every raw reading can be translated to degrees with the factor 0,07 deg/s
             //Datasheet https://www.pololu.com/file/0J731/L3GD20H.pdf)
-            current_angle += (((float)IMU.g.z - gyro_offset_z - (gyro_drift_z/3)) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
+            current_angle += (((float)IMU.g.z - gyro_offset_z) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
 
 
             if (current_angle < -360){
@@ -186,7 +194,6 @@ class ZumoDrive: public ZumoCom{
                     t_deacc = millis();
                     acc = 0;
                 }
-                
 
                 if (100 < millis()-t2){ //for each 100 millis we print the angle
                     display_print((String)deacc_zumo_value, 0, 0);
@@ -277,7 +284,7 @@ class ZumoDrive: public ZumoCom{
         }
 
 
-
+        /*
         void gyro_drift(){ //delete posibily 
             for (int s = 0; s < 100; s++){
                 while (!IMU.gyroDataReady()) {}
@@ -286,7 +293,7 @@ class ZumoDrive: public ZumoCom{
                 Serial.println(current_angle);
                 delay(100);
             }
-        }
+        }*/
 
 
 
@@ -316,5 +323,122 @@ class ZumoDrive: public ZumoCom{
 
         }
 
- 
+        void drive_to_line(){
+            Motors.setSpeeds(70, 70);
+            LineSensors.read(values);
+
+            while((values[0] < thresh) && (values[4] < thresh)){
+                LineSensors.readCalibrated(values);
+                updateAngleGyro();
+            }
+            
+            Motors.setSpeeds(0,0);
+            
+            if(values[0] > thresh ){
+                Motors.setRightSpeed(70);
+                while(values[4] < thresh){
+                    LineSensors.readCalibrated(values);
+                    updateAngleGyro();
+                }
+                Motors.setRightSpeed(0);
+
+            } else if (values[4] > thresh){
+                Motors.setLeftSpeed(70);
+                while(values[0] < thresh){
+                    LineSensors.readCalibrated(values);
+                    updateAngleGyro();
+                }
+                Motors.setLeftSpeed(0);
+            }
+
+            delay(500);
+            drive_straight(6, 10);
+
+            delay(500);
+            turn_to(-90);
+
+            delay(500);
+            drive_on_line();
+
+            LineSensors.emittersOn();
+            display_print("Emits");
+            delay(3000);
+            display_print("DOne");
+            LineSensors.emittersOff();
+        }
+
+        void drive_on_line(){
+            right_speed = 70;
+            LineSensors.readCalibrated(values);
+            Motors.setSpeeds(70,70);
+
+            while((values[0] < thresh) && (values[4] < thresh)){
+                display_print((String)values[4]);
+                LineSensors.readCalibrated(values);
+                if(values[1] < thresh){
+                    right_speed = (right_speed < 60) ? right_speed-1 : right_speed;
+                    Motors.setRightSpeed(right_speed);
+                } else if (values[3] < thresh){
+                    right_speed = (right_speed > 100) ? right_speed+1 : right_speed;
+                }
+                Motors.setRightSpeed(right_speed);
+                updateAngleGyro();
+            }
+
+            Motors.setSpeeds(0,0);
+
+            while((values[0] < thresh))
+            {
+                Motors.setLeftSpeed(70);
+                updateAngleGyro();
+            }
+            Motors.setSpeeds(0,0);
+
+            while((values[4] < thresh))
+            {
+                Motors.setRightSpeed(70);
+                updateAngleGyro();
+            }
+            
+            Motors.setSpeeds(0,0); 
+        }
+
+        void printValues(){
+            while(true){
+                LineSensors.readCalibrated(values);
+                Serial.print((String)values[0] + " ");
+                Serial.println((String)values[4] + " ");
+                display_print((String)values[2], 0,0);
+                delay(50);
+                if(But_B.isPressed()){
+                    break;
+                }
+            }
+        }
+
+        void setLineThresh(uint16_t val){
+            thresh = val;
+        }
+
+        void calibrateSensors(){
+            // Wait 1 second and then begin automatic sensor calibration
+            // by rotating in place to sweep the sensors over the line
+            delay(1000);
+            for(uint16_t i = 0; i < 120; i++)
+            {
+                if (i > 30 && i <= 90)
+                {
+                Motors.setSpeeds(-200, 200);
+                }
+                else
+                {
+                Motors.setSpeeds(200, -200);
+                }
+
+                LineSensors.calibrate();
+            }
+            Motors.setSpeeds(0, 0);
+            
+        }
+
 };

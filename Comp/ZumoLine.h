@@ -4,12 +4,12 @@
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
-#include "ZumoDrive.h"
+#include "ZumoDriveLine.h"
 
 
 
 //The Rockxanne class includes all the classes
-class Rockxanne: public ZumoDrive{    //, public ZumoCom
+class Rockxanne: public ZumoDriveLine{    //, public ZumoCom 
 
     //Private members can NOT be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value

@@ -19,7 +19,6 @@ float sten[4][2] = {{80,80},{10,80},{10,10},{50,50}};
 void setup(){
     Serial.begin(9600);
     Rockxan.initAll("LCD");
-
 }
 
 void loop(){
@@ -47,4 +46,6 @@ void loop(){
         Rockxan.turn_to(-180);
         Rockxan.drive_straight(200, 20);
     }
+    delay(500);
+    Serial.println("her går det godt");
 }
