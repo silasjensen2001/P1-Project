@@ -149,7 +149,7 @@ class ZumoDriveLine: public ZumoComLine{
 
         //Drives straight for a given distance [cm] with a given speed [cm/s]
         //Max speed is 50 cm/s
-        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
+        void drive_straight(float dist, float real_speed, bool backwards = false, bool correction_active = true, float acc = 0, float deacc = 0){
             float angle_store = current_angle;
             float start_at = 0;
             float acc_zumo_value = 0;
@@ -160,11 +160,16 @@ class ZumoDriveLine: public ZumoComLine{
             unsigned long t_deacc = millis();
 
             updateAngleGyro();
-            Motors.setSpeeds(speed, speed);
-    
+            if(backwards){
+                speed = -speed;
+                correction_active = false;
+            }
+
             Encoders.getCountsAndResetLeft();
             left_counts = 0;
 
+            //Motors.setSpeeds(speed, speed);
+    
             if (correction_active){
                 target_angle = current_angle;
                 right_speed = speed;
@@ -316,6 +321,8 @@ class ZumoDriveLine: public ZumoComLine{
             delay(2000);
 
             turn_to(angle);
+            display_print((String)norm, 0, 0);
+            delay(2000);
             drive_straight(norm, speed);
 
             //Updates the position
@@ -478,17 +485,27 @@ class ZumoDriveLine: public ZumoComLine{
             return SensorPR;
         }
 
-        void DetectCan(){ //Detects can and stops the belt.
+        void DetectCan(int timer){ //Detects can and stops the belt.
+            unsigned long t = millis();
+
             LineSensors.emittersOn();
             while (leftSensor != rightSensor || leftSensor < 4){
                 ProxSensors.read();
                 leftSensor = ProxSensors.countsFrontWithLeftLeds();
                 rightSensor = ProxSensors.countsFrontWithRightLeds();
+
+                if(timer < millis()-t){
+                    display_print((String)leftSensor, 0,0);
+                    delay(1000);
+                    return;
+                }
             }
-            display_print((String)leftSensor, 0,0);
-            display_print((String)rightSensor, 0,1);
+
             LineSensors.emittersOff();
-            delay(3000);
+        }
+
+        void setSpeeds(int speedLeft, int speedRight){
+            Motors.setSpeeds(speedLeft, speedRight);
         }
         
 
