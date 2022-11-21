@@ -6,8 +6,8 @@ Rockxanne Rockxan;
 int dist;
 int detected;
 float coords[2] = {18,0};
-float coords2[2] = {-10,-17};
-float second_coords[3][2] = {{0, -30}, {16, -30}, {16, 10}};
+float coords2[2] = {-8,-10};
+float second_coords[4][2] = {{0, -30}, {16, -30}, {16, 10}, {-10, 10}};
 
 void setup() {
     Serial.begin(9600);
@@ -45,11 +45,13 @@ void loop() {
 
             } else if (dist <= 5) {
                 straight_can();
+                drive_back();
             } else {
                 second_can();
+                 
             }
 
-            drive_back(); 
+            
             delay(50);             
         }
     }
@@ -88,7 +90,10 @@ void second_can(){
     Rockxan.setSpeeds(-100, -100);
     delay(50);
     Rockxan.setSpeeds(0, 0);
-
+    delay(50);
+    Rockxan.koortilkordinat(second_coords[3], 25, 100);
+    delay(50);
+    Rockxan.turn_to(-90);
 }
 
 void drive_back(){
