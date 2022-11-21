@@ -4,13 +4,14 @@ Zumo32U4LineSensors LineSensors;
 
 Rockxanne Rockxan;
 int dist;
+int detected;
 float coords[2] = {18,0};
-float coords2[2] = {-10,-20};
-float second_coords[3][2] = {{0, -30}, {16, -30}, {8, 10}};
+float coords2[2] = {-10,-17};
+float second_coords[3][2] = {{0, -30}, {16, -30}, {16, 10}};
 
 void setup() {
     Serial.begin(9600);
-    Rockxan.initAll("LCD");
+    Rockxan.initAll("OLED");
     Rockxan.setLineThresh(500);
 }
 
@@ -20,9 +21,9 @@ void loop() {
         Rockxan.turn_to(90, 100);
         for(int i=0; i<4; i++){
             delay(50);
-            Rockxan.drive_to_line();
+            Rockxan.drive_to_line(80);
             delay(50);
-            Rockxan.drive_straight(6, 10);
+            Rockxan.drive_straight(6, 12);
 
             delay(50);
             Rockxan.turn_to(0, 90);
@@ -32,16 +33,17 @@ void loop() {
             Rockxan.reset();
 
             Rockxan.display_print("Emits");
-            Rockxan.DetectCan(4000);
+            Rockxan.DetectCan(10000);
             delay(50);
 
             dist = Rockxan.FindDistance();
             Rockxan.display_print("Dist:");
             Rockxan.display_print((String)dist, 0,1);
-            delay(2500);
+            delay(1000);
 
-            if (dist <= 2){      
-            } else if (dist <= 6) {
+            if (dist <= 2){
+
+            } else if (dist <= 5) {
                 straight_can();
             } else {
                 second_can();
@@ -53,18 +55,7 @@ void loop() {
     }
 
     if (Rockxan.But_B.isPressed()){
-        Rockxan.calibrateSensors();
-        /*
-        while (true)
-        {
-            dist = Rockxan.FindDistance();
-            Rockxan.display_print((String)dist);
-            delay(500);
-            if (Rockxan.But_C.isPressed()){
-                Rockxan.display_print("Reset");
-                break;
-            }    
-        } */     
+        Rockxan.calibrateSensors();     
     }
 
     if (Rockxan.But_C.isPressed()){
@@ -77,9 +68,10 @@ void loop() {
 }
 
 void straight_can(){
-    Rockxan.koortilkordinat(coords, 22);
+    Rockxan.koortilkordinat(coords, 22, 100);
     Rockxan.drive_to_line();
-    delay(100);
+    delay(200);
+    Rockxan.setAngle(0);
     Rockxan.setSpeeds(-100, -100);
     delay(500);
     Rockxan.setSpeeds(0, 0);
@@ -87,14 +79,16 @@ void straight_can(){
 
 void second_can(){
     for(int i = 0; i<3; i++){
-       Rockxan.koortilkordinat(second_coords[i], 22); 
-       delay(100);
+       Rockxan.koortilkordinat(second_coords[i], 25, 100); 
+       delay(50);
     }
     Rockxan.drive_to_line();
-    delay(100);
+    delay(200);
+    Rockxan.setAngle(90);
     Rockxan.setSpeeds(-100, -100);
-    delay(500);
+    delay(50);
     Rockxan.setSpeeds(0, 0);
+
 }
 
 void drive_back(){

@@ -14,15 +14,19 @@ class ZumoCom{
     //Protected er ligesom private blot at hovedeklassen har adgang til dem
     protected:
         bool oled = false;
-        Zumo32U4OLED OLED;
         Zumo32U4LCD LCD;
+        Zumo32U4OLED OLED;
+        
 
     //Under public are all functions/methods defined
     public:
 
         //The communication channel has to be initialized and is dependent on whether OLED or LCD is used
         void initDisplay(String OLED_or_LCD){
+            Wire.begin();
             if (OLED_or_LCD == "OLED"){
+                OLED.clear();
+                OLED.setLayout8x2();
                 oled = true;
                 
             } else if (OLED_or_LCD == "LCD"){
@@ -35,7 +39,10 @@ class ZumoCom{
         //It takes into consideration whether a OLED or LCD is used
         void display_print(String text, int posX = 0, int posY = 0){
             if (oled) {
-                //Oled print functions
+                OLED.gotoXY(posX,posY);
+                OLED.print("        ");
+                OLED.gotoXY(posX,posY);
+                OLED.print(text);
             } else {
                 LCD.gotoXY(posX,posY);
                 LCD.print("        ");
