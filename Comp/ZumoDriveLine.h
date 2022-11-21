@@ -39,10 +39,10 @@ class ZumoDriveLine: public ZumoComLine{
         int SensorPR;
         int thresh;
 
-        unsigned int left_counts;
-        unsigned int right_counts;
+        int left_counts;
+        int right_counts;
         unsigned int values[5];
-        uint16_t brightnessLevels[4] = { 0.4, 0.8 , 1.2 , 1.6 }; //skal sige der er 4.
+        uint16_t brightnessLevels[5] = {0.5, 1, 4, 6, 7}; //skal sige der er 4.
 
         //unsigned long gyro_timer;   //ms
 
@@ -153,8 +153,8 @@ class ZumoDriveLine: public ZumoComLine{
 
         //Drives straight for a given distance [cm] with a given speed [cm/s]
         //Max speed is 50 cm/s
-        void drive_straight(float dist, float real_speed, bool backwards = false, bool correction_active = true, float acc = 0, float deacc = 0){
-            float angle_store = current_angle;
+        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
+            //float angle_store = current_angle;
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
@@ -163,8 +163,11 @@ class ZumoDriveLine: public ZumoComLine{
             unsigned long t_acc = millis();
             unsigned long t_deacc = millis();
 
+            float target_posX = cos((current_angle*M_PI/180))*dist;
+            float target_posY = sin((current_angle*M_PI/180))*dist;
+
             updateAngleGyro();
-            if(backwards){
+            if(dist < 0){
                 speed = -speed;
                 correction_active = false;
             }
@@ -198,7 +201,7 @@ class ZumoDriveLine: public ZumoComLine{
             Motors.setSpeeds(left_speed, right_speed);
 
             //A continuos loop that stops running, when distance is met
-            while(dist > left_counts){
+            while(abs(dist) > abs(left_counts)){
                 left_counts = Encoders.getCountsLeft();
 
                 if(correction_active){
@@ -227,16 +230,20 @@ class ZumoDriveLine: public ZumoComLine{
                     display_print((String)deacc_zumo_value, 0, 0);
                     display_print((String)dist, 0, 1);
                     t2 = millis();
-                }          
-            }
-
+                }  
+                display_print((String)left_counts);
+                //Motors.setSpeeds(0,0);        
+            }   
             Motors.setSpeeds(0,0);
+            current_pos[0] = current_pos[0] + target_posX;
+            current_pos[1] = current_pos[1] + target_posY;
         }
 
 
         //Method that turns the Zumo to a given angle relative to the Zumo's X-axis (direction of Zumo when calibrated)
         void turn_to(float end_angle, int speed = 120){
             unsigned long t2 = millis();
+
 
             //Checks whether the Zumo already have the angle (inside the thresholds) or not
             if (end_angle > current_angle + angle_thresh or end_angle < current_angle-angle_thresh){
@@ -321,10 +328,8 @@ class ZumoDriveLine: public ZumoComLine{
                 angle = -angle;
             }
 
-            display_print((String)angle, 0, 0);
-
             turn_to(angle, angle_speed);
-            delay(100);
+            delay(50);
             drive_straight(norm, speed);
 
             //Updates the position
@@ -333,8 +338,10 @@ class ZumoDriveLine: public ZumoComLine{
 
         }
 
-        void drive_to_line(int speed = 70){
+        void drive_to_line(int speedCM = 12){
             int i = 0;
+            int speed = applied_speed(speedCM);
+
             Motors.setSpeeds(speed, speed);
             LineSensors.readCalibrated(values);
 
@@ -349,19 +356,15 @@ class ZumoDriveLine: public ZumoComLine{
                 if (values[4] < thresh){
                     Motors.setRightSpeed(0);
                     i++;
-                }
-                //if(i >= 2){
-                //    break;
-                //}
-                
+                }       
             }
-
         }
 
-        void drive_on_line(){
+        void drive_on_line(int speedCM){
             int16_t lastError = 0;
             int i2 = 0;
             int16_t position = LineSensors.readLine(values, true, true);
+            int speed = applied_speed(speedCM);
 
             while((values[0] > thresh) || (values[4] > thresh)){
                 position = LineSensors.readLine(values, true, true);
@@ -372,14 +375,14 @@ class ZumoDriveLine: public ZumoComLine{
 
                 // Get motor speed difference using proportional and derivative
                 // PID terms (the integral term is generally not very useful
-                int16_t speedDifference = error + 2 * (error - lastError); //error / 4
+                int16_t speedDifference = error*4 + 2 * (error - lastError); //error / 4
 
                 lastError = error;
 
                 // Get individual motor speeds.  The sign of speedDifference
                 // determines if the robot turns left or right.
-                int16_t leftSpeed = (int16_t)90 + speedDifference;
-                int16_t rightSpeed = (int16_t)90 - speedDifference;
+                int16_t leftSpeed = (int16_t)speed + speedDifference;
+                int16_t rightSpeed = (int16_t)speed - speedDifference;
 
                 // Constrain our motor speeds to be between 0 and maxSpeed.
                 // One motor will always be turning at maxSpeed, and the other
@@ -387,8 +390,8 @@ class ZumoDriveLine: public ZumoComLine{
                 // else it will be stationary.  For some applications, you
                 // might want to allow the motor speed to go negative so that
                 // it can spin in reverse.
-                leftSpeed = constrain(leftSpeed, 70, (int16_t)120);
-                rightSpeed = constrain(rightSpeed, 70, (int16_t)120);
+                leftSpeed = constrain(leftSpeed, 70, (int16_t)150);
+                rightSpeed = constrain(rightSpeed, 70, (int16_t)150);
 
                 Motors.setSpeeds(leftSpeed, rightSpeed);
                 //LineSensors.readCalibrated(values);
@@ -401,34 +404,11 @@ class ZumoDriveLine: public ZumoComLine{
                     Motors.setRightSpeed(0);
                     i2++;
                 }
-                //if(i2 == 2){
-                //    display_print((String)i2);
-                //    delay(3000);
-                
-                //    break;
-                //}
+
                 
             }
-            
 
-            /*
-            Motors.setSpeeds(0,0);
-
-            while((values[0] < thresh))
-            {
-                LineSensors.readCalibrated(values);
-                Motors.setLeftSpeed(70);
-                updateAngleGyro();
-            }
-            Motors.setSpeeds(0,0);
-
-            while((values[4] < thresh))
-            {
-                Motors.setRightSpeed(70);
-                LineSensors.readCalibrated(values);
-                updateAngleGyro();
-            }
-            */
+            drive_straight(0.5,10);
             Motors.setSpeeds(0,0);
             
 
@@ -489,16 +469,22 @@ class ZumoDriveLine: public ZumoComLine{
 
         int DetectCan(int timer){ //Detects can and stops the belt.
             unsigned long t = millis();
-
             LineSensors.emittersOn();
-            while (leftSensor != rightSensor || leftSensor < 3){
+
+            ProxSensors.read();
+            leftSensor = ProxSensors.countsFrontWithLeftLeds();
+            rightSensor = ProxSensors.countsFrontWithRightLeds();
+
+            while (leftSensor != rightSensor || leftSensor < 1){
+                LineSensors.emittersOn();
+                delay(20);
                 ProxSensors.read();
+                LineSensors.emittersOn();
                 leftSensor = ProxSensors.countsFrontWithLeftLeds();
                 rightSensor = ProxSensors.countsFrontWithRightLeds();
 
                 if(timer < millis()-t){
                     display_print((String)leftSensor, 0,0);
-                    delay(1000);
                     return 0;
                 }
                 
@@ -511,6 +497,14 @@ class ZumoDriveLine: public ZumoComLine{
         void setSpeeds(int speedLeft, int speedRight){
             Motors.setSpeeds(speedLeft, speedRight);
         }
-        
+
+        void emitOn(){
+            LineSensors.emittersOn();
+        }
+
+        void emitOff(){
+            LineSensors.emittersOff();
+        }
+
 
 };

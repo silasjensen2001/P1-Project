@@ -3,11 +3,18 @@
 Zumo32U4LineSensors LineSensors;
 
 Rockxanne Rockxan;
-int dist;
+int pause = 25; //ms
+int speed = 40; //cm/s
+int speed_to_line = 25;
+int angle_speed = 200; //Zumo value
+int dist; 
 int detected;
-float coords[2] = {18,0};
-float coords2[2] = {-8,-10};
-float second_coords[4][2] = {{0, -30}, {16, -30}, {16, 10}, {-10, 10}};
+
+float coords[2] = {20,0};
+float coords2[2] = {-6,-10};
+float second_coords[3][2] = {{14, -7}, {14, 17}, {-8, 20}}; //{{0, -30}, {16, -30}, {16, 10}, {-8, 13}}
+
+bool from_second = true;
 
 void setup() {
     Serial.begin(9600);
@@ -18,23 +25,26 @@ void setup() {
 void loop() {
     if (Rockxan.But_A.isPressed()){
         delay(1000);
-        Rockxan.turn_to(90, 100);
-        for(int i=0; i<4; i++){
-            delay(50);
-            Rockxan.drive_to_line(80);
-            delay(50);
-            Rockxan.drive_straight(6, 12);
+        Rockxan.turn_to(90, angle_speed);
+        for(int i=0; i<8; i++){
+            if(from_second){
+                delay(pause);
+                Rockxan.drive_to_line(speed_to_line);
+                delay(pause);
+                Rockxan.drive_straight(5, 12);
 
-            delay(50);
-            Rockxan.turn_to(0, 90);
+                delay(pause);
+                Rockxan.turn_to(0, angle_speed); 
+            }
+            
 
-            delay(50);
-            Rockxan.drive_on_line();
+            delay(pause);
+            Rockxan.drive_on_line(speed_to_line);
             Rockxan.reset();
 
             Rockxan.display_print("Emits");
             detected = Rockxan.DetectCan(10000);
-            delay(50);
+            delay(pause);
 
             dist = Rockxan.FindDistance();
             Rockxan.display_print("Dist:");
@@ -42,62 +52,68 @@ void loop() {
             delay(1000);
 
             if (dist <= 2){
-
+                Rockxan.drive_straight(-15, speed);
+                from_second = false;
             } else if (dist <= 5) {
                 straight_can();
-                drive_back();
+                from_second = false;
             } else {
                 second_can();
-                 
+                from_second = true; 
             }
 
-            
-            delay(50);             
+            delay(pause);             
         }
+        Rockxan.display_print("Well");
+        Rockxan.display_print("Done", 0, 1);
     }
 
     if (Rockxan.But_B.isPressed()){
-        Rockxan.calibrateSensors();     
+        Rockxan.reset();
+        Rockxan.display_print("Reset");
+        //Rockxan.drive_straight(-20, 22, true);     
     }
 
     if (Rockxan.But_C.isPressed()){
         //Rockxan.drive_on_line();
-        Rockxan.reset();
-        Rockxan.display_print("Reset");
+        Rockxan.display_print("Calibrating");
+        Rockxan.calibrateSensors();
+        
         //Rockxan.printValues();
     }
     
 }
 
+
 void straight_can(){
-    Rockxan.koortilkordinat(coords, 22, 100);
-    Rockxan.drive_to_line();
-    delay(200);
+    Rockxan.koortilkordinat(coords, speed, angle_speed);
+    Rockxan.drive_to_line(speed_to_line);
+    delay(pause);
     Rockxan.setAngle(0);
-    Rockxan.setSpeeds(-100, -100);
-    delay(500);
-    Rockxan.setSpeeds(0, 0);
+    Rockxan.drive_straight(-35, speed);
 }
+
 
 void second_can(){
-    for(int i = 0; i<3; i++){
-       Rockxan.koortilkordinat(second_coords[i], 25, 100); 
-       delay(50);
-    }
-    Rockxan.drive_to_line();
-    delay(200);
-    Rockxan.setAngle(90);
-    Rockxan.setSpeeds(-100, -100);
-    delay(50);
-    Rockxan.setSpeeds(0, 0);
-    delay(50);
-    Rockxan.koortilkordinat(second_coords[3], 25, 100);
-    delay(50);
-    Rockxan.turn_to(-90);
-}
+    Rockxan.emitOn();
+    delay(500);
+    Rockxan.emitOff();
 
-void drive_back(){
-    Rockxan.koortilkordinat(coords2, 25); 
-    delay(50);
-    Rockxan.turn_to(90, 100);  
+    for(int i = 0; i<2; i++){
+       Rockxan.koortilkordinat(second_coords[i], speed, angle_speed); 
+       delay(pause);
+    }
+
+    Rockxan.drive_to_line();
+    delay(pause);
+    Rockxan.setAngle(90);
+    Rockxan.drive_straight(2.5, 12);
+    //Rockxan.drive_straight(-5, speed);
+    //delay(pause);
+    //Rockxan.setSpeeds(0, 0);
+    delay(pause);
+    Rockxan.koortilkordinat(second_coords[2], speed, angle_speed);
+    delay(pause);
+    Rockxan.turn_to(270, angle_speed);
+    Rockxan.setAngle(-90); //Snyder mig udenom en bug
 }
