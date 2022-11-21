@@ -491,7 +491,7 @@ class ZumoDriveLine: public ZumoComLine{
             unsigned long t = millis();
 
             LineSensors.emittersOn();
-            while (leftSensor != rightSensor || leftSensor < 2){
+            while (leftSensor != rightSensor || leftSensor < 3){
                 ProxSensors.read();
                 leftSensor = ProxSensors.countsFrontWithLeftLeds();
                 rightSensor = ProxSensors.countsFrontWithRightLeds();
@@ -501,8 +501,9 @@ class ZumoDriveLine: public ZumoComLine{
                     delay(1000);
                     return 0;
                 }
-                return 1;
+                
             }
+            return 1;
 
             LineSensors.emittersOff();
         }

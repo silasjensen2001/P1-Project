@@ -33,7 +33,7 @@ void loop() {
             Rockxan.reset();
 
             Rockxan.display_print("Emits");
-            Rockxan.DetectCan(10000);
+            detected = Rockxan.DetectCan(10000);
             delay(50);
 
             dist = Rockxan.FindDistance();
