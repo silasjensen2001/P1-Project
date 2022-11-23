@@ -13,9 +13,6 @@ Zumo32U4ButtonC But_C;
 
 Rockxanne Rockxan;
 
-float sten[4][2] = {{80,80},{10,80},{10,10},{50,50}};
-
-
 void setup(){
     Serial.begin(9600);
     Rockxan.initAll("LCD");
