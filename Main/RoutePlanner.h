@@ -29,7 +29,7 @@ class RoutePlanner{
                 UpdateList[i][1]=stone[i][1];
             }
             for (size_t i = 0; i < 3; i++){   //makes it check trough the array numStone-1 times.
-                for (size_t S = 0; S < 3; S++){  //Checks trough the array comparing 2 parts, beside each other, of the array each time. 
+                for (size_t S = 0; S < 3; S++){  //Checks trough the array comparing 2 parts of the array that is beside each other each time. 
                     if ((stone[S][0] > stone[S+1][0]) || ((stone[S][0] = stone[S+1][0]) && ((stone[S][1] > stone[S+1][1])))){
                         UpdateList[S][0] = stone[S+1][0];
                         UpdateList[S][1] = stone[S+1][1];
@@ -42,6 +42,5 @@ class RoutePlanner{
                     }
                 }  
             }   
-        }  
-        
-};
+        }
+}
