@@ -6,21 +6,6 @@ using namespace std;
 
 float stone[4][2] = {{80,80},{10,80},{10,10},{50,50}};
 
-
-int main( int argc, char* argv[] )
-{ 
-    for(int i = 0; i < 4; i++){
-        cout << (String)stone[i][0] + ", " + (String)stone[i][1] + "\n";
-    } 
-
-    SortXY();
-
-    for(int i = 0; i < 4; i++){
-        cout << (String)stone[i][0] + ", " + (String)stone[i][1] + "\n";
-    } 
-    
-}
-
 void SortXY(){
     float UpdateList[4][2]; //another array lokal for this method/function.
     for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
@@ -48,3 +33,18 @@ void SortXY(){
         }  
     }   
 }  
+
+int main( int argc, char* argv[] )
+{ 
+    for(int i = 0; i < 4; i++){
+        cout << (String)stone[i][0] + ", " + (String)stone[i][1] + "\n";
+    } 
+
+    SortXY();
+
+    for(int i = 0; i < 4; i++){
+        cout << (String)stone[i][0] + ", " + (String)stone[i][1] + "\n";
+    } 
+    
+}
+
