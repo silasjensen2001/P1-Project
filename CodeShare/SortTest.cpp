@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string.h>
 
 //std = standard and includes functions such as cin, cout, open, etc.
 using namespace std;  
