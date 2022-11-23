@@ -338,7 +338,7 @@ class ZumoDriveLine: public ZumoComLine{
 
         }
 
-        void drive_to_line(int speedCM = 12){
+        void drive_to_line(int speedCM = 15){
             int i = 0;
             int speed = applied_speed(speedCM);
 
@@ -375,7 +375,7 @@ class ZumoDriveLine: public ZumoComLine{
 
                 // Get motor speed difference using proportional and derivative
                 // PID terms (the integral term is generally not very useful
-                int16_t speedDifference = error*4 + 2 * (error - lastError); //error / 4
+                int16_t speedDifference = error*8 + (error - lastError); //error / 4
 
                 lastError = error;
 
