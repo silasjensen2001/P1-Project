@@ -30,22 +30,16 @@ class RoutePlanner{
             }
             for (size_t i = 0; i < 3; i++){   //makes it check trough the array numStone-1 times.
                 for (size_t S = 0; S < 3; S++){  //Checks trough the array comparing 2 parts, beside each other, of the array each time. 
-                    if (stone[S][0] > stone[S+1][0]){
+                    if ((stone[S][0] > stone[S+1][0]) || ((stone[S][0] = stone[S+1][0]) && ((stone[S][1] > stone[S+1][1])))){
                         UpdateList[S][0] = stone[S+1][0];
                         UpdateList[S][1] = stone[S+1][1];
                         UpdateList[S+1][0] = stone[S][0];
                         UpdateList[S+1][1] = stone[S][1];          
-                    }
-                    else if ((stone[S][0] = stone[S+1][0]) && ((stone[S][1] > stone[S+1][1]))){
-                        UpdateList[S][0] = stone[S+1][0];
-                        UpdateList[S][1] = stone[S+1][1];
-                        UpdateList[S+1][0] = stone[S][0];
-                        UpdateList[S+1][1] = stone[S][1];
-                    }
-                    for(int i = 0; i < 4; i++){
+                        for(int i = 0; i < 4; i++){
                             stone[i][0]=UpdateList[i][0];
                             stone[i][1]=UpdateList[i][1];
-                    } 
+                        } 
+                    }
                 }  
             }   
         }  
