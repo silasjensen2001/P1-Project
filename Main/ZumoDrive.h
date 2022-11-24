@@ -339,7 +339,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     koortilkordinat(DriveTo, 10); //obs med fart?? kører hen til rækken
                 } // nu er vi kørt hen til rækken men y = 0. 
                 DriveTo[1] = stone[i][1]; //sætter y=punktet til y-værdi.
-                koortilkordinat(DriveTo); //kører op til y-værdien. 
+                koortilkordinat(DriveTo, 10); //kører op til y-værdien. 
                 // vi er kørt op så vi er ud for punktet/på punktet
                 if (XTrack != stone[i][0]){ //hvis stenen ikke ligger på Rækken
                     DriveTo[0] = stone[i][0];
@@ -356,4 +356,4 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     koortilkordinat(DriveTo, 10);           
                 }}
             }
-}
+};

@@ -16,6 +16,7 @@ Rockxanne Rockxan;
 void setup(){
     Serial.begin(9600);
     Rockxan.initAll("LCD");
+    
 }
 
 void loop(){
