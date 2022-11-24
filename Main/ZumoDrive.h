@@ -244,10 +244,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 Motors.setRightSpeed(right_speed);
                 gyro_timer = millis(); 
                 gyro_last_angle = current_angle;
-            } 
-        
+            }
             updateAngleGyro();   
-            
         }
 
 
