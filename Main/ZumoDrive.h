@@ -322,7 +322,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             float DriveTo[2] = {0,0};   //the destination we want to go to next
             for (size_t i = 0; i < 4; i++){
                 if ((stone[i][0] % TrackSize) == 0){  //If X-value is on the Track then life is simple.
-                DriveTo[0]=stone[i][0];
+                DriveTo[0] = stone[i][0];
                 DriveTo[1] = 0; 
                 koortilkordinat(DriveTo, 10); //obs med fart?? Vi kører derhen.
                 }
@@ -335,14 +335,14 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 else { //når x er på tættest på en x-række med højere værdi end x-værdien.
                     XTrack = stone[i][0] + (stone[i][0] % TrackSize);
                     DriveTo[0] = XTrack;
-                    DriveTo[1]=0;
+                    DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 10); //obs med fart?? kører hen til rækken
                 } // nu er vi kørt hen til rækken men y = 0. 
                 DriveTo[1] = stone[i][1]; //sætter y=punktet til y-værdi.
                 koortilkordinat(DriveTo); //kører op til y-værdien. 
                 // vi er kørt op så vi er ud for punktet/på punktet
                 if (XTrack != stone[i][0]){ //hvis stenen ikke ligger på Rækken
-                    DriveTo[0]=stone[i][0];
+                    DriveTo[0] = stone[i][0];
                     koortilkordinat(DriveTo,10); //nu er punktet nået.
                     //opsamler sten.
                     DriveTo[0] = XTrack; //kører tilbage til linjen.
