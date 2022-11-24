@@ -4,16 +4,16 @@ Zumo32U4LineSensors LineSensors;
 
 Rockxanne Rockxan;
 int pause = 25; //ms
-int speed = 45; //cm/s
-int speed_to_line = 35;
-int angle_speed = 350; //Zumo value
+int speed = 50; //cm/s
+int speed_to_line = 40;
+int angle_speed = 400; //Zumo value
 int dist; 
 int detected;
 
 float coords[2] = {20,0};
 float coords2[2] = {-10,-15};
 
-float second_coords_speedy[3][2] = {{14, -7}, {15, 13}, {-8, 13}}; //{{0, -30}, {16, -30}, {16, 10}, {-8, 13}}
+float second_coords_speedy[3][2] = {{12, -7}, {12, 13}, {-8, 13}}; //{{0, -30}, {16, -30}, {16, 10}, {-8, 13}}
 float second_coords_safe[3][2] = {{0, -30}, {14, -30}, {14, 12}};
 float second_coords[3][2];
 
@@ -35,10 +35,10 @@ void loop() {
         while (true){
             if (Rockxan.But_A.isPressed()){
                 delay(1000);
-                speed = 40;
-                speed_to_line = 25;
-                angle_speed = 250;
-                pause = 25;
+                speed = 50;
+                speed_to_line = 30;
+                angle_speed = 400;
+                pause = 0;
                 speedy = true;
                 for (int i = 0; i < 3; i++){
                     second_coords[i][0] = second_coords_speedy[i][0];
