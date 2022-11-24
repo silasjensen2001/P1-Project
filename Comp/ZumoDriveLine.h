@@ -2,12 +2,13 @@
 //It also has the variables that keep track of position and angle
 //First a few libraries need to be imported
 #include "arduino.h"
-#include "ZumoComLine.h"
+#include <Wire.h>
+#include <Zumo32U4.h>
 
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class ZumoDriveLine: public ZumoComLine{
+class Rockxanne{
 
     //Private members can't be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value
@@ -18,6 +19,8 @@ class ZumoDriveLine: public ZumoComLine{
         Zumo32U4Motors Motors;
         Zumo32U4LineSensors LineSensors;
         Zumo32U4ProximitySensors ProxSensors;
+        Zumo32U4OLED OLED;
+        Zumo32U4LCD LCD;
         
 
         //Variables  /attributes 
@@ -38,11 +41,13 @@ class ZumoDriveLine: public ZumoComLine{
         int rightSensor;
         int SensorPR;
         int thresh;
-
         int left_counts;
         int right_counts;
+
         unsigned int values[5];
         uint16_t brightnessLevels[5] = {0.5, 1, 4, 6, 7}; //skal sige der er 4.
+
+        bool oled = false;
 
         //unsigned long gyro_timer;   //ms
 
@@ -71,18 +76,33 @@ class ZumoDriveLine: public ZumoComLine{
             return encoder_counts/counts_rotation*len_rotation;
         }
 
+
     public:
         Zumo32U4ButtonA But_A;
         Zumo32U4ButtonB But_B;
         Zumo32U4ButtonC But_C;
 
         //The constructor
-        ZumoDriveLine(){
+        Rockxanne(){
             
         }
 
-
         //---------------------Public methods---------------------//
+
+        //initAll has to be called once in the setup() in main.ino
+        //initializes all inherited classes
+        void initAll(String display = "OLED"){
+            //This init is found in ZumoCom.h
+            initDisplay(display);               //takes parameter "OLED" or "LCD"
+
+            display_print("Ik Klar", 0, 0);
+
+            //This init is found in "ZumoDrive.h"
+            initDrive();
+            
+            display_print("Klar", 0, 0);
+        }
+
 
         void initDrive(){
             counts_rotation = 909;
@@ -114,7 +134,7 @@ class ZumoDriveLine: public ZumoComLine{
             current_angle = 0;        
             left_counts = 0;
             right_counts = 0;
-            angle_thresh = 0.2;
+            angle_thresh = 0.4;
             gyro_correction_time = 1;
             min_speed = 80;
 
@@ -152,31 +172,31 @@ class ZumoDriveLine: public ZumoComLine{
 
 
         //Drives straight for a given distance [cm] with a given speed [cm/s]
-        //Max speed is 50 cm/s
+        //Max speed is 50 cm/s and min. speed is 8 cm/s (depending on battery level)
         void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
-            //float angle_store = current_angle;
-            float start_at = 0;
-            float acc_zumo_value = 0;
-            float deacc_zumo_value = 0;
+            //Convert physical speed in cm to 
             float speed = applied_speed(real_speed);
-            unsigned long t2 = millis();
-            unsigned long t_acc = millis();
-            unsigned long t_deacc = millis();
 
+            //Used to time a print
+            unsigned long t2 = millis();
+
+            //Calculate the vectorvalues for the motion
             float target_posX = cos((current_angle*M_PI/180))*dist;
             float target_posY = sin((current_angle*M_PI/180))*dist;
 
             updateAngleGyro();
+
+            //If the distance is negative it has to drive backwards aka. having negative speed values
             if(dist < 0){
                 speed = -speed;
                 correction_active = false;
             }
 
+            //Reset encoder and the left_counts attribute
             Encoders.getCountsAndResetLeft();
             left_counts = 0;
-
-            //Motors.setSpeeds(speed, speed);
     
+            //If Gyro correction is activated we want to set the desired angle to current angle
             if (correction_active){
                 target_angle = current_angle;
                 right_speed = speed;
@@ -184,57 +204,33 @@ class ZumoDriveLine: public ZumoComLine{
 
             display_print((String)current_angle, 0,0);
 
-            dist = phys_to_encod_dist(dist);  //we get the distance but expresed in counts
+            //Convert physical distance in cm to distance in encoder counts
+            dist = phys_to_encod_dist(dist);  
 
+            left_speed = right_speed = speed;
 
-            if(acc != 0){
-                acc_zumo_value = applied_speed(acc);  //zumo values pr. sec.
-                left_speed = right_speed = min_speed;
-            } else {
-                left_speed = right_speed = speed;
-            } 
-            if(deacc != 0){
-                deacc_zumo_value = applied_speed(deacc);                  //zumo values pr. sec.
-                start_at = dist - fabs(((pow(8, 2) - pow(real_speed, 2))/(2*deacc))/len_rotation * counts_rotation);  //dist needed to deacc in counts
-            }
-
+            //Start driving
             Motors.setSpeeds(left_speed, right_speed);
 
             //A continuos loop that stops running, when distance is met
             while(abs(dist) > abs(left_counts)){
                 left_counts = Encoders.getCountsLeft();
-
+                
                 if(correction_active){
                     gyro_correction();
                 }
 
-                //Accelerates the Zumo if active
-                if(acc != 0 && millis() > t_acc+100 && left_speed <= speed){
-                    right_speed += int(acc_zumo_value/10);
-                    left_speed += int(acc_zumo_value/10);
-                    Motors.setSpeeds(left_speed, right_speed);
-                    t_acc = millis();
-                }
-
-                //Deaccelerates the Zumo if active
-                if(deacc != 0 && left_counts >= start_at && millis() > t_deacc+100 && left_speed > min_speed){
-                    right_speed -= deacc_zumo_value/10;
-                    left_speed -= deacc_zumo_value/10;
-                    Motors.setSpeeds(left_speed, right_speed);
-                    t_deacc = millis();
-                    acc = 0;
-                }
-
                 //for each 100 millis we print the angle
                 if (100 < millis()-t2){ 
-                    display_print((String)deacc_zumo_value, 0, 0);
-                    display_print((String)dist, 0, 1);
+                    display_print((String)current_angle, 0, 1);
                     t2 = millis();
-                }  
-                display_print((String)left_counts);
-                //Motors.setSpeeds(0,0);        
+                }       
             }   
+
+            //Stop driving
             Motors.setSpeeds(0,0);
+
+            //Update position
             current_pos[0] = current_pos[0] + target_posX;
             current_pos[1] = current_pos[1] + target_posY;
         }
@@ -242,8 +238,8 @@ class ZumoDriveLine: public ZumoComLine{
 
         //Method that turns the Zumo to a given angle relative to the Zumo's X-axis (direction of Zumo when calibrated)
         void turn_to(float end_angle, int speed = 120){
+            int i = 0;
             unsigned long t2 = millis();
-
 
             //Checks whether the Zumo already have the angle (inside the thresholds) or not
             if (end_angle > current_angle + angle_thresh or end_angle < current_angle-angle_thresh){
@@ -258,7 +254,12 @@ class ZumoDriveLine: public ZumoComLine{
 
                     if (current_angle > end_angle-angle_thresh && current_angle < end_angle+angle_thresh){
                         Motors.setSpeeds(0, 0);
-                        break;
+                        delay(20);
+                        speed = 70;
+                        i++;
+                        if(i>3){
+                            break;    
+                        }    
                     } else if (current_angle > end_angle-angle_thresh) {
                         Motors.setSpeeds(speed, -speed);
                     } else if (current_angle < end_angle+angle_thresh) {
@@ -294,9 +295,8 @@ class ZumoDriveLine: public ZumoComLine{
         //The gyro needs be calibrated
         //This is due to an offset reading and a drifting value
         void calibrate_gyro(){
-            //Kalibrering af gyro (Vi ønsker 0, når den står stille, så vi skal finde et gns. offset) // TODO: ret thor skrev på dansk adddrrr
             for (uint16_t i = 0; i < 2048; i++){
-                //Venter indtil den har læst en ny værdi for gyroskopet
+                //Waits until a new value is available from the gyro
                 while(!IMU.gyroDataReady()){}
 
                 IMU.readGyro();
@@ -327,16 +327,18 @@ class ZumoDriveLine: public ZumoComLine{
             if (current_pos[1] > coords[1]){
                 angle = -angle;
             }
-
+            
+            //Now it can turn the angle and drive the length
             turn_to(angle, angle_speed);
             delay(50);
             drive_straight(norm, speed);
 
-            //Updates the position
+            //Update the position
             current_pos[0] = coords[0];
             current_pos[1] = coords[1];
 
         }
+
 
         void drive_to_line(int speedCM = 15){
             int i = 0;
@@ -347,21 +349,31 @@ class ZumoDriveLine: public ZumoComLine{
 
             while((values[0] > thresh) || (values[4] > thresh)){
                 LineSensors.readCalibrated(values);
+                
+                //This avoids a false reading to stop the robot
+                if(i>=2){
+                    Motors.setSpeeds(speed, speed);
+                    i=0;
+                } 
 
                 if(values[0] < thresh){
                     Motors.setLeftSpeed(0);
                     i++;
                 }
-                updateAngleGyro();
                 if (values[4] < thresh){
                     Motors.setRightSpeed(0);
                     i++;
-                }       
+                } 
+                
+                updateAngleGyro(); 
             }
+            Motors.setSpeeds(0,0);
+
         }
 
         void drive_on_line(int speedCM){
             int16_t lastError = 0;
+            int i3 = 0;
             int i2 = 0;
             int16_t position = LineSensors.readLine(values, true, true);
             int speed = applied_speed(speedCM);
@@ -375,7 +387,7 @@ class ZumoDriveLine: public ZumoComLine{
 
                 // Get motor speed difference using proportional and derivative
                 // PID terms (the integral term is generally not very useful
-                int16_t speedDifference = error*8 + (error - lastError); //error / 4
+                int16_t speedDifference = error*0.8 + 1*(error - lastError); //error / 4
 
                 lastError = error;
 
@@ -390,25 +402,35 @@ class ZumoDriveLine: public ZumoComLine{
                 // else it will be stationary.  For some applications, you
                 // might want to allow the motor speed to go negative so that
                 // it can spin in reverse.
-                leftSpeed = constrain(leftSpeed, 70, (int16_t)150);
-                rightSpeed = constrain(rightSpeed, 70, (int16_t)150);
+                leftSpeed = constrain(leftSpeed, 70, (int16_t)400);
+                rightSpeed = constrain(rightSpeed, 70, (int16_t)400);
 
                 Motors.setSpeeds(leftSpeed, rightSpeed);
                 //LineSensors.readCalibrated(values);
          
                 if(values[0] < thresh){
                     Motors.setLeftSpeed(0);
+                    Motors.setRightSpeed(70);
                     i2++;
                 }
                 if (values[4] < thresh){
                     Motors.setRightSpeed(0);
+                    Motors.setLeftSpeed(70);
                     i2++;
+                }
+
+                if(i2 == 2 && i3 == 0){
+                    drive_straight(-2, 20);
+                    Motors.setSpeeds(70, 70);
+                    delay(100);
+                    i2 = 0;
+                    i3++;
+                    values[4] = 1000;
                 }
 
                 
             }
-
-            drive_straight(0.5,10);
+            drive_straight(0.1,10);
             Motors.setSpeeds(0,0);
             
 
@@ -416,7 +438,7 @@ class ZumoDriveLine: public ZumoComLine{
             reset();
         }
 
-
+        //Good function for debbugging
         void printValues(){
             int pos;
             while(true){
@@ -440,7 +462,7 @@ class ZumoDriveLine: public ZumoComLine{
         void calibrateSensors(){
             // Wait 1 second and then begin automatic sensor calibration
             // by rotating in place to sweep the sensors over the line
-            delay(1000);
+            delay(500);
             for(uint16_t i = 0; i < 120; i++)
             {
                 if (i > 30 && i <= 90)
@@ -458,6 +480,8 @@ class ZumoDriveLine: public ZumoComLine{
             
         }
 
+        //Reads the front prox. sensor with the right and left led
+        //The two values are then added together and returned as a measure for the distance
         int FindDistance(){
             ProxSensors.read();
             leftSensor = ProxSensors.countsFrontWithLeftLeds();
@@ -467,7 +491,8 @@ class ZumoDriveLine: public ZumoComLine{
             return SensorPR;
         }
 
-        int DetectCan(int timer){ //Detects can and stops the belt.
+        //Detects can and stops the belt.
+        int DetectCan(int timer){ 
             unsigned long t = millis();
             LineSensors.emittersOn();
 
@@ -477,7 +502,7 @@ class ZumoDriveLine: public ZumoComLine{
 
             while (leftSensor != rightSensor || leftSensor < 1){
                 LineSensors.emittersOn();
-                delay(20);
+                delay(50);
                 ProxSensors.read();
                 LineSensors.emittersOn();
                 leftSensor = ProxSensors.countsFrontWithLeftLeds();
@@ -487,12 +512,12 @@ class ZumoDriveLine: public ZumoComLine{
                     display_print((String)leftSensor, 0,0);
                     return 0;
                 }
-                
             }
-            return 1;
 
             LineSensors.emittersOff();
+            return 1;
         }
+
 
         void setSpeeds(int speedLeft, int speedRight){
             Motors.setSpeeds(speedLeft, speedRight);
@@ -506,5 +531,36 @@ class ZumoDriveLine: public ZumoComLine{
             LineSensors.emittersOff();
         }
 
+
+        //The communication channel has to be initialized and is dependent on whether OLED or LCD is used
+        void initDisplay(String OLED_or_LCD){
+            Wire.begin();
+
+            if (OLED_or_LCD == "OLED"){
+                OLED.clear();
+                OLED.setLayout8x2();
+                oled = true;
+                
+            } else if (OLED_or_LCD == "LCD"){
+                oled = false;
+                
+            }
+        }
+
+        //This functions prints to the display
+        //It takes into consideration whether a OLED or LCD is used
+        void display_print(String text, int posX = 0, int posY = 0){
+            if (oled) {
+                OLED.gotoXY(posX,posY);
+                OLED.print("        ");
+                OLED.gotoXY(posX,posY);
+                OLED.print(text);
+            } else {
+                LCD.gotoXY(posX,posY);
+                LCD.print("        ");
+                LCD.gotoXY(posX,posY);
+                LCD.print(text);
+            }
+        }
 
 };

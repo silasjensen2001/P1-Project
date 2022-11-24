@@ -19,7 +19,7 @@ void SortXY(){
 
     for (int i = 0; i < 3; i++){   //makes it check trough the array numStone-1 times.
         for (int i1 = 0; i1 < (3-i); i1++){  //Checks trough the array comparing 2 parts, beside each other, of the array each time. 
-            if ((stone[i1][0] > stone[i1+1][0]) || ((stone[i1][0] = stone[i1+1][0]) && ((stone[i1][1] > stone[i1+1][1])))){
+            if ((stone[i1][0] > stone[i1+1][0]) || ((stone[i1][0] == stone[i1+1][0]) && ((stone[i1][1] > stone[i1+1][1])))){
                 UpdateList[i1][0] = stone[i1+1][0];
                 UpdateList[i1][1] = stone[i1+1][1];
                 

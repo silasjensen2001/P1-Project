@@ -5,11 +5,12 @@
 #include <Wire.h>
 #include <Zumo32U4.h>
 #include "ZumoCom.h"
+#include "RoutePlanner.h"
 
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
-class ZumoDrive: public ZumoCom{
+class ZumoDrive: public ZumoCom, public RoutePlanner{
 
     //Private members can't be accesed with ex. Rockxan."member" 
     //To get information about private members you need to make public methods that returns the respective value
@@ -316,5 +317,46 @@ class ZumoDrive: public ZumoCom{
 
         }
 
- 
-};
+        void followTracks(){
+            SortXY();
+            int TrackSize= 2; //the distance in the cordinatesystem between the Tracks.
+            int XTrack = 0; //the track it goes to
+            float DriveTo[2] = {0,0};   //the destination we want to go to next
+            for (size_t i = 0; i < 4; i++){
+                if ((stone[i][0] % TrackSize) == 0){  //If X-value is on the Track then life is simple.
+                DriveTo[0]=stone[i][0];
+                DriveTo[1] = 0; 
+                koortilkordinat(DriveTo, 10); //obs med fart?? Vi kører derhen.
+                }
+                else if ((stone[i][0] % TrackSize) <= TrackSize/2){ //når x er på tættest eller midt imellem en x-række der er lavere end x-værdien selv.
+                    XTrack = stone[i][0] - (stone[i][0] % TrackSize);
+                    DriveTo[0] = XTrack;
+                    DriveTo[1] = 0;
+                    koortilkordinat(DriveTo, 10); //obs med fart??
+                    }
+                else { //når x er på tættest på en x-række med højere værdi end x-værdien.
+                    XTrack = stone[i][0] + (stone[i][0] % TrackSize);
+                    DriveTo[0] = XTrack;
+                    DriveTo[1]=0;
+                    koortilkordinat(DriveTo, 10); //obs med fart?? kører hen til rækken
+                } // nu er vi kørt hen til rækken men y = 0. 
+                DriveTo[1] = stone[i][1]; //sætter y=punktet til y-værdi.
+                koortilkordinat(DriveTo); //kører op til y-værdien. 
+                // vi er kørt op så vi er ud for punktet/på punktet
+                if (XTrack != stone[i][0]){ //hvis stenen ikke ligger på Rækken
+                    DriveTo[0]=stone[i][0];
+                    koortilkordinat(DriveTo,10); //nu er punktet nået.
+                    //opsamler sten.
+                    DriveTo[0] = XTrack; //kører tilbage til linjen.
+                    koortilkordinat(DriveTo, 10);
+                }            
+                else{
+                    //sten opsamling.
+                }//stennen er samlet op og vi er tilbage på rækken ved vores y-værdi.
+                if ((stone[i][0]!=stone[i+1][0])){
+                    DriveTo[1] = 0;
+                    koortilkordinat(DriveTo);           
+                }
+                }
+            }
+}
