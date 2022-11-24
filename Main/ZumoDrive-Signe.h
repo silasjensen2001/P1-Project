@@ -317,7 +317,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         void followTracks(){
             SortXY();
-            int TrackSize= 2; //the distance in the cordinatesystem between the Tracks.
+            int TrackSize= 10; //the distance in the cordinatesystem between the Tracks.
             int XTrack = 0; //the track it goes to
             float DriveTo[2] = {0,0};   //the destination we want to go to next
             for (size_t i = 0; i < 4; i++){
@@ -353,7 +353,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }//stennen er samlet op og vi er tilbage på rækken ved vores y-værdi.
                 if ((stone[i][0]!=stone[i+1][0])){
                     DriveTo[1] = 0;
-                    koortilkordinat(DriveTo, 10);           
+                    koortilkordinat(DriveTo);           
                 }
                 }
             }

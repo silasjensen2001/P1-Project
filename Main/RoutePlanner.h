@@ -13,7 +13,7 @@ class RoutePlanner{
 
     //Protected is like privat members except that iherited classes can acces these members
     protected:
-        float stone[4][2] = {{80,80},{10,80},{10,10},{50,50}};
+        float stone[4][2] = {{20,24},{10,10},{30,4},{10,15}};
     //Under here are all methods/functions defined
     public:
 
@@ -43,4 +43,4 @@ class RoutePlanner{
                 }  
             }   
         }
-}
+};
