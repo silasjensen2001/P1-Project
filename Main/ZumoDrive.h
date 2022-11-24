@@ -351,10 +351,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 else{
                     //sten opsamling.
                 }//stennen er samlet op og vi er tilbage på rækken ved vores y-værdi.
-                if ((stone[i][0]!=stone[i+1][0])){
+                if ((i=3) || (stone[i][0]!=stone[i+1][0])){
                     DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 10);           
-                }
-                }
+                }}
             }
 }
