@@ -45,7 +45,8 @@ class Rockxanne{
         int right_counts;
 
         unsigned int values[5];
-        uint16_t brightnessLevels[5] = {0.5, 1, 4, 6, 7}; //skal sige der er 4.
+        uint16_t brightnessLevels[4] = {0.4, 0.8, 7, 8}; //skal sige der er 4.//uint16_t brightnessLevels[5] = {0.5, 1, 4, 6, 7}; //skal sige der er 4.
+        int size = 4;
 
         bool oled = false;
 
@@ -120,7 +121,7 @@ class Rockxanne{
             leftSensor = ProxSensors.countsFrontWithLeftLeds();
             rightSensor = ProxSensors.countsFrontWithRightLeds(); 
             SensorPR = 0;
-            ProxSensors.setBrightnessLevels(brightnessLevels, 4);
+            ProxSensors.setBrightnessLevels(brightnessLevels, size);
 
             calibrate_gyro();
             reset();

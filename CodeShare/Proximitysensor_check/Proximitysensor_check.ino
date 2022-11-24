@@ -12,7 +12,7 @@ Zumo32U4ProximitySensors proxSensors;
 
 bool useEmitters = true;
 int Speed = 100;
-int brightnessLevels[5] = { 0.5, 1 , 5 , 7 , 8 }; //skal sige der er 4.
+int brightnessLevels[6] = {0.4, 0.8, 1, 6, 7, 8}; //skal sige der er 4.
 uint16_t lineSensorValues[5];
 int leftSensor = proxSensors.countsFrontWithLeftLeds();
 int rightSensor = proxSensors.countsFrontWithRightLeds(); 
@@ -63,7 +63,7 @@ Serial.println("Can is far away.");
 
 void setup() {
   proxSensors.initThreeSensors();
-  proxSensors.setBrightnessLevels( brightnessLevels, 4);
+  proxSensors.setBrightnessLevels(brightnessLevels, 6);
   lineSensors.initFiveSensors();
   display.clear();
    

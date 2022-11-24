@@ -34,10 +34,10 @@ void loop() {
 
         while (true){
             if (Rockxan.But_A.isPressed()){
-                delay(1000);
+                delay(500);
                 speed = 50;
-                speed_to_line = 30;
-                angle_speed = 400;
+                speed_to_line = 40;
+                angle_speed = 300;
                 pause = 0;
                 speedy = true;
                 for (int i = 0; i < 3; i++){
@@ -68,7 +68,7 @@ void loop() {
                 delay(pause);
                 Rockxan.drive_to_line(speed_to_line);
                 delay(pause);
-                Rockxan.drive_straight(4.5, 25); //5, 12
+                Rockxan.drive_straight(2, 25); //5, 12
 
                 delay(pause);
 
@@ -91,7 +91,7 @@ void loop() {
             if (dist <= 2){
                 Rockxan.drive_straight(-15, speed);
                 from_second = false;
-            } else if (dist <= 5) {
+            } else if (dist <= 5) { // <= 5
                 Rockxan.emitOn();
                 delay(100);
                 Rockxan.emitOff();
