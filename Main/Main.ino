@@ -20,14 +20,7 @@ void setup(){
 
 void loop(){
     if (But_A.isPressed()){
-        int i = 0;
-        delay(500);
-
-        while(i < 4){
-            Rockxan.koortilkordinat(sten[i], 15);
-            delay(500); 
-            i++;
-        }       
+        Rockxan.followTracks();
     }
 
     if (But_B.isPressed()){
