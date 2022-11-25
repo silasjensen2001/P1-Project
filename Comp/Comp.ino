@@ -63,7 +63,7 @@ void loop() {
         
         Rockxan.turn_to(90, angle_speed);
 
-        for(int i=0; i<20; i++){
+        while(true){
             if(from_second){
                 delay(pause);
                 Rockxan.drive_to_line(speed_to_line);
