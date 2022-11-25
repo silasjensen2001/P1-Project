@@ -321,18 +321,18 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int XTrack = 0; //the track it goes to
             float DriveTo[2] = {0,0};   //the destination we want to go to next
             for (size_t i = 0; i < 4; i++){
-                if ((stone[i][0] % TrackSize) == 0){  //If X-value is on the Track then life is simple.
+                if (((stone[i][0] % TrackSize) == 0) && (DriveTo[1] != 0)){  //If X-value is on the Track then life is simple.
                 DriveTo[0] = stone[i][0];
                 DriveTo[1] = 0; 
                 koortilkordinat(DriveTo, 10); //obs med fart?? Vi kører derhen.
                 }
-                else if ((stone[i][0] % TrackSize) <= TrackSize/2){ //når x er på tættest eller midt imellem en x-række der er lavere end x-værdien selv.
+                else if (((stone[i][0] % TrackSize) <= TrackSize/2) && (DriveTo[1] != 0)){ //når x er på tættest eller midt imellem en x-række der er lavere end x-værdien selv.
                     XTrack = stone[i][0] - (stone[i][0] % TrackSize);
                     DriveTo[0] = XTrack;
                     DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 10); //obs med fart??
                     }
-                else { //når x er på tættest på en x-række med højere værdi end x-værdien.
+                else if (DriveTo[1] != 0){ //når x er på tættest på en x-række med højere værdi end x-værdien.
                     XTrack = stone[i][0] + (stone[i][0] % TrackSize);
                     DriveTo[0] = XTrack;
                     DriveTo[1] = 0;
@@ -351,9 +351,12 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 else{
                     //sten opsamling.
                 }//stennen er samlet op og vi er tilbage på rækken ved vores y-værdi.
-                if ((i=3) || (stone[i][0]!=stone[i+1][0])){
+                if ((i=3) || (stone[i][0]!=stone[i+1][0]) || (((stone[i][0] % TrackSize) <= TrackSize/2) != ((stone[i+1][0] % TrackSize) <= TrackSize/2))){
                     DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 10);           
-                }}
+                }
+                }
+                DriveTo[0] = 0; 
+                koortilkordinat(DriveTo,10);  
             }
 };
