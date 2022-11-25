@@ -2,7 +2,8 @@ import time
 
 stone = [[80,80],[10,80],[10,10],[50,50]]
 UpdateList = stone
-
+ 
+min(stone)
 def SortXY():  
     for i in range(3):
         for i1 in range(3-i): 

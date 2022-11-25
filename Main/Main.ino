@@ -15,8 +15,7 @@ Rockxanne Rockxan;
 
 void setup(){
     Serial.begin(9600);
-    Rockxan.display_print("ik klar");
-    Rockxan.initAll("LCD");
+    Rockxan.initAll("OLED");
     Rockxan.display_print("Klar");
 }
 
