@@ -45,7 +45,7 @@ class Rockxanne{
         int right_counts;
 
         unsigned int values[5];
-        uint16_t brightnessLevels[4] = {0.4, 0.8, 7, 8}; //skal sige der er 4.//uint16_t brightnessLevels[5] = {0.5, 1, 4, 6, 7}; //skal sige der er 4.
+        uint16_t brightnessLevels[4] = {0.6, 1, 7, 8}; //skal sige der er 4.//uint16_t brightnessLevels[4] = {0.4, 0.8, 7, 8}; //skal sige der er 4.
         int size = 4;
 
         bool oled = false;
