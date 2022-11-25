@@ -320,6 +320,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int TrackSize= 10; //the distance in the cordinatesystem between the Tracks.
             int XTrack = 0; //the track it goes to
             float DriveTo[2] = {0,0};   //the destination we want to go to next
+            koortilkordinat(DriveTo,10);
             for (size_t i = 0; i < 4; i++){
                 if (((stone[i][0] % TrackSize) == 0) && (DriveTo[1] != 0)){  //If X-value is on the Track then life is simple.
                 DriveTo[0] = stone[i][0];
@@ -331,7 +332,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     DriveTo[0] = XTrack;
                     DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 10); //obs med fart??
-                    }
+                }
                 else if (DriveTo[1] != 0){ //når x er på tættest på en x-række med højere værdi end x-værdien.
                     XTrack = stone[i][0] + (stone[i][0] % TrackSize);
                     DriveTo[0] = XTrack;
@@ -357,6 +358,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }
                 }
                 DriveTo[0] = 0; 
-                koortilkordinat(DriveTo,10);  
+                koortilkordinat(DriveTo,10);
             }
 };
