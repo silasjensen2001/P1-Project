@@ -3,7 +3,7 @@ import time
 stone = [[80,80],[10,80],[10,10],[50,50]]
 UpdateList = stone
  
-min(stone)
+
 def SortXY():  
     for i in range(3):
         for i1 in range(3-i): 
@@ -20,11 +20,9 @@ def SortXY():
                     stone[i2][1] = UpdateList[i2][1]                 
                 
 
-                time.sleep(500);
-                cout << stone[i1][0];
-            }  
-        }   
-        cout << "   ";
-    } 
+                time.sleep(500)
+                print(stone[i1][0])
 
-} 
+        print("   ")
+
+SortXY()
