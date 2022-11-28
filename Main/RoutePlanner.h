@@ -13,7 +13,8 @@ class RoutePlanner{
 
     //Protected is like privat members except that iherited classes can acces these members
     protected:
-        int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
+        int stone[4][2] = {{70, 20},{15, 40}, {25,80},{40,70}};
+        
     //Under here are all methods/functions defined
     public:
 
