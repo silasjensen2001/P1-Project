@@ -479,7 +479,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             DriveTo[0] = stone[0][0];
             DriveTo[1] = stone[0][1];
 
-            koortilkordinat(DriveTo,10);
+            //(DriveTo,10);
 
             for (int i = 0; i < 4; i++){
                 if (((stone[i][0] % TrackSize) == 0) && (DriveTo[1] != 0)){  //If X-value is on the Track then life is simple.
@@ -495,7 +495,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     koortilkordinat(DriveTo, 20, 160); //obs med fart??
                 }
                 else if (DriveTo[1] != 0){ //når x er på tættest på en x-række med højere værdi end x-værdien.
-                    XTrack = stone[i][0] + (TrackSize - stone[i][0] % TrackSize);
+                    XTrack = stone[i][0] + (TrackSize - (stone[i][0] % TrackSize));
                     DriveTo[0] = XTrack;
                     DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 20, 160); //obs med fart?? kører hen til rækken
