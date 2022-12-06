@@ -19,6 +19,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         Zumo32U4Encoders Encoders;
         Zumo32U4IMU IMU;
         Zumo32U4Motors Motors;
+        Zumo32U4ProximitySensors proxSensors;
         Zumo32U4ButtonA But_A;
         Zumo32U4ButtonB But_B;
         Zumo32U4ButtonC But_C;
@@ -33,6 +34,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float target_angle;        //degrees
         float len_rotation;        //cm
         float last_angle_error;
+        int brightnessLevels[4] = { 1, 2 , 3 , 4 };
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
@@ -79,11 +81,24 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             IMU.init();
             IMU.enableDefault();
             IMU.configureForTurnSensing();
+            proxSensors.initThreeSensors();
+            proxSensors.setBrightnessLevels(brightnessLevels, 4);
 
             calibrate_gyro();
             reset();
         }
 
+        void checkObstacle(){
+            proxSensors.read();
+            int rightSensor = proxSensors.countsFrontWithRightLeds();
+            int leftSensor = proxSensors.countsFrontWithLeftLeds();
+            while(leftSensor >= 4 or rightSensor >= 4){
+                proxSensors.read();
+                rightSensor = proxSensors.countsFrontWithRightLeds();
+                leftSensor = proxSensors.countsFrontWithLeftLeds();
+                Motors.setSpeeds(0, 0);
+            }
+        }
         
         //resets pos, angle and encoder counts
         void reset(){
@@ -173,6 +188,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             Motors.setSpeeds(left_speed, right_speed);
 
             while(abs(dist) > abs(left_counts)){
+                checkObstacle();
+
                 left_counts = Encoders.getCountsLeft();
 
                 if(correction_active){
