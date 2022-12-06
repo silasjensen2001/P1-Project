@@ -11,7 +11,7 @@
 //Its attributes keep track of variables like current angle and position
 class ZumoCom{
 
-    //Protected er ligesom private blot at hovedeklassen har adgang til dem
+    //Protected er ligesom private blot at hovedklassen har adgang til dem
     protected:
         bool oled = false;
         Zumo32U4LCD LCD;
