@@ -11,18 +11,33 @@
 //Its attributes keep track of variables like current angle and position
 class RoutePlanner{
 
-    //Protected is like privat members except that iherited classes can acces these members
+    //Protected is like privat members except that iherited classes can access these members
     protected:
-        int stone[4][2] = {{70, 20},{15, 40}, {25,80},{40,70}};
-        
-    //Under here are all methods/functions defined
+
+    //Variables 
+    float current_pos[2];      //{x,y} [cm]  
+    float i;
+    float j;
+    float length;
+
+    float stoneList[8][2] = {{80,60},{10,30},{10,20},{50,50},{70,80},{10,80},{10,60},{40,50}};;
+    int list_size = stoneList.size()
+    float lengthList[list_size-1];
+
+    //Underneath here are all methods/functions defined
     public:
 
         //This is an example function
-        void sort_for_freemove(){
-            Serial.println("Hello World");
-        }
-        
+        void nearest_neighbour(){
+            for (int i = 0; i < list_size, i++) {
+                for (int j = 0; j < list_size - i, i++) {
+                    length = sqrt(pow(stoneList[i][0] - stoneList[j][0])) + sqrt(pow(stoneList[i][1] - stoneList[j][1]))
+                    lengthList.assign(length)
+                }
+                //print(lengthList)
+            }
+
+
         void SortXY(){
             float UpdateList[4][2]; //another array lokal for this method/function.
             for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
@@ -44,4 +59,6 @@ class RoutePlanner{
                 }  
             }   
         }
+};    
+
 };
