@@ -493,11 +493,11 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int XTrack = 0;             //the track it goes to
             float DriveTo[2] = {0,0};   //the destination we want to go to next
 
-            
+            DriveTo[0] = stone[i][0];    // er lige blevet flyttet fra over for løkken.
+                DriveTo[1] = stone[i][1];
 
             for (int i = 0; i < 4; i++){
-                DriveTo[0] = stone[i][0];    // er lige blevet flyttet fra over for løkken.
-                DriveTo[1] = stone[i][1];
+                
                 if (((stone[i][0] % TrackSize) == 0) && (DriveTo[1] != 0)){  //If X-value is on the Track then life is simple.
                     XTrack = stone[i][0];
                     DriveTo[0] = stone[i][0];
