@@ -1,7 +1,6 @@
 //This header file contains the "Rockxanne" class with its respective attributes and methods
 //This is a comment for testing GIT :O
 //First a few libraries need to be imported
-
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
@@ -15,7 +14,7 @@ class RoutePlanner{
     protected:
 
     //Lists
-    //int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
+    int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
     //int stone[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
     int stoneList[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
 
@@ -38,12 +37,11 @@ class RoutePlanner{
                     length = sqrt(pow(stoneList[i][0] - stoneList[j][0])) + sqrt(pow(stoneList[i][1] - stoneList[j][1]));
                     lengthList.assign(length);
                 }
-                Serial.println(lengthList);
+                Serial.println(lengthList[0][0]);
             }
 
-};
+        }
 
-/*
         void SortXY(){
             float UpdateList[4][2]; //another array lokal for this method/function.
             for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
@@ -64,7 +62,7 @@ class RoutePlanner{
                     }
                 }  
             }   
-        }*/
-        
+        }
+
 };   
 
