@@ -496,8 +496,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             DriveTo[0] = stone[0][0];
             DriveTo[1] = stone[0][1];
 
-            //(DriveTo,10);
-
             for (int i = 0; i < 4; i++){
                 if (((stone[i][0] % TrackSize) == 0) && (DriveTo[1] != 0)){  //If X-value is on the Track then life is simple.
                     XTrack = stone[i][0];
