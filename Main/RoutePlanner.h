@@ -41,22 +41,22 @@ class RoutePlanner{
             for (int i = 0; i < list_size; i++) {
                 for (int j = 0; j < list_size - i; i++) {
                     length = sqrt(pow((stone_list[i][0] - stone_list[j][0]), 2) + pow((stone_list[i][1] - stone_list[j][1]),2));
-                    length_list[i] = length; 
-                
-            
-            //Iterate the array to get minimum value in list
-            for(int i = 0; i < n; i++){
-                if(length_list[i] < min){
-                    // If current value is less than min value then replace it with min value
-                    min = length_list[i];
-                    index = i;
+                    length_list[i] = length;  
+        }
+                //Iterate the array to get minimum value in list
+                for(int i = 0; i < n; i++){
+                    if(length_list[i] < min){
+                        // If current value is less than min value then replace it with min value
+                        min = length_list[i];
+                        index = i;
+                    }
+                    route_list[i] = min;
                 }
-                route_list[i] = min;
-            }
             Serial.println(length_list[1]);
             Serial.println(min);
             Serial.println(index);
-        }
+            Serial.println(route_list[0]);
+            Serial.println(stone_list[1][0]);
     }
 };
 
