@@ -24,7 +24,7 @@ class RoutePlanner{
     float j;
     float length;
 
-    int list_size = stoneList.size()/size(float);
+    int list_size = 4; // stoneList.size()/size(float);
     float lengthList[4];
 
     //Underneath here are all methods/functions defined
@@ -34,10 +34,10 @@ class RoutePlanner{
         void nearest_neighbour(){
             for (int i = 0; i < list_size; i++) {
                 for (int j = 0; j < list_size - i; i++) {
-                    length = sqrt(pow(stoneList[i][0] - stoneList[j][0])) + sqrt(pow(stoneList[i][1] - stoneList[j][1]));
-                    lengthList.assign(length);
+                    length = sqrt(pow((stoneList[i][0] - stoneList[j][0]), 2) + pow((stoneList[i][1] - stoneList[j][1]),2));
+                    lengthList[i] = length; //.assign(length);
                 }
-                Serial.println(lengthList[0][0]);
+                Serial.println(lengthList[1]);
             }
 
         }
