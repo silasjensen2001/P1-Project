@@ -4,6 +4,7 @@
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
+#include <limits.h>
 
 
 //The Rockxanne class includes all useful methods for steering the zumo robot
@@ -24,7 +25,9 @@ class RoutePlanner{
     float j;
     float length;
 
-    int l;
+    int min = INT_MAX;
+    int index = -1;
+    int n = sizeof(lengthList);
 
     int list_size = 4; // stoneList.size()/size(float);
     float lengthList[4];
@@ -38,21 +41,23 @@ class RoutePlanner{
                 for (int j = 0; j < list_size - i; i++) {
                     length = sqrt(pow((stoneList[i][0] - stoneList[j][0]), 2) + pow((stoneList[i][1] - stoneList[j][1]),2));
                     lengthList[i] = length; 
-                    l += 1
                 }
                 Serial.println(lengthList[1]);
-                // Iterate the array
+            
+            // Iterate the array to get minimum value in list
             for(int i=0; i < n; i++)
             {
-                if(arr[i] < min)
+                if(lengthList[i] < min)
                 {
                     //If current value is less than min value
                     // then replace it with min value
-                    min = arr[i];
+                    min = lengthList[i];
                     index = i;
-            }
+                }
 
+            }
         }
+    };
 
         void SortXY(){
             float UpdateList[4][2]; //another array lokal for this method/function.
