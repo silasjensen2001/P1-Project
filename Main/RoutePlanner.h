@@ -45,7 +45,7 @@ class RoutePlanner{
 
 /*
         void SortXY(){
-            float UpdateList[4][2]; //another array local for this method/function.
+            float UpdateList[4][2]; //another array lokal for this method/function.
             for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
                 UpdateList[i][0]=stone[i][0];
                 UpdateList[i][1]=stone[i][1];
@@ -64,6 +64,7 @@ class RoutePlanner{
                     }
                 }  
             }   
-        }
-};    */
+        }*/
+        
+};   
 
