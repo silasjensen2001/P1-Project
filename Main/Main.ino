@@ -43,8 +43,10 @@ void loop(){
     }
 
     if (But_C.isPressed()){
+        Rockxan.nearest_neighbour();
         //Rockxan.gyro_drift();
 
+        /*
         delay(500);
         Rockxan.display_print("Driving");
         Rockxan.display_print("Coords", 0, 1);
@@ -56,6 +58,6 @@ void loop(){
 
         Rockxan.display_print("Driving");
         Rockxan.display_print("Done", 0, 1);
-        
+        */
     }
 }
