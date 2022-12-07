@@ -17,7 +17,7 @@ class RoutePlanner{
     //Lists
     //int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
     int stone[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
-    int stoneList[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
+    int stone_list[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
 
     //Variables 
     float current_pos[2];      //{x,y} [cm]  
@@ -27,10 +27,11 @@ class RoutePlanner{
 
     int min = INT_MAX;
     int index = -1;
-    int n = sizeof(lengthList);
+    int n = sizeof(length_list);
 
     int list_size = 4; // stoneList.size()/size(float);
-    float lengthList[4];
+    float length_list[4];
+    float route_list[4];
 
     //Underneath here are all methods/functions defined
     public:
@@ -39,25 +40,25 @@ class RoutePlanner{
         void nearest_neighbour(){
             for (int i = 0; i < list_size; i++) {
                 for (int j = 0; j < list_size - i; i++) {
-                    length = sqrt(pow((stoneList[i][0] - stoneList[j][0]), 2) + pow((stoneList[i][1] - stoneList[j][1]),2));
-                    lengthList[i] = length; 
-                }
-                Serial.println(lengthList[1]);
+                    length = sqrt(pow((stone_list[i][0] - stone_list[j][0]), 2) + pow((stone_list[i][1] - stone_list[j][1]),2));
+                    length_list[i] = length; 
+                
             
-            // Iterate the array to get minimum value in list
-            for(int i=0; i < n; i++)
-            {
-                if(lengthList[i] < min)
-                {
-                    //If current value is less than min value
-                    // then replace it with min value
-                    min = lengthList[i];
+            //Iterate the array to get minimum value in list
+            for(int i = 0; i < n; i++){
+                if(length_list[i] < min){
+                    // If current value is less than min value then replace it with min value
+                    min = length_list[i];
                     index = i;
                 }
-
+                route_list[i] = min;
             }
+            Serial.println(length_list[1]);
+            Serial.println(min);
+            Serial.println(index);
         }
-    };
+    }
+};
 
         void SortXY(){
             float UpdateList[4][2]; //another array lokal for this method/function.
