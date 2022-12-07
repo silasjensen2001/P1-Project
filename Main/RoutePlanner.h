@@ -10,7 +10,7 @@
 //Its attributes keep track of variables like current angle and position
 class RoutePlanner{
 
-    //Protected is like privat members except that iherited classes can access these members
+    //Protected is like private members except that inherited classes can access these members
     protected:
 
     //Lists
@@ -36,8 +36,10 @@ class RoutePlanner{
                 for (int j = 0; j < list_size - i; i++) {
                     length = sqrt(pow((stoneList[i][0] - stoneList[j][0]), 2) + pow((stoneList[i][1] - stoneList[j][1]),2));
                     lengthList[i] = length; //.assign(length);
+                
                 }
                 Serial.println(lengthList[1]);
+                Serial.println(lengthList.size());
             }
 
         }
