@@ -24,6 +24,8 @@ class RoutePlanner{
     float j;
     float length;
 
+    int l;
+
     int list_size = 4; // stoneList.size()/size(float);
     float lengthList[4];
 
@@ -35,11 +37,11 @@ class RoutePlanner{
             for (int i = 0; i < list_size; i++) {
                 for (int j = 0; j < list_size - i; i++) {
                     length = sqrt(pow((stoneList[i][0] - stoneList[j][0]), 2) + pow((stoneList[i][1] - stoneList[j][1]),2));
-                    lengthList[i] = length; //.assign(length);
-                
+                    lengthList[i] = length; 
+                    l += 1
                 }
                 Serial.println(lengthList[1]);
-                Serial.println(lengthList.size());
+                Serial.println(l);
             }
 
         }
