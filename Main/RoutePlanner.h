@@ -41,7 +41,15 @@ class RoutePlanner{
                     l += 1
                 }
                 Serial.println(lengthList[1]);
-                Serial.println(l);
+                // Iterate the array
+            for(int i=0; i < n; i++)
+            {
+                if(arr[i] < min)
+                {
+                    //If current value is less than min value
+                    // then replace it with min value
+                    min = arr[i];
+                    index = i;
             }
 
         }
