@@ -496,10 +496,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             for (int i = 0; i < 4; i++){
                 DriveTo[0] = stone[i][0];    // er lige blevet flyttet fra over for løkken. 
                 DriveTo[1] = stone[i][1];
-                if ((stone[i][0] % TrackSize) == 0){  //If the stone is on the Track.
+                if ((stone[i][0] % TrackSize) == 0){  //If this stone is on the Track.
                     XTrack = stone[i][0];
-                    if (OnTrack == false){            //this section determines what track to go to and drives to it. Note: the y-position stays 0.
-                        DriveTo[0] = stone[i][0];
+                    if (OnTrack == false){            //this if statement is runned trough if the stone is on another track than the one just used.
+                        DriveTo[0] = XTrack;
                         DriveTo[1] = 0; 
                         koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
                 }}
@@ -517,10 +517,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                         DriveTo[1] = 0;
                         koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
                 }}
-                // er slettet som condition i alle && (DriveTo[1] != 0).
                 delay(200);
 
-                // Zumo is at the Track and y-position is y = 0. 
+                // Zumo is at the Track and y-position is y = 0.
+                DriveTo[0] = XTrack;
                 DriveTo[1] = stone[i][1]; //defines the GoTo y-value to the stones y-value.
                 koortilkordinat(DriveTo, 20, 160); //Drives up the track to the y-position. 
 
@@ -528,7 +528,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 // Zumo is on the Track on the same y-position as the stone.
                 if (XTrack != stone[i][0]){ //If the stone does not lay on the track.
                     DriveTo[0] = stone[i][0];
-                    koortilkordinat(DriveTo, 20, 160); //The stone i reached.
+                    koortilkordinat(DriveTo, 20, 160); //The stone is reached.
 
                     display_print("Picking");
                     delay(3000);
@@ -541,21 +541,24 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     display_print("Picking");
                     delay(3000);
                 }
-
                 //The stone is collected and we are on the track at the y-position of the stone.
-                if ((i == 3) || (stone[i+1][0] <= (XTrack - (TrackSize/2))) || ( stone[i+1][0] > (XTrack + (TrackSize/2)))){  //If it is the last stone that has just been collected, or if the next stone is not located closest to the track that we are currently on, the Zumo goes down the Track to y-position=0. 
+                if (i == 3){ //if its the last stone, it drives down the track to the y-position=0.
+                    DriveTo[0] = XTrack;
                     DriveTo[1] = 0;
-                    koortilkordinat(DriveTo, 20, 160);  //kører ned til linjen. 
+                    koortilkordinat(DriveTo, 20, 160);  //Drives down to y-position = 0. 
+                }
+                else if ((((XTrack - (TrackSize/2))) < stone[i+1][0] ) && (stone[i+1][0]<= (XTrack + (TrackSize/2)))){  //If the next stone is located closest to the current track. 
                     OnTrack = true;
-                    //(stone[i][0] != stone[i+1][0])   lige fjernet som betingelse.        
-                    //(((stone[i][0] % TrackSize) <= TrackSize/2) != ((stone[i+1][0] % TrackSize) <= TrackSize/2)) 
                 }
                 else { // If the next stone is closest to another track.
                     OnTrack = false;
+                    DriveTo[0] = XTrack;
+                    DriveTo[1] = 0;
+                    koortilkordinat(DriveTo, 20, 160);
                 }
             }
-                DriveTo[0] = 0;
-                DriveTo[1] = 0; 
-                koortilkordinat(DriveTo, 20, 160);
+            DriveTo[0] = 0;  
+            DriveTo[1] = 0; 
+            koortilkordinat(DriveTo, 20, 160);   //drives to origo (0,0).
         }
 };
