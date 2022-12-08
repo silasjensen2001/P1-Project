@@ -492,11 +492,11 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int TrackSize= 20;          //the distance in the cordinatesystem between the Tracks.
             int XTrack = 0;             //the track it goes to
             float DriveTo[2] = {0,0};   //the destination we want to go to next
-            bool OnTrack = false;            //If false; next stone is not on the Track/ If true next stone is on the Track
+            bool OnTrack = false;       //If false; next stone is not on the Track/ If true next stone is on the Track
             for (int i = 0; i < 4; i++){
                 DriveTo[0] = stone[i][0];    // er lige blevet flyttet fra over for løkken. 
                 DriveTo[1] = stone[i][1];
-                if (OnTrack == 0){ //this section determines what track to go to and drives to it. Note: the y-position stays 0.
+                if (OnTrack == 0){           //this section determines what track to go to and drives to it. Note: the y-position stays 0.
                     if ((stone[i][0] % TrackSize) == 0){  //If the stone is on the Track.
                         XTrack = stone[i][0];
                         DriveTo[0] = stone[i][0];
@@ -509,7 +509,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                         DriveTo[1] = 0;
                         koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
                     }
-                    else { //når x er tættest på en x-række med højere værdi end x-sten-værdien.
+                    else { //Wheen the stone is closest to the Track to the right.
                         XTrack = stone[i][0] + (TrackSize - (stone[i][0] % TrackSize));
                         DriveTo[0] = XTrack;
                         DriveTo[1] = 0;
@@ -519,37 +519,37 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }
                 delay(200);
 
-                // nu er vi kørt hen til rækken men y = 0. 
-                DriveTo[1] = stone[i][1]; //sætter y=punktet til y-værdi.
-                koortilkordinat(DriveTo, 20, 160); //kører op til y-værdien. 
+                // Zumo is at the Track and y-position is y = 0. 
+                DriveTo[1] = stone[i][1]; //defines the GoTo y-value to the stones y-value.
+                koortilkordinat(DriveTo, 20, 160); //Drives up the track to the y-position. 
 
                 delay(200);
-                // vi er kørt op så vi er ud for punktet/på punktet
-                if (XTrack != stone[i][0]){ //hvis stenen ikke ligger på Rækken
+                // Zumo is on the Track on the same y-position as the stone.
+                if (XTrack != stone[i][0]){ //If the stone does not lay on the track.
                     DriveTo[0] = stone[i][0];
-                    koortilkordinat(DriveTo, 20, 160); //nu er punktet nået.
+                    koortilkordinat(DriveTo, 20, 160); //The stone i reached.
 
                     display_print("Picking");
                     delay(3000);
-                    //opsamler sten.
-                    DriveTo[0] = XTrack; //kører tilbage til linjen.
+                    //collects stone.
+                    DriveTo[0] = XTrack; //Drives back to the track, but same y-position.
                     koortilkordinat(DriveTo, 20, 160);
                 }            
-                else{
-                    //sten opsamling.
+                else{ //if the stone is on track.
+                    //Collecting stone.
                     display_print("Picking");
                     delay(3000);
                 }
 
-                //stenen er samlet op og vi er tilbage på rækken ved vores y-værdi.
-                if ((i == 3) || (stone[i+1][0] <= (XTrack - (TrackSize/2))) || ( stone[i+1][0] > (XTrack + (TrackSize/2)))){  //hvis det er sidste sten der undersøges køres ned til linjen ellers undersøges der om næste sten ligger tættest på dette spor.
+                //The stone is collected and we are on the track at the y-position of the stone.
+                if ((i == 3) || (stone[i+1][0] <= (XTrack - (TrackSize/2))) || ( stone[i+1][0] > (XTrack + (TrackSize/2)))){  //If it is the last stone that has just been collected, or if the next stone is not located closest to the track that we are currently on, the Zumo goes down the Track to y-position=0. 
                     DriveTo[1] = 0;
                     koortilkordinat(DriveTo, 20, 160);  //kører ned til linjen. 
                     OnTrack = true;
                     //(stone[i][0] != stone[i+1][0])   lige fjernet som betingelse.        
                     //(((stone[i][0] % TrackSize) <= TrackSize/2) != ((stone[i+1][0] % TrackSize) <= TrackSize/2)) 
                 }
-                else {
+                else { // If the next stone is closest to another track.
                     OnTrack = false;
                 }
             }
