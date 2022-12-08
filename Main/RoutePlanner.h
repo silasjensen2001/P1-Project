@@ -16,7 +16,7 @@ class RoutePlanner{
 
     //Lists
     //int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
-    int stone[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
+    int stone[4][2] = {{70, 0},{15, 20},{25,60},{40,50}};
     int stone_list[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
 
     //Variables 
@@ -30,8 +30,8 @@ class RoutePlanner{
     int n = sizeof(length_list);
 
     int list_size = 4; // stoneList.size()/size(float);
-    float length_list[4];
-    float route_list[4];
+    float length_list[3];
+    float route_list[4][2];
 
     //Underneath here are all methods/functions defined
     public:
@@ -42,6 +42,10 @@ class RoutePlanner{
                 for (int j = 0; j < list_size - i; i++) {
                     length = sqrt(pow((stone_list[i][0] - stone_list[j][0]), 2) + pow((stone_list[i][1] - stone_list[j][1]),2));
                     length_list[i] = length;  
+
+            for (int i = 0; i < list_size; i++) {
+                Serial.println(length_list);
+            }
         }
                 //Iterate the array to get minimum value in list
                 for(int i = 0; i < n; i++){
@@ -52,7 +56,6 @@ class RoutePlanner{
                     }
                     route_list[i] = min;
                 }
-            Serial.println(length_list[1]);
             Serial.println(min);
             Serial.println(index);
             Serial.println(route_list[0]);

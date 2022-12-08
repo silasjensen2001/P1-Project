@@ -16,7 +16,7 @@ float coords[5][2] = {{50, 25}, {20, 80}, {-20,80}, {50, 50}, {0,0}};
 
 void setup(){
     Serial.begin(9600);
-    Rockxan.initAll("OLED");
+    Rockxan.initAll("LCD");
     Rockxan.display_print("Klar");
 }
 

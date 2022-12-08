@@ -492,17 +492,17 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int TrackSize= 20;          //the distance in the cordinatesystem between the Tracks.
             int XTrack = 0;             //the track it goes to
             float DriveTo[2] = {0,0};   //the destination we want to go to next
-            bool OnTrack = false;       //If false; next stone is not on the Track/ If true next stone is on the Track
+            bool OnTrack = false;       //If false; next stone is closest to the next Track/ If true next stone is on the Track
             for (int i = 0; i < 4; i++){
                 DriveTo[0] = stone[i][0];    // er lige blevet flyttet fra over for løkken. 
                 DriveTo[1] = stone[i][1];
-                if (OnTrack == 0){           //this section determines what track to go to and drives to it. Note: the y-position stays 0.
+                if (OnTrack == false){           //this section determines what track to go to and drives to it. Note: the y-position stays 0.
                     if ((stone[i][0] % TrackSize) == 0){  //If the stone is on the Track.
                         XTrack = stone[i][0];
                         DriveTo[0] = stone[i][0];
                         DriveTo[1] = 0; 
                         koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
-                    }
+                    }}
                     else if ((stone[i][0] % TrackSize) <= TrackSize/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
                         XTrack = stone[i][0] - (stone[i][0] % TrackSize);
                         DriveTo[0] = XTrack;
