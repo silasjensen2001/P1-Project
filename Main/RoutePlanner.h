@@ -44,7 +44,7 @@ class RoutePlanner{
                     length_list[i] = length;  
 
             for (int i = 0; i < list_size; i++) {
-                Serial.println(length_list);
+                //Serial.println(length_list);
             }
         }
                 //Iterate the array to get minimum value in list
@@ -54,11 +54,11 @@ class RoutePlanner{
                         min = length_list[i];
                         index = i;
                     }
-                    route_list[i] = min;
+                    //route_list[i] = min;
                 }
             Serial.println(min);
             Serial.println(index);
-            Serial.println(route_list[0]);
+            //Serial.println(route_list[0]);
             Serial.println(stone_list[1][0]);
     }
 };
