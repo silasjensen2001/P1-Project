@@ -502,7 +502,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                         DriveTo[0] = stone[i][0];
                         DriveTo[1] = 0; 
                         koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
-                    }}
+                    }
                     else if ((stone[i][0] % TrackSize) <= TrackSize/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
                         XTrack = stone[i][0] - (stone[i][0] % TrackSize);
                         DriveTo[0] = XTrack;
@@ -515,8 +515,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                         DriveTo[1] = 0;
                         koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
                     } 
-                    // er slettet som condition i alle && (DriveTo[1] != 0).
                 }
+                    // er slettet som condition i alle && (DriveTo[1] != 0).
                 delay(200);
 
                 // Zumo is at the Track and y-position is y = 0. 
@@ -556,5 +556,5 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 DriveTo[0] = 0;
                 DriveTo[1] = 0; 
                 koortilkordinat(DriveTo, 20, 160);
-            }
+        }
 };
