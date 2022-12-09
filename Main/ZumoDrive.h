@@ -34,7 +34,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float target_angle;        //degrees
         float len_rotation;        //cm
         float last_angle_error;
-        int brightnessLevels[4] = { 1, 2 , 3 , 4 };
+        uint16_t brightnessLevels[4] = { 1, 2 , 3 , 4 };
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
@@ -43,7 +43,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         int right_speed;
         int left_speed;
         int gyro_correction_time;   //ms
-       
 
         unsigned long gyro_timer;   //ms
 
@@ -143,7 +142,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
 
         //Drives straight for a given distance [cm] with a given speed [cm/s]
-        //Max speed is 50 cm/s
+        //Max speed is 56 cm/s
         void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
             float start_at = 0;
             float acc_zumo_value = 0;

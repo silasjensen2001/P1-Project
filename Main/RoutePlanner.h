@@ -31,34 +31,39 @@ class RoutePlanner{
 
     int list_size = 4; // stoneList.size()/size(float);
     float length_list[3];
-    float route_list[4][2];
+    //float route_list[4][2];
 
     //Underneath here are all methods/functions defined
     public:
 
-        //This is an example function
+        // Nearest neighbour function
         void nearest_neighbour(){
-            for (int i = 0; i < list_size; i++) {
-                for (int j = 0; j < list_size - i; i++) {
-                    length = sqrt(pow((stone_list[i][0] - stone_list[j][0]), 2) + pow((stone_list[i][1] - stone_list[j][1]),2));
-                    length_list[i] = length;  
-
-            for (int i = 0; i < list_size; i++) {
-                //Serial.println(length_list);
+            Serial.println(n);
+            for (int i = 0; i < 4; i++){
+                for (int j = 0; j < 4; i++){
+                    length = sqrt(pow((stone_list[i][0] - stone_list[j][0]), 2) + pow((stone_list[i][1] - stone_list[j][1]), 2));
+            if (length != 0 || length < 0){
+                length_list[i] = length;  
             }
-        }
+            }
+            for (int i = 0; i < list_size; i++){
+                Serial.println(length_list[i]);
+            }
                 //Iterate the array to get minimum value in list
-                for(int i = 0; i < n; i++){
-                    if(length_list[i] < min){
-                        // If current value is less than min value then replace it with min value
-                        min = length_list[i];
-                        index = i;
-                    }
-                    //route_list[i] = min;
+            for(int i = 0; i < n; i++){
+                Serial.println(length_list[i]);
+                if(length_list[i] < min){
+                    // If current value is less than min value then replace it with min value
+                    min = length_list[i];
+                    index = i;
                 }
-            Serial.println(min);
+              //route_list[i] = min;
+            }
+            Serial.println((String)"_____");
+            Serial.println((String)"_____");
             Serial.println(index);
-            //Serial.println(route_list[0]);
+           // Serial.println(route_list[0]);
+            Serial.println((String)"_____");
             Serial.println(stone_list[1][0]);
     }
 };
