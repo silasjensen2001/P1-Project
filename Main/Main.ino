@@ -43,8 +43,13 @@ void loop(){
     }
 
     if (But_C.isPressed()){
-        Rockxan.nearest_neighbour();
-        delay(200);
+        delay(500);
+        for (int i = 0; i < 10; i++){
+            Rockxan.drive_straight(200, 25);
+            Serial.println("new;" + (String)Rockxan.getPValue() + ";" + (String)Rockxan.getDValue());
+        }
+        
+        Serial.println("done");
         //Rockxan.gyro_drift();
 
         /*

@@ -34,6 +34,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float target_angle;        //degrees
         float len_rotation;        //cm
         float last_angle_error;
+        float kc, kd;
+
         uint16_t brightnessLevels[4] = { 1, 2 , 3 , 4 };
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
@@ -44,6 +46,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         int left_speed;
         int gyro_correction_time;   //ms
 
+        unsigned long time_offset;
         unsigned long gyro_timer;   //ms
 
 
@@ -110,11 +113,24 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             gyro_correction_time = 1;
             min_speed = 80;
             last_angle_error = 0;
+            kc = 0.5;
+            kd = 15;
 
             Encoders.getCountsAndResetLeft();
             Encoders.getCountsAndResetRight();
         }
 
+        void setPDValues(float new_kc, float new_kd){
+            kc = new_kc;
+            kd = new_kd;
+        }
+
+        float getPValue(){
+            return kc;
+        }
+        float getDValue(){
+            return kd;
+        }
 
         //This function updates the angle according to changes in the gyroscope
         //The function has to be called very often to work well, since it is calculated
@@ -163,7 +179,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             if (correction_active){
-                gyro_timer = millis();
+                
                 target_angle = current_angle;
                 last_angle_error = 0;
             }
@@ -185,6 +201,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             Motors.setSpeeds(left_speed, right_speed);
+
+            time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
                 checkObstacle();
@@ -223,6 +241,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             Motors.setSpeeds(0,0);
+            Serial.println("done");
         }
 
         /*
@@ -297,9 +316,13 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             float error = target_angle - current_angle;
 
+            Serial.println((String)float(millis()-time_offset) + ";" + (String)error);
+            //Serial.println(millis()-gyro_timer);
+            //gyro_timer = millis();
+
             // Get motor speed difference using proportional and derivative
             // PID terms (the integral term is generally not very useful)
-            float speedDifference = error/2 + (error - last_angle_error)*15; //error / 4
+            float speedDifference = error*kc + (error - last_angle_error)*kd; //error / 4
 
             //if(driving_backward){
                 //speedDifference = -speedDifference;
@@ -445,7 +468,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         }
 
-        
+        /*
         //Checks and corrects speed on motors to drive straight based on angle change measured by gyro
         void gyro_correction(){
             updateAngleGyro();
@@ -465,7 +488,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         
             updateAngleGyro();   
             
-        }
+        }*/
 
 
         /*
