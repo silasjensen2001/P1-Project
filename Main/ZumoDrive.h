@@ -34,7 +34,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float target_angle;        //degrees
         float len_rotation;        //cm
         float last_angle_error;
-        uint16_t brightnessLevels[4] = { 1, 2 , 3 , 4 };
+        int brightnessLevels[4] = { 0.5, 1 , 1.5 , 2 };
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
