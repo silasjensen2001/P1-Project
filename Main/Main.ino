@@ -43,7 +43,8 @@ void loop(){
     }
 
     if (But_C.isPressed()){
-        Rockxan.nearest_neighbour();
+        delay(500);
+        Rockxan.drive_straight(200, 40, false);
         delay(200);
         //Rockxan.gyro_drift();
 
