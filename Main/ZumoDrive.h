@@ -28,7 +28,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float current_pos[2];      //{x,y} [cm]  
         float current_angle;       //degrees
         float gyro_offset_z;
-        float gyro_drift_z;
         float gyro_last_angle;     //degrees
         float angle_thresh;        //degrees
         float target_angle;        //degrees
@@ -36,6 +35,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float last_angle_error;
         float kc, kd;
         float error_sum;
+
+        double gyro_drift_z;
 
         uint16_t brightness_levels[4] = { 1, 2 , 3 , 4 };
 
@@ -150,7 +151,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //The angle change can now be calculated
             //Every raw reading can be translated to degrees with the factor 0,07 deg/s
             //Datasheet https://www.pololu.com/file/0J731/L3GD20H.pdf)
-            current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
+            Serial.println(dt);
+            current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z*dt) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
 
 
             if (current_angle < -360){
@@ -350,15 +352,25 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             gyro_offset_z /= 2048;
 
+            unsigned long time = micros(); // = millis();
+            unsigned long dt;
+             
             for (int s = 0; s < 64; s++){   //work in progress dont judge
+                time = micros();
                 while (!IMU.gyroDataReady()) {}
                 IMU.readGyro();
 
                 gyro_drift_z += IMU.g.z - gyro_offset_z;
                 delay(50);
             }
+            unsigned long dt = millis()-time;
 
-            gyro_drift_z /= 64;
+            Serial.println(gyro_drift_z);
+            gyro_drift_z = gyro_drift_z/dt;
+            Serial.println(dt);
+            Serial.println(gyro_drift_z, 14);
+
+            //gyro_drift_z /= 64;
         }
         
 
