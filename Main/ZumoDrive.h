@@ -85,7 +85,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             IMU.enableDefault();
             IMU.configureForTurnSensing();
             proxSensors.initThreeSensors();
-            proxSensors.setBrightnessLevels(brightnessLevels, 4);
+            proxSensors.setBrightnessLevels(brightness_levels, 4);
 
             calibrate_gyro();
             reset();
@@ -95,7 +95,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             proxSensors.read();
             int right_sensor = proxSensors.countsFrontWithRightLeds();
             int left_sensor = proxSensors.countsFrontWithLeftLeds();
-            while(leftSensor >= 4 or rightSensor >= 4){
+            while(left_sensor >= 4 or right_sensor >= 4){
                 proxSensors.read();
                 right_sensor = proxSensors.countsFrontWithRightLeds();
                 left_sensor = proxSensors.countsFrontWithLeftLeds();
@@ -236,7 +236,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     acc = 0;
                 }
                 
-                updateAngleGyro();
+                update_angle_gyro();
 
                 if (100 < millis()-t2){ //for each 100 millis we print the angle
                     display_print((String)current_angle, 0, 0);
@@ -260,7 +260,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //}
 
             //Checks whether the Zumo already have the angle (inside the thresholds) or not
-            if (end_angle > current_angle + angle_thresh or end_angle < current_angle-angle_thresh){
+            if (end_angle > current_angle + angle_thresh or end_angle < current_angle - angle_thresh){
                 //A continous loop that runs until right angle is achieved
                 while(true){
                     update_angle_gyro();
@@ -294,13 +294,13 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             float error = target_angle - current_angle;
             error_sum += fabs(error);
 
-            Serial.println((String)float(millis()-time_offset) + ";" + (String)error);
+            Serial.println((String)float(millis() - time_offset) + ";" + (String)error);
             //Serial.println(millis()-gyro_timer);
             //gyro_timer = millis();
 
             // Get motor speed difference using proportional and derivative
             // PID terms (the integral term is generally not very useful)
-            float speedDifference = error*kc + (error - last_angle_error)*kd; //error / 4
+            float speed_difference = error*kc + (error - last_angle_error)*kd; //error / 4
 
             //if(driving_backward){
                 //speedDifference = -speedDifference;
@@ -310,8 +310,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             // Get individual motor speeds.  The sign of speedDifference
             // determines if the robot turns left or right.
-            left_speed = (int16_t)left_speed - (int16_t)speedDifference;
-            right_speed = (int16_t)right_speed + (int16_t)speedDifference;
+            left_speed = (int16_t)left_speed - (int16_t)speed_difference;
+            right_speed = (int16_t)right_speed + (int16_t)speed_difference;
 
             update_angle_gyro();
             // Constrain our motor speeds to be between 70 (0) and maxSpeed.
@@ -331,21 +331,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             Motors.setSpeeds(left_speed, right_speed);
 
-            /*
-            float d_angle = current_angle - gyro_last_angle;
-
-            if (gyro_correction_time < (millis()-gyro_timer) && abs(d_angle) > angle_thresh){   //
-                if (current_angle > target_angle) {
-                    right_speed--;          
-                } else if (current_angle < target_angle) {
-                    right_speed++; 
-                }
-
-                Motors.setRightSpeed(right_speed);
-                gyro_timer = millis(); 
-                gyro_last_angle = current_angle;
-            }
-            */
             update_angle_gyro();   
         }
 
@@ -438,7 +423,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                         drive_to_coords(drive_to, 20, 160); //Drives to the Track.
                 }}
                 else if ((stone_list[i][0] % track_size) <= track_size/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
-                    x_track = stone[i][0] - (stone_list[i][0] % track_size);
+                    x_track = stone_list[i][0] - (stone_list[i][0] % track_size);
                     if (on_track == false){
                         drive_to[0] = x_track;
                         drive_to[1] = 0;
