@@ -39,14 +39,14 @@ class ZumoCom{
         //It takes into consideration whether a OLED or LCD is used
         void display_print(String text, int posX = 0, int posY = 0){
             if (oled) {
-                OLED.go_to_xy(posX,posY);
+                OLED.gotoXY(posX,posY);
                 OLED.print("        ");
-                OLED.go_to_xy(posX,posY);
+                OLED.gotoXY(posX,posY);
                 OLED.print(text);
             } else {
-                LCD.go_to_xy(posX,posY);
+                LCD.gotoXY(posX,posY);
                 LCD.print("        ");
-                LCD.go_to_xy(posX,posY);
+                LCD.gotoXY(posX,posY);
                 LCD.print(text);
             }
         }
