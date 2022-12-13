@@ -260,7 +260,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //}
 
             //Checks whether the Zumo already have the angle (inside the thresholds) or not
-            if (end_angle > current_angle + angle_thresh or end_angle < current_angle - angle_thresh){
+            if ((end_angle > current_angle + angle_thresh) || (end_angle < current_angle - angle_thresh)){
                 //A continous loop that runs until right angle is achieved
                 while(true){
                     update_angle_gyro();
@@ -286,6 +286,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }
             }
         }
+
 
         //Checks and corrects speed on right motor based on angle change measured by gyro
         void gyro_correction(bool driving_backward = false){
