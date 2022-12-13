@@ -352,21 +352,24 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             gyro_offset_z /= 2048;
 
+
             unsigned long time = micros(); // = millis();
             unsigned long dt;
              
             for (int s = 0; s < 64; s++){   //work in progress dont judge
-                time = micros();
                 while (!IMU.gyroDataReady()) {}
                 IMU.readGyro();
 
-                gyro_drift_z += IMU.g.z - gyro_offset_z;
+
+                dt = micros() - time;
+                time = micros();
+                gyro_drift_z += (IMU.g.z - gyro_offset_z)/dt;
                 delay(50);
             }
-            unsigned long dt = millis()-time;
 
             Serial.println(gyro_drift_z);
-            gyro_drift_z = gyro_drift_z/dt;
+            gyro_drift_z = gyro_drift_z/64;
+            
             Serial.println(dt);
             Serial.println(gyro_drift_z, 14);
 
