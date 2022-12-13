@@ -34,7 +34,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float target_angle;        //degrees
         float len_rotation;        //cm
         float last_angle_error;
-        int brightnessLevels[4] = { 0.5, 1 , 1.5 , 2 };
+        float kc, kd;
+        float error_sum;
+
+        uint16_t brightness_levels[4] = { 1, 2 , 3 , 4 };
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
@@ -44,6 +47,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         int left_speed;
         int gyro_correction_time;   //ms
 
+        unsigned long time_offset;
         unsigned long gyro_timer;   //ms
 
 
@@ -72,7 +76,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         //---------------------Public methods---------------------//
 
-        void initDrive(){
+        void init_drive(){
             counts_rotation = 909;
             len_rotation = 11.5;
 
@@ -81,20 +85,20 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             IMU.enableDefault();
             IMU.configureForTurnSensing();
             proxSensors.initThreeSensors();
-            proxSensors.setBrightnessLevels(brightnessLevels, 4);
+            proxSensors.setBrightnessLevels(brightness_levels, 4);
 
             calibrate_gyro();
             reset();
         }
 
-        void checkObstacle(){
+        void check_obstacle(){
             proxSensors.read();
-            int rightSensor = proxSensors.countsFrontWithRightLeds();
-            int leftSensor = proxSensors.countsFrontWithLeftLeds();
-            while(leftSensor >= 4 or rightSensor >= 4){
+            int right_sensor = proxSensors.countsFrontWithRightLeds();
+            int left_sensor = proxSensors.countsFrontWithLeftLeds();
+            while(left_sensor >= 4 or right_sensor >= 4){
                 proxSensors.read();
-                rightSensor = proxSensors.countsFrontWithRightLeds();
-                leftSensor = proxSensors.countsFrontWithLeftLeds();
+                right_sensor = proxSensors.countsFrontWithRightLeds();
+                left_sensor = proxSensors.countsFrontWithLeftLeds();
                 Motors.setSpeeds(0, 0);
             }
         }
@@ -110,16 +114,32 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             gyro_correction_time = 1;
             min_speed = 80;
             last_angle_error = 0;
+            kc = 0.5;
+            kd = 15;
 
             Encoders.getCountsAndResetLeft();
             Encoders.getCountsAndResetRight();
         }
 
+        void set_PD_values(float new_kc, float new_kd){
+            kc = new_kc;
+            kd = new_kd;
+        }
+
+        float get_P_value(){
+            return kc;
+        }
+        float get_D_value(){
+            return kd;
+        }
+        float get_error(){
+            return error_sum;
+        }
 
         //This function updates the angle according to changes in the gyroscope
         //The function has to be called very often to work well, since it is calculated
         //from movements
-        void updateAngleGyro() {
+        void update_angle_gyro() {
             static uint16_t last_update = 0;
             uint16_t m = micros();
             uint16_t dt = m - last_update;
@@ -147,12 +167,13 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
+            error_sum = 0;
             float speed = applied_speed(real_speed);
             uint16_t t2 = millis();
             uint16_t t_acc = millis();
             uint16_t t_deacc = millis();
 
-            updateAngleGyro();
+            update_angle_gyro();
     
             Encoders.getCountsAndResetLeft();
             left_counts = 0;
@@ -163,7 +184,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             if (correction_active){
-                gyro_timer = millis();
+                
                 target_angle = current_angle;
                 last_angle_error = 0;
             }
@@ -186,8 +207,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             Motors.setSpeeds(left_speed, right_speed);
 
+            time_offset = millis();
+
             while(abs(dist) > abs(left_counts)){
-                checkObstacle();
+                check_obstacle();
 
                 left_counts = Encoders.getCountsLeft();
 
@@ -213,7 +236,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     acc = 0;
                 }
                 
-                updateAngleGyro();
+                update_angle_gyro();
 
                 if (100 < millis()-t2){ //for each 100 millis we print the angle
                     display_print((String)current_angle, 0, 0);
@@ -223,38 +246,11 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             Motors.setSpeeds(0,0);
+            //Serial.println("done");
         }
 
-        /*
-        void turn_to(float end_angle){
-            int speed = 70;
-            unsigned long t2 = millis();
-
-
-            if (end_angle > current_angle + angle_thresh or end_angle < current_angle-angle_thresh){
-                while(true){
-                    updateAngleGyro();
-
-                    if (100 < millis()-t2){
-                        display_print((String)current_angle, 0, 0);
-                        t2 = millis();
-                    }
-
-                    if (current_angle > end_angle-angle_thresh && current_angle < end_angle+angle_thresh){
-                        Motors.setSpeeds(0, 0);
-                        break;
-                    } else if (current_angle > end_angle-angle_thresh) {
-                        Motors.setSpeeds(speed, -speed);
-                    } else if (current_angle < end_angle+angle_thresh) {
-                        Motors.setSpeeds(-speed, speed);
-                    }
-                }
-            }
-        }
-        */
-
-
-        //Method that turns the Zumo to a given angle relative to the Zumo's X-axis (direction of Zumo when calibrated)
+        
+            //Method that turns the Zumo to a given angle relative to the Zumo's X-axis (direction of Zumo when calibrated)
         void turn_to(float end_angle, int speed = 120){
             int i = 0;
             unsigned long t2 = millis();
@@ -264,10 +260,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //}
 
             //Checks whether the Zumo already have the angle (inside the thresholds) or not
-            if (end_angle > current_angle + angle_thresh or end_angle < current_angle-angle_thresh){
+            if (end_angle > current_angle + angle_thresh or end_angle < current_angle - angle_thresh){
                 //A continous loop that runs until right angle is achieved
                 while(true){
-                    updateAngleGyro();
+                    update_angle_gyro();
 
                     if (100 < millis()-t2){
                         display_print((String)current_angle, 0, 0);
@@ -293,13 +289,18 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         //Checks and corrects speed on right motor based on angle change measured by gyro
         void gyro_correction(bool driving_backward = false){
-            updateAngleGyro();
+            update_angle_gyro();
 
             float error = target_angle - current_angle;
+            error_sum += fabs(error);
+
+            Serial.println((String)float(millis() - time_offset) + ";" + (String)error);
+            //Serial.println(millis()-gyro_timer);
+            //gyro_timer = millis();
 
             // Get motor speed difference using proportional and derivative
             // PID terms (the integral term is generally not very useful)
-            float speedDifference = error/2 + (error - last_angle_error)*15; //error / 4
+            float speed_difference = error*kc + (error - last_angle_error)*kd; //error / 4
 
             //if(driving_backward){
                 //speedDifference = -speedDifference;
@@ -309,10 +310,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             // Get individual motor speeds.  The sign of speedDifference
             // determines if the robot turns left or right.
-            left_speed = (int16_t)left_speed - (int16_t)speedDifference;
-            right_speed = (int16_t)right_speed + (int16_t)speedDifference;
+            left_speed = (int16_t)left_speed - (int16_t)speed_difference;
+            right_speed = (int16_t)right_speed + (int16_t)speed_difference;
 
-            updateAngleGyro();
+            update_angle_gyro();
             // Constrain our motor speeds to be between 70 (0) and maxSpeed.
             // One motor will always be turning at maxSpeed, and the other
             // will be at maxSpeed-|speedDifference| if that is positive,
@@ -330,22 +331,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             Motors.setSpeeds(left_speed, right_speed);
 
-            /*
-            float d_angle = current_angle - gyro_last_angle;
-
-            if (gyro_correction_time < (millis()-gyro_timer) && abs(d_angle) > angle_thresh){   //
-                if (current_angle > target_angle) {
-                    right_speed--;          
-                } else if (current_angle < target_angle) {
-                    right_speed++; 
-                }
-
-                Motors.setRightSpeed(right_speed);
-                gyro_timer = millis(); 
-                gyro_last_angle = current_angle;
-            }
-            */
-            updateAngleGyro();   
+            update_angle_gyro();   
         }
 
         
@@ -380,43 +366,16 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         void gyro_drift(){ //delete posibily 
             for (int s = 0; s < 100; s++){
                 while (!IMU.gyroDataReady()) {}
-                updateAngleGyro();
+                update_angle_gyro();
 
                 Serial.println(current_angle);
                 delay(100);
             }
         }
 
-        /*
-        void koortilkordinat(float coords[2], float speed){ //Speed = cm/s
-            int x_vec[2] = {1, 0};
-            int x = coords[0] - current_pos[0];
-            int y = coords[1] - current_pos[1];
-            float norm = sqrt((pow(x, 2) + pow(y, 2)));
-
-            float dot_prod = x_vec[0]*x + x_vec[1]*y;
-            float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
-
-            float angle = acos(dot_prod/norm_prod)*180/M_PI;
-
-            if (current_pos[1] > coords[1]){
-                angle = -angle;
-            }
-
-            display_print((String)angle, 0, 0);
-            delay(2000);
-
-            turn_to(angle);
-            drive_straight(norm, speed);
-
-            current_pos[0] = coords[0];
-            current_pos[1] = coords[1];
-
-        }
-        */
-
+        
         //Drives the Zumo to a given {x,y} coordinat relative to 0 (point of calibration) with a given speed [cm/s]
-        void koortilkordinat(float coords[2], float speed, int angle_speed = 80){ 
+        void drive_to_coords(float coords[2], float speed, int angle_speed = 80){ 
             //This is used to calculate the angle the Zumo has to turn to get in the direction of the point
             //It is the formular for finding the angle between two vectors
             int x_vec[2] = {1, 0};
@@ -446,94 +405,55 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         }
 
         
-        //Checks and corrects speed on motors to drive straight based on angle change measured by gyro
-        void gyro_correction(){
-            updateAngleGyro();
-            float d_angle = current_angle - gyro_last_angle;
 
-            if (abs(d_angle) > angle_thresh){   //
-                if (current_angle > target_angle) {
-                    right_speed--;          
-                } else if (current_angle < target_angle) {
-                    right_speed++; 
-                }
-
-                Motors.setRightSpeed(right_speed);
-                //gyro_timer = millis(); 
-                gyro_last_angle = current_angle;
-            } 
-        
-            updateAngleGyro();   
-            
-        }
-
-
-        /*
-        //The gyro needs be calibrated
-        //This is due to an offset reading and a drifting value
-        void calibrate_gyro(){
-            for (uint16_t i = 0; i < 2048; i++){
-                //Waits until a new value is available from the gyro
-                while(!IMU.gyroDataReady()){}
-
-                IMU.readGyro();
-
-                gyro_offset_z += IMU.g.z;
-            }
-
-            gyro_offset_z /= 2048;
-
-        }
-        */
-
-        void followTracks(){
-            SortXY();
-            int TrackSize= 20;          //the distance in the cordinatesystem between the Tracks.
-            int XTrack = 0;             //the track it goes to
-            float DriveTo[2] = {0,0};   //the destination we want to go to next
-            bool OnTrack = false;       //If false; next stone is closest to the next Track/ If true next stone is on the Track
+        void follow_tracks(){
+            sort_xy();
+            int track_size= 20;          //the distance in the cordinatesystem between the Tracks.
+            int x_track = 0;             //the track it goes to
+            float drive_to[2] = {0,0};   //the destination we want to go to next
+            bool on_track = false;       //If false; next stone is closest to the next Track/ If true next stone is on the Track
             for (int i = 0; i < 4; i++){
-                DriveTo[0] = stone[i][0];    // er lige blevet flyttet fra over for løkken. 
-                DriveTo[1] = stone[i][1];
-                if ((stone[i][0] % TrackSize) == 0){  //If this stone is on the Track.
-                    XTrack = stone[i][0];
-                    if (OnTrack == false){            //this if statement is runned trough if the stone is on another track than the one just used.
-                        DriveTo[0] = XTrack;
-                        DriveTo[1] = 0; 
-                        koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
+                drive_to[0] = stone_list[i][0];    // er lige blevet flyttet fra over for løkken. 
+                drive_to[1] = stone_list[i][1];
+                if ((stone_list[i][0] % track_size) == 0){  //If this stone is on the Track.
+                    x_track = stone_list[i][0];
+                    if (on_track == false){            //this if statement is runned trough if the stone is on another track than the one just used.
+                        drive_to[0] = x_track;
+                        drive_to[1] = 0; 
+                        drive_to_coords(drive_to, 20, 160); //Drives to the Track.
                 }}
-                else if ((stone[i][0] % TrackSize) <= TrackSize/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
-                    XTrack = stone[i][0] - (stone[i][0] % TrackSize);
-                    if (OnTrack == false){
-                        DriveTo[0] = XTrack;
-                        DriveTo[1] = 0;
-                        koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
+                else if ((stone_list[i][0] % track_size) <= track_size/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
+                    x_track = stone_list[i][0] - (stone_list[i][0] % track_size);
+                    if (on_track == false){
+                        drive_to[0] = x_track;
+                        drive_to[1] = 0;
+                        drive_to_coords(drive_to, 20, 160); //Drives to the Track.
                 }}
                 else { //Wheen the stone is closest to the Track to the right.
-                    XTrack = stone[i][0] + (TrackSize - (stone[i][0] % TrackSize));
-                    if (OnTrack == false){
-                        DriveTo[0] = XTrack;
-                        DriveTo[1] = 0;
-                        koortilkordinat(DriveTo, 20, 160); //Drives to the Track.
+                    x_track = stone_list[i][0] + (track_size - (stone_list[i][0] % track_size));
+                    if (on_track == false){
+                        drive_to[0] = x_track;
+                        drive_to[1] = 0;
+                        drive_to_coords(drive_to, 20, 160); //Drives to the Track.
                 }}
                 delay(200);
 
                 // Zumo is at the Track and y-position is y = 0.
-                DriveTo[0] = XTrack;
-                DriveTo[1] = stone[i][1]; //defines the GoTo y-value to the stones y-value.
-                koortilkordinat(DriveTo, 20, 160); //Drives up the track to the y-position. 
+                drive_to[0] = x_track;
+                drive_to[1] = stone_list[i][1]; //defines the GoTo y-value to the stones y-value.
+                drive_to_coords(drive_to, 20, 160); //Drives up the track to the y-position. 
 
                 delay(200);
                 // Zumo is on the Track on the same y-position as the stone.
-                if (XTrack != stone[i][0]){ //If the stone does not lay on the track.
-                    DriveTo[0] = stone[i][0];
-                    koortilkordinat(DriveTo, 20, 160); //The stone is reached.
+                if (x_track != stone_list[i][0]){ //If the stone does not lay on the track.
+                    drive_to[0] = stone_list[i][0];
+                    drive_to_coords(drive_to, 20, 160); //The stone is reached.
 
                     display_print("Picking");
                     delay(3000);
                     //collects stone.
-                    DriveTo[0] = XTrack; //Drives back to the track, but same y-position.
-                    koortilkordinat(DriveTo, 20, 160);
+                    drive_to[0] = x_track; //Drives back to the track, but same y-position.
+                    drive_to_coords(drive_to, 20, 160);
                 }            
                 else{ //if the stone is on track.
                     //Collecting stone.
@@ -542,22 +462,22 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }
                 //The stone is collected and we are on the track at the y-position of the stone.
                 if (i == 3){ //if its the last stone, it drives down the track to the y-position=0.
-                    DriveTo[0] = XTrack;
-                    DriveTo[1] = 0;
-                    koortilkordinat(DriveTo, 20, 160);  //Drives down to y-position = 0. 
+                    drive_to[0] = x_track;
+                    drive_to[1] = 0;
+                    drive_to_coords(drive_to, 20, 160);  //Drives down to y-position = 0. 
                 }
-                else if ((((XTrack - (TrackSize/2))) < stone[i+1][0] ) && (stone[i+1][0]<= (XTrack + (TrackSize/2)))){  //If the next stone is located closest to the current track. 
-                    OnTrack = true;
+                else if ((((x_track - (track_size/2))) < stone_list[i+1][0] ) && (stone_list[i+1][0]<= (x_track + (track_size/2)))){  //If the next stone is located closest to the current track. 
+                    on_track = true;
                 }
                 else { // If the next stone is closest to another track.
-                    OnTrack = false;
-                    DriveTo[0] = XTrack;
-                    DriveTo[1] = 0;
-                    koortilkordinat(DriveTo, 20, 160);
+                    on_track = false;
+                    drive_to[0] = x_track;
+                    drive_to[1] = 0;
+                    drive_to_coords(drive_to, 20, 160);
                 }
             }
-            DriveTo[0] = 0;  
-            DriveTo[1] = 0; 
-            koortilkordinat(DriveTo, 20, 160);   //drives to origo (0,0).
+            drive_to[0] = 0;  
+            drive_to[1] = 0; 
+            drive_to_coords(drive_to, 20, 160);   //drives to origo (0,0).
         }
 };

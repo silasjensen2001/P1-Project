@@ -22,7 +22,7 @@ class ZumoCom{
     public:
 
         //The communication channel has to be initialized and is dependent on whether OLED or LCD is used
-        void initDisplay(String OLED_or_LCD){
+        void init_display(String OLED_or_LCD){
             Wire.begin();
             if (OLED_or_LCD == "OLED"){
                 OLED.clear();

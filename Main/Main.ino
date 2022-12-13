@@ -12,26 +12,26 @@ Zumo32U4ButtonC But_C;
 
 Rockxanne Rockxan;
 
-float coords[5][2] = {{50, 25}, {20, 80}, {-20,80}, {50, 50}, {0,0}};
+float values[9][2] = {{0.5, 0.5}, {2, 0.5}, {5, 0.5}, {10, 0.5}, {15, 0.5}, {0.5, 2}, {0.5, 5}, {0.5, 10}, {0.5, 15}};
 
 void setup(){
     Serial.begin(9600);
-    Rockxan.initAll("OLED");
+    Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
     Rockxan.display_print("Klar");
 }
 
 
 void loop(){
-    if (But_A.isPressed()){
+    if (But_A.isPressed()){      //Initiates Tracs following.
         delay(500);
         Rockxan.display_print("Following");
         Rockxan.display_print("Tracks", 0, 1);
-        Rockxan.followTracks();
+        Rockxan.follow_tracks();
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
     }
 
-    if (But_B.isPressed()){
+    if (But_B.isPressed()){         //The Zumo drives straight and returns to the starting position.
         delay(500);
         Rockxan.display_print("Driving");
         Rockxan.display_print("Straight", 0, 1);
@@ -50,16 +50,17 @@ void loop(){
 
         /*
         delay(500);
-        Rockxan.display_print("Driving");
-        Rockxan.display_print("Coords", 0, 1);
-        for(int i = 0; i < 5; i++){
-            Rockxan.koortilkordinat(coords[i], 30, 120);
-            delay(1500);
+        for (int i = 0; i < 4; i++){
+            Rockxan.set_PD_values(values[i][0], values[i][1]);
+            Rockxan.drive_straight(200, 25);
+            Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_error());
+            delay(500);
+            Rockxan.drive_straight(-200, 40, false);
+            delay(500);
+            Rockxan.reset();
+            Rockxan.calibrate_gyro();     
         }
-        Rockxan.turn_to(0);
+        Serial.println("done");
 
-        Rockxan.display_print("Driving");
-        Rockxan.display_print("Done", 0, 1);
-        */
     }
 }
