@@ -33,12 +33,13 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float target_angle;        //degrees
         float len_rotation;        //cm
         float last_angle_error;
-        float kc, kd;
+        float kc, kd, ki;
         float error_sum;
+        float integral_error;
 
         double gyro_drift_z;
 
-        uint16_t brightness_levels[4] = { 1, 2 , 3 , 4 };
+        uint16_t brightness_levels[4] = {1, 2 , 3 , 4 };
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
@@ -117,21 +118,26 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             last_angle_error = 0;
             kc = 0.5;
             kd = 15;
+            ki = 8;
 
             Encoders.getCountsAndResetLeft();
             Encoders.getCountsAndResetRight();
         }
 
-        void set_PD_values(float new_kc, float new_kd){
+        void set_PID_values(float new_kc, float new_ki, float new_kd){
             kc = new_kc;
-            kd = new_kd;
+            kd = new_kc*new_kd;
+            ki = new_kc*(1/new_ki);
         }
 
         float get_P_value(){
             return kc;
         }
         float get_D_value(){
-            return kd;
+            return kd/kc;
+        }
+        float get_I_value(){
+            return kc/ki;
         }
         float get_error(){
             return error_sum;
@@ -151,7 +157,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //The angle change can now be calculated
             //Every raw reading can be translated to degrees with the factor 0,07 deg/s
             //Datasheet https://www.pololu.com/file/0J731/L3GD20H.pdf)
-            Serial.println(dt);
             current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z*dt) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
 
 
@@ -170,6 +175,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
             error_sum = 0;
+            integral_error = 0;
             float speed = applied_speed(real_speed);
             uint16_t t2 = millis();
             uint16_t t_acc = millis();
@@ -185,8 +191,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 speed = -speed;
             }
 
-            if (correction_active){
-                
+            if (correction_active){   
                 target_angle = current_angle;
                 last_angle_error = 0;
             }
@@ -295,6 +300,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             float error = target_angle - current_angle;
             error_sum += fabs(error);
+            integral_error += error;
 
             Serial.println((String)float(millis() - time_offset) + ";" + (String)error);
             //Serial.println(millis()-gyro_timer);
@@ -302,7 +308,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             // Get motor speed difference using proportional and derivative
             // PID terms (the integral term is generally not very useful)
-            float speed_difference = error*kc + (error - last_angle_error)*kd; //error / 4
+            float speed_difference = error*kc + ki * integral_error + kd*(error - last_angle_error); //error / 4
 
             //if(driving_backward){
                 //speedDifference = -speedDifference;
@@ -369,7 +375,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             Serial.println(gyro_drift_z);
             gyro_drift_z = gyro_drift_z/64;
-            
+
             Serial.println(dt);
             Serial.println(gyro_drift_z, 14);
 

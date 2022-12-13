@@ -31,7 +31,7 @@ while run:
         if y[0] == "new":
             print("new")
             #Before creating a new sheet we want to save the kc-, kd- and error values
-            sheets[name + str(n)].write(0, 3, f"Kc = {y[1]} and Kd = {y[2]}\nTotal Error = {y[3]}")
+            sheets[name + str(n)].write(0, 3, f"Kc = {y[1]} and Kd = {y[2]} Ki = {y[3]}")  #\nTotal Error = ???")
 
             n += 1
             i = 0
@@ -45,12 +45,12 @@ while run:
             break
         else:
             sheets[name + str(n)].write(i, 0, float(y[0])/1000)
-            sheets[name + str(n)].write(i, 1, float(y[1])/1000)
+            sheets[name + str(n)].write(i, 1, float(y[1]))
             i += 1
 
-iterations = n+1
+iterations = n
 
-sheets[name + str(iterations+1)] = workbook.add_worksheet(str(name) + str(iterations+1))
+#sheets[name + str(iterations+1)] = workbook.add_worksheet(str(name) + str(iterations+1))
 row = 0
 
 for i in range(iterations):
@@ -106,9 +106,9 @@ for i in range(iterations):
     chart.set_legend({'none': True})
 
     if i%2 == 0: 
-        sheets[name + str(iterations+1)].insert_chart(f'A{row*11+1}', chart, {'x_scale': 0.59, 'y_scale': 0.75,})  
+        sheets[name + str(n)].insert_chart(f'A{row*11+1}', chart, {'x_scale': 0.59, 'y_scale': 0.75,})  
     else:
-        sheets[name + str(iterations+1)].insert_chart(f'E{row*11+1}', chart, {'x_offset': 30, 'x_scale': 0.6, 'y_scale': 0.75,})
+        sheets[name + str(n)].insert_chart(f'E{row*11+1}', chart, {'x_offset': 30, 'x_scale': 0.6, 'y_scale': 0.75,})
         row+=1
 
 workbook.close()

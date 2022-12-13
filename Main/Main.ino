@@ -12,7 +12,15 @@ Zumo32U4ButtonC But_C;
 
 Rockxanne Rockxan;
 
-float values[9][2] = {{0.5, 0.5}, {2, 0.5}, {5, 0.5}, {10, 0.5}, {15, 0.5}, {0.5, 2}, {0.5, 5}, {0.5, 10}, {0.5, 15}};
+float values[9][3] = {{1.24, 137, 39}, 
+                        {4, 137, 39}, 
+                        {12.56, 8, 7.76}, 
+                        {1.24, 80, 20}, 
+                        {1.24, 137, 39}, 
+                        {13.86, 7, 6.52}, 
+                        {18.64, 8, 6.45}, 
+                        {30, 9, 16}, 
+                        {13.51, 15, 8.07}};
 
 void setup(){
     Serial.begin(9600);
@@ -44,23 +52,13 @@ void loop(){
 
     if (But_C.isPressed()){
         delay(500);
-        Rockxan.drive_straight(200, 40, false);
-        delay(200);
-        //Rockxan.gyro_drift();
-
-        /*
-        delay(500);
-        for (int i = 0; i < 4; i++){
-            Rockxan.set_PD_values(values[i][0], values[i][1]);
-            Rockxan.drive_straight(200, 25);
-            Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_error());
-            delay(500);
-            Rockxan.drive_straight(-200, 40, false);
-            delay(500);
-            Rockxan.reset();
-            Rockxan.calibrate_gyro();     
+        for (int i = 0; i < 5; i++){
+            Rockxan.set_PID_values(values[i][0], values[i][1], values[i][2]);
+            Rockxan.drive_straight(200, 30);
+            Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_I_value());
+            delay(1000);
         }
+
         Serial.println("done");
-      */
     }
 }
