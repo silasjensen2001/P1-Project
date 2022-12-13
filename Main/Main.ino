@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <Zumo32U4.h>
 #include "Zumo.h"
-
+//Hej
 
 Zumo32U4ButtonA But_A;
 Zumo32U4ButtonB But_B;
@@ -16,7 +16,7 @@ float values[9][2] = {{0.5, 0.5}, {2, 0.5}, {5, 0.5}, {10, 0.5}, {15, 0.5}, {0.5
 
 void setup(){
     Serial.begin(9600);
-    Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
+    Rockxan.init_all("LCD");  //If its the OLED version write that, else write LCD.
     Rockxan.display_print("Klar");
 }
 
