@@ -25,11 +25,7 @@ void setup(){
 void loop(){
     if (But_A.isPressed()){
         delay(500);
-        Rockxan.display_print("Following");
-        Rockxan.display_print("Tracks", 0, 1);
-        Rockxan.followTracks();
-        Rockxan.display_print("Done");
-        Rockxan.display_print("", 0, 1);
+        Rockxan.drive_straight(200, 40, false);
     }
 
     if (But_B.isPressed()){

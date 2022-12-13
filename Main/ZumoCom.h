@@ -22,7 +22,7 @@ class ZumoCom{
     public:
 
         //The communication channel has to be initialized and is dependent on whether OLED or LCD is used
-        void initDisplay(String OLED_or_LCD){
+        void init_display(String OLED_or_LCD){
             Wire.begin();
             if (OLED_or_LCD == "OLED"){
                 OLED.clear();
@@ -39,14 +39,14 @@ class ZumoCom{
         //It takes into consideration whether a OLED or LCD is used
         void display_print(String text, int posX = 0, int posY = 0){
             if (oled) {
-                OLED.gotoXY(posX,posY);
+                OLED.go_to_xy(posX,posY);
                 OLED.print("        ");
-                OLED.gotoXY(posX,posY);
+                OLED.go_to_xy(posX,posY);
                 OLED.print(text);
             } else {
-                LCD.gotoXY(posX,posY);
+                LCD.go_to_xy(posX,posY);
                 LCD.print("        ");
-                LCD.gotoXY(posX,posY);
+                LCD.go_to_xy(posX,posY);
                 LCD.print(text);
             }
         }
