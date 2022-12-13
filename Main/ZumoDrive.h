@@ -387,7 +387,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             float dot_prod = x_vec[0]*x + x_vec[1]*y;
             float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
 
-            float angle = acos(dot_prod/norm_prod)*180/M_PI;
+            float angle = acos(dot_prod/norm_prod)*180/M_PI;   //is multiplied by 180/pi to go from radians to degrees. 
 
             //The formular above does not take sign into account
             if (current_pos[1] > coords[1]){
