@@ -35,6 +35,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float len_rotation;        //cm
         float last_angle_error;
         float kc, kd;
+        float error_sum;
 
         uint16_t brightnessLevels[4] = { 1, 2 , 3 , 4 };
 
@@ -131,6 +132,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         float getDValue(){
             return kd;
         }
+        float getError(){
+            return error_sum;
+        }
 
         //This function updates the angle according to changes in the gyroscope
         //The function has to be called very often to work well, since it is calculated
@@ -163,6 +167,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
+            error_sum = 0;
             float speed = applied_speed(real_speed);
             uint16_t t2 = millis();
             uint16_t t_acc = millis();
@@ -241,7 +246,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             Motors.setSpeeds(0,0);
-            Serial.println("done");
+            //Serial.println("done");
         }
 
         /*
@@ -315,6 +320,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             updateAngleGyro();
 
             float error = target_angle - current_angle;
+            error_sum += fabs(error);
 
             Serial.println((String)float(millis()-time_offset) + ";" + (String)error);
             //Serial.println(millis()-gyro_timer);
