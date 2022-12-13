@@ -41,12 +41,12 @@ class RoutePlanner{
             for (int i = 0; i < 4; i++){
                 for (int j = 0; j < 4; i++){
                     length = sqrt(pow((stone_list[i][0] - stone_list[j][0]), 2) + pow((stone_list[i][1] - stone_list[j][1]), 2));
-            if (length != 0 || length < 0){
+            if (length != 0){
                 length_list[i] = length;  
             }
             }
-            for (int i = 0; i < list_size; i++){
-                Serial.println(length_list[i]);
+           // for (int i = 0; i < list_size; i++){
+              //  Serial.println(length_list[i]);
             }
                 //Iterate the array to get minimum value in list
             for(int i = 0; i < n; i++){
@@ -64,14 +64,14 @@ class RoutePlanner{
            // Serial.println(route_list[0]);
             Serial.println((String)"_____");
             Serial.println(stone_list[1][0]);
-    }
-};
+    };
+
 
         void sort_xy(){
             float update_list[4][2]; //another array lokal for this method/function.
             for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
-                update_list[i][0]=stone_list[i][0];
-                update_list[i][1]=stone_list[i][1];
+                update_list[i][0] = stone_list[i][0];
+                update_list[i][1] = stone_list[i][1];
             }
             for (size_t i = 0; i < 3; i++){   //makes it check trough the array numStone-1 times.
                 for (size_t S = 0; S < 3; S++){  //Checks trough the array comparing 2 parts of the array that is beside each other each time. 
@@ -81,17 +81,17 @@ class RoutePlanner{
                         update_list[S+1][0] = stone_list[S][0];
                         update_list[S+1][1] = stone_list[S][1];          
                         for(int i = 0; i < 4; i++){
-                            stone_list[i][0]=update_list[i][0];
-                            stone_list[i][1]=update_list[i][1];
+                            stone_list[i][0] = update_list[i][0];
+                            stone_list[i][1] = update_list[i][1];
                         } 
                     }
                 }  
             }   
-        }
+        };
 
-        void sort_TSP(){
-            Serial.print("Hello world");
-        }
+        //void sort_TSP(){
+          //  Serial.print("Hello world");
+        //}
 
 };   
 
