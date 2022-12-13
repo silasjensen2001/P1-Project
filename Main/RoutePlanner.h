@@ -89,7 +89,7 @@ class RoutePlanner{
             }   
         }
 
-        void sortTSP(){
+        void sort_TSP(){
             Serial.print("Hello world");
         }
 
