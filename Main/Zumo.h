@@ -24,23 +24,5 @@ class Rockxanne: public ZumoDrive{
         }
 
         //---------------------Public methods---------------------//
-
-        //initAll has to be called once in the setup() in main.ino
-        //initializes all inherited classes
-        void init_all(String display = "OLED"){
-            //This init is found in ZumoCom.h
-            init_display(display);               //takes parameter "OLED" or "LCD"
-
-            display_print("Ik Klar", 0, 0);
-
-            //This init is found in "ZumoDrive.h"
-            init_drive();
-            
-            display_print("Klar", 0, 0);
-        }
-
-
-        
-
-        
+     
 };
