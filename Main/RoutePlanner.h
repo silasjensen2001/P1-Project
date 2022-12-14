@@ -28,12 +28,12 @@ class RoutePlanner{
     float length;
 
     int min = INT_MAX;
-    int index = -1;
+    int index;
     int index_list[4];
-    int n = sizeof(length_list);
-    int counts = 0;
+    //int n = sizeof(length_list);
+    //int counts = 0;
 
-    int list_size = 5; // stoneList.size()/size(float);
+    int list_size = 4; // stoneList.size()/size(float);
     float length_list[4];
     float route_list[4][2];
 

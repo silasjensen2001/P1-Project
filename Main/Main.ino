@@ -43,11 +43,19 @@ void loop(){
 
     if (But_C.isPressed()){
         delay(500);
+        Rockxan.display_print("Free");
+        Rockxan.display_print("move", 0, 1);
+        Rockxan.free_move();
+        Rockxan.display_print("Done");
+        Rockxan.display_print("", 0, 1);
+    }
+}
+/*delay(500);
         Rockxan.drive_straight(200, 40, false);
         delay(200);
         //Rockxan.gyro_drift();
 
-        /*
+        
         delay(500);
         for (int i = 0; i < 4; i++){
             Rockxan.set_PD_values(values[i][0], values[i][1]);
@@ -61,5 +69,3 @@ void loop(){
         }
         Serial.println("done");
       */
-    }
-}
