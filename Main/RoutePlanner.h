@@ -43,7 +43,7 @@ class RoutePlanner{
 
         // Nearest neighbour function
         void nearest_neighbour(){
-            
+            //empty
         }
 
         void sort_xy(){
