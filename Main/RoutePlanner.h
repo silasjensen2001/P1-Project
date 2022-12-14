@@ -88,10 +88,5 @@ class RoutePlanner{
                 }  
             }   
         };
-
-        //void sort_TSP(){
-          //  Serial.print("Hello world");
-        //}
-
 };   
 
