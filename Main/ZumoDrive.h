@@ -407,12 +407,12 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         
 
-        void follow_tracks(float stone_list[4][2], int track_size = 20){     // track_size is the distance in the cordinatesystem between the Tracks.
+        void follow_tracks( int track_size = 20){      //track_size is the distance in the cordinatesystem between the Tracks.
             sort_xy();     
             int x_track = 0;             //the track it goes to
             float drive_to[2] = {0,0};   //the destination we want to go to next
             bool on_track = false;       //If false; next stone is closest to the next Track/ If true next stone is on the Track
-            for (int i = 0; i < 4; i++){
+            for (int i = 0; i < list_size; i++){     //repeates the loup until it is done for all the stones. 
                 drive_to[0] = stone_list[i][0];    // er lige blevet flyttet fra over for løkken. 
                 drive_to[1] = stone_list[i][1];
                 if ((stone_list[i][0] % track_size) == 0){  //If this stone is on the Track.
@@ -461,7 +461,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     delay(3000);
                 }
                 //The stone is collected and we are on the track at the y-position of the stone.
-                if (i == 3){ //if its the last stone, it drives down the track to the y-position=0.
+                if (i == list_size - 1){ //if its the last stone, it drives down the track to the y-position=0.
                     drive_to[0] = x_track;
                     drive_to[1] = 0;
                     drive_to_coords(drive_to, 20, 160);  //Drives down to y-position = 0. 
@@ -485,7 +485,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         void free_move(){
             int drive_to[2] = {0,0};
             nearest_neighbour();       //sorts the stone_list array so the coordinates is in the right order.
-            for (size_t i = 0; i < 4; i++){       //drives to every stone and collects them.
+            for (size_t i = 0; i < list_size; i++){       //drives to every stone and collects them.
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
                 drive_to_coords(drive_to, 20, 160);

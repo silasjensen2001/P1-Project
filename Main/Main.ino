@@ -4,7 +4,6 @@
 #include <Wire.h>
 #include <Zumo32U4.h>
 #include "Zumo.h"
-//Hej
 
 Zumo32U4ButtonA But_A;
 Zumo32U4ButtonB But_B;
@@ -26,7 +25,7 @@ void loop(){
         delay(500);
         Rockxan.display_print("Following");
         Rockxan.display_print("Tracks", 0, 1);
-        Rockxan.follow_tracks();
+        Rockxan.follow_tracks(stone_list, 20);
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
     }
