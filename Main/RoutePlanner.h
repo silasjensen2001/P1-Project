@@ -23,8 +23,8 @@ class RoutePlanner{
 
     //Variables 
     float current_pos[2];      //{x,y} [cm]  
-    float i;
-    float j;
+    //float i;
+    //float j;
     float length;
 
     int min = INT_MAX;
@@ -47,14 +47,14 @@ class RoutePlanner{
             int length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             int index = 0;
             for (size_t i = 0; i < list_size; i++){
-                for (size_t i = 0; i < list_size; i++){
-                    if ((index_list[i] == 0) && (i != 0)){
+                for (size_t j = 0; j < list_size; j++){
+                    if ((index_list[j] == 0) && (j != 0)){
                         if (length <= (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)))){
 
                         }
                         else{
                             length = (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)));
-                            index = i;
+                            index = j;
                         }
                     }
                 }
@@ -66,12 +66,14 @@ class RoutePlanner{
             }
             Serial.println(route_list[0][0]);
             Serial.println(route_list[0][1]);
+            Serial.println("skift");
             Serial.println(route_list[1][0]);
             Serial.println(route_list[1][1]);
             Serial.println(route_list[2][0]);
             Serial.println(route_list[2][1]);
             Serial.println(route_list[3][0]);
             Serial.println(route_list[3][1]);
+            delay(5000000);  //sletttt
         }
         
         void sort_xy(){
