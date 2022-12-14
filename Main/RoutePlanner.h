@@ -44,12 +44,12 @@ class RoutePlanner{
         void nearest_neighbour(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            float correkt_row[4];
+            float correct_row[4];
             int length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             int index = 0;
             for (size_t i = 0; i < list_size; i++){
                 for (size_t j = 0; j < list_size; j++){
-                    if (index_list[j] == 0){    //&& (j != 0)
+                    if (index_list[j] == 0){
                         if ((length >= (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)))) || (length == 0)){    //length == 0 since the lenght needs to be updated in the beginning.
                             length = (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)));
                             index = j;
@@ -61,7 +61,7 @@ class RoutePlanner{
                 }
                 length = 0;
                 index_list[index] = 1;
-                correkt_row[i] = index;
+                correct_row[i] = index;
                 current_pos[0] = stone_list[index][0];
                 current_pos[1] = stone_list[index][1];
                 route_list[i][0] = stone_list[index][0];
@@ -71,24 +71,6 @@ class RoutePlanner{
                 stone_list[i][0] = route_list[i][0];
                 stone_list[i][1] = route_list[i][1];
             }
-            
-            //følgende kan slettes.
-            Serial.println(index_list[0]);
-            Serial.println(index_list[1]);
-            Serial.println(index_list[2]);
-            Serial.println(index_list[3]);
-            Serial.println(correkt_row[0]);
-            Serial.println(correkt_row[1]);
-            Serial.println(correkt_row[2]);
-            Serial.println(correkt_row[3]);
-            Serial.println(route_list[0][0]);
-            Serial.println(route_list[0][1]);
-            Serial.println(route_list[1][0]);
-            Serial.println(route_list[1][1]);
-            Serial.println(route_list[2][0]);
-            Serial.println(route_list[2][1]);
-            Serial.println(route_list[3][0]);
-            Serial.println(route_list[3][1]);
         }
         
         void sort_xy(){
