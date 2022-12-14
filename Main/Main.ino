@@ -25,7 +25,7 @@ void loop(){
         delay(500);
         Rockxan.display_print("Following");
         Rockxan.display_print("Tracks", 0, 1);
-        Rockxan.follow_tracks(stone_list, 20);
+        Rockxan.follow_tracks(20);
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
     }
