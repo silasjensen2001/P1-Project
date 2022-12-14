@@ -17,7 +17,6 @@ class RoutePlanner{
     //Protected is like private members except that inherited classes can access these members
     protected:
 
-    //Hej
     //Lists
     //int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
     int stone_list[4][2] = {{70, 10},{15, 20},{25,60},{40,50}};
