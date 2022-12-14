@@ -407,9 +407,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         
 
-        void follow_tracks(){
-            sort_xy();
-            int track_size= 20;          //the distance in the cordinatesystem between the Tracks.
+        void follow_tracks(float stone_list[4][2], int track_size = 20){     // track_size is the distance in the cordinatesystem between the Tracks.
+            sort_xy();     
             int x_track = 0;             //the track it goes to
             float drive_to[2] = {0,0};   //the destination we want to go to next
             bool on_track = false;       //If false; next stone is closest to the next Track/ If true next stone is on the Track
@@ -450,7 +449,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     drive_to[0] = stone_list[i][0];
                     drive_to_coords(drive_to, 20, 160); //The stone is reached.
 
-                    display_print("Picking");
+                    display_print("Collecting");
                     delay(3000);
                     //collects stone.
                     drive_to[0] = x_track; //Drives back to the track, but same y-position.
@@ -458,7 +457,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }            
                 else{ //if the stone is on track.
                     //Collecting stone.
-                    display_print("Picking");
+                    display_print("Collecting");
                     delay(3000);
                 }
                 //The stone is collected and we are on the track at the y-position of the stone.
@@ -480,5 +479,21 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             drive_to[0] = 0;  
             drive_to[1] = 0; 
             drive_to_coords(drive_to, 20, 160);   //drives to origo (0,0).
+        }
+        
+
+        void free_move(){
+            int drive_to[2] = {0,0};
+            nearest_neighbour();       //sorts the stone_list array so the coordinates is in the right order.
+            for (size_t i = 0; i < 4; i++){       //drives to every stone and collects them.
+                drive_to[0] = stone_list[i][0];
+                drive_to[1] = stone_list[i][1];
+                drive_to_coords(drive_to, 20, 160);
+                display_print("Collecting");
+                delay(3000);
+            }
+            drive_to[0] = 0;
+            drive_to[1] = 0;
+            drive_to_coords(drive_to, 20, 160)    //returns to starting position.
         }
 };
