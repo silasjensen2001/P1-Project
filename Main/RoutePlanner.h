@@ -50,16 +50,17 @@ class RoutePlanner{
             for (size_t i = 0; i < list_size; i++){
                 for (size_t j = 0; j < list_size; j++){
                     if ((index_list[j] == 0) && (j != 0)){
-                        if (length <= (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)))){
-
-                        }
-                        else{
+                        if ((length >= (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)))) || (length == 0)){    //length == 0 since the lenght needs to be updated in the beginning.
                             length = (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)));
                             index = j;
                         }
+                        else{
+                            //empty
+                        }
                     }
                 }
-                index_list[index] = index;
+                length = 0;
+                index_list[index] = 1;
                 correkt_row[i] = index;
                 current_pos[0] = stone_list[index][0];
                 current_pos[1] = stone_list[index][1];
