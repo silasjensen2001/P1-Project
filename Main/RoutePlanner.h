@@ -42,9 +42,38 @@ class RoutePlanner{
 
         // Nearest neighbour function
         void nearest_neighbour(){
-            //empty
-        }
+            current_pos[0] = 0;
+            current_pos[1] = 0;
+            int length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
+            int index = 0;
+            for (size_t i = 0; i < list_size; i++){
+                for (size_t i = 0; i < list_size; i++){
+                    if ((index_list[i] == 0) && (i != 0)){
+                        if (length <= (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)))){
 
+                        }
+                        else{
+                            length = (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)));
+                            index = i;
+                        }
+                    }
+                }
+                index_list[index] = index;
+                current_pos[0] = stone_list[index][0];
+                current_pos[1] = stone_list[index][1];
+                route_list[i][0] = stone_list[index][0];
+                route_list[i][1] = stone_list[index][1];
+            }
+            Serial.println(route_list[0][0]);
+            Serial.println(route_list[0][1]);
+            Serial.println(route_list[1][0]);
+            Serial.println(route_list[1][1]);
+            Serial.println(route_list[2][0]);
+            Serial.println(route_list[2][1]);
+            Serial.println(route_list[3][0]);
+            Serial.println(route_list[3][1]);
+        }
+        
         void sort_xy(){
             float update_list[4][2]; //another array lokal for this method/function.
             for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
