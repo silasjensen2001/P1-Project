@@ -49,9 +49,9 @@ class RoutePlanner{
             int index = 0;
             for (size_t i = 0; i < list_size; i++){
                 for (size_t j = 0; j < list_size; j++){
-                    if ((index_list[j] == 0) && (j != 0)){
-                        if ((length >= (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)))) || (length == 0)){    //length == 0 since the lenght needs to be updated in the beginning.
-                            length = (sqrt(pow((stone_list[i][0] - current_pos[0]), 2) + pow((stone_list[i][1] - current_pos[1]), 2)));
+                    if (index_list[j] == 0){    //&& (j != 0)
+                        if ((length >= (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)))) || (length == 0)){    //length == 0 since the lenght needs to be updated in the beginning.
+                            length = (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)));
                             index = j;
                         }
                         else{
@@ -77,7 +77,6 @@ class RoutePlanner{
             Serial.println(correkt_row[3]);
             Serial.println(route_list[0][0]);
             Serial.println(route_list[0][1]);
-            Serial.println("skift");
             Serial.println(route_list[1][0]);
             Serial.println(route_list[1][1]);
             Serial.println(route_list[2][0]);
