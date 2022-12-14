@@ -40,6 +40,15 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         double gyro_drift_z;
 
         uint16_t brightness_levels[4] = {1, 2 , 3 , 4 };
+        float PIDvalues[9][3] = {{1.5, 19, 25}, 
+                        {1.5, 19, 26}, 
+                        {1.5, 19, 27}, 
+                        {1.5, 19, 28}, 
+                        {1.5, 19, 29}, 
+                        {1.5, 20, 30}, 
+                        {1.5, 21, 35}, 
+                        {1.5, 18, 40}, 
+                        {1.5, 17, 45}};
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
@@ -116,9 +125,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             gyro_correction_time = 1;
             min_speed = 80;
             last_angle_error = 0;
-            kc = 0.5;
-            kd = 15;
-            ki = 8;
+            
+            set_PID_values(1.5, 23, 19);
 
             Encoders.getCountsAndResetLeft();
             Encoders.getCountsAndResetRight();
@@ -143,6 +151,16 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             return error_sum;
         }
 
+        void test_PID(){
+            for (int i = 0; i < 7; i++){
+                Rockxan.set_PID_values(PIDvalues[i][0], PIDvalues[i][1], PIDvalues[i][2]);
+                Rockxan.drive_straight(200, 30);
+                Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_I_value());
+                delay(3000);
+        }
+
+        Serial.println("done");
+        }
         //This function updates the angle according to changes in the gyroscope
         //The function has to be called very often to work well, since it is calculated
         //from movements
@@ -214,7 +232,11 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             Motors.setSpeeds(left_speed, right_speed);
 
+            bool rise_done = false;
             time_offset = millis();
+
+            //Husk at slette dette når PID test er done
+            current_angle -= 3.5;
 
             while(abs(dist) > abs(left_counts)){
                 check_obstacle();
@@ -244,6 +266,13 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }
                 
                 update_angle_gyro();
+
+                //Slet også dette når PID er done
+                if ((abs(dist)/2 < abs(left_counts)) && rise_done != true){
+                    current_angle += 3;
+                    rise_done = true;
+                }
+
 
                 if (100 < millis()-t2){ //for each 100 millis we print the angle
                     display_print((String)current_angle, 0, 0);
@@ -373,11 +402,11 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 delay(50);
             }
 
-            Serial.println(gyro_drift_z);
+            //Serial.println(gyro_drift_z);
             gyro_drift_z = gyro_drift_z/64;
 
-            Serial.println(dt);
-            Serial.println(gyro_drift_z, 14);
+            //Serial.println(dt);
+            //Serial.println(gyro_drift_z, 14);
 
             //gyro_drift_z /= 64;
         }

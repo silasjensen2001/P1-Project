@@ -12,16 +12,6 @@ Zumo32U4ButtonC But_C;
 
 Rockxanne Rockxan;
 
-float values[9][3] = {{1.24, 137, 39}, 
-                        {4, 137, 39}, 
-                        {12.56, 8, 7.76}, 
-                        {1.24, 80, 20}, 
-                        {1.24, 137, 39}, 
-                        {13.86, 7, 6.52}, 
-                        {18.64, 8, 6.45}, 
-                        {30, 9, 16}, 
-                        {13.51, 15, 8.07}};
-
 void setup(){
     Serial.begin(9600);
     Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
@@ -52,13 +42,5 @@ void loop(){
 
     if (But_C.isPressed()){
         delay(500);
-        for (int i = 0; i < 5; i++){
-            Rockxan.set_PID_values(values[i][0], values[i][1], values[i][2]);
-            Rockxan.drive_straight(200, 30);
-            Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_I_value());
-            delay(1000);
-        }
-
-        Serial.println("done");
     }
 }

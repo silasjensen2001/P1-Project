@@ -9,7 +9,7 @@ time.sleep(2)
 header = ["Time", "Error"]
 
 # Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook('PD-ZumoTest.xlsx')
+workbook = xlsxwriter.Workbook('PD-ZumoTest6.xlsx')
 
 #Sheet names
 name = "PD"
@@ -101,7 +101,7 @@ for i in range(iterations):
 
     # Add y-axis label
     chart.set_y_axis({ 'major_unit': 0.1,
-                        'min': -1, 'max': 1}) #'name': 'Angular Error [degrees]'
+                        'min': -0.5, 'max': 0.5}) #'name': 'Angular Error [degrees]'
 
     chart.set_legend({'none': True})
 
