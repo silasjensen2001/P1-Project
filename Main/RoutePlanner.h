@@ -67,6 +67,7 @@ class RoutePlanner{
                 route_list[i][0] = stone_list[index][0];
                 route_list[i][1] = stone_list[index][1];
             }
+            //følgende kan slettes.
             Serial.println(index_list[0]);
             Serial.println(index_list[1]);
             Serial.println(index_list[2]);
@@ -83,7 +84,6 @@ class RoutePlanner{
             Serial.println(route_list[2][1]);
             Serial.println(route_list[3][0]);
             Serial.println(route_list[3][1]);
-            delay(5000000);  //sletttt
         }
         
         void sort_xy(){
