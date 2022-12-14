@@ -67,6 +67,11 @@ class RoutePlanner{
                 route_list[i][0] = stone_list[index][0];
                 route_list[i][1] = stone_list[index][1];
             }
+            for (size_t i = 0; i < list_size; i++){
+                stone_list[i][0] = route_list[i][0];
+                stone_list[i][1] = route_list[i][1];
+            }
+            
             //følgende kan slettes.
             Serial.println(index_list[0]);
             Serial.println(index_list[1]);
@@ -88,18 +93,18 @@ class RoutePlanner{
         
         void sort_xy(){
             float update_list[4][2]; //another array lokal for this method/function.
-            for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
+            for(int i = 0; i < list_size; i++){ //sets the array UpList=sten.
                 update_list[i][0]=stone_list[i][0];
                 update_list[i][1]=stone_list[i][1];
             }
-            for (size_t i = 0; i < 3; i++){   //makes it check trough the array numStone-1 times.
-                for (size_t S = 0; S < 3; S++){  //Checks trough the array comparing 2 parts of the array that is beside each other each time. 
+            for (size_t i = 0; i < list_size-1; i++){   //makes it check trough the array numStone-1 times.
+                for (size_t S = 0; S < list_size-1; S++){  //Checks trough the array comparing 2 parts of the array that is beside each other each time. 
                     if ((stone_list[S][0] > stone_list[S+1][0]) || ((stone_list[S][0] == stone_list[S+1][0]) && ((stone_list[S][1] > stone_list[S+1][1])))){
                         update_list[S][0] = stone_list[S+1][0];
                         update_list[S][1] = stone_list[S+1][1];
                         update_list[S+1][0] = stone_list[S][0];
                         update_list[S+1][1] = stone_list[S][1];          
-                        for(int i = 0; i < 4; i++){
+                        for(int i = 0; i < list_size; i++){
                             stone_list[i][0]=update_list[i][0];
                             stone_list[i][1]=update_list[i][1];
                         } 

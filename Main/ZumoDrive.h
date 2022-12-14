@@ -497,8 +497,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         
 
         void free_move(){
-            float drive_to[2] = {0,0};
             nearest_neighbour();       //sorts the stone_list array so the coordinates is in the right order.
+            float drive_to[2] = {0,0};
             for (size_t i = 0; i < list_size; i++){       //drives to every stone and collects them.
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
