@@ -168,9 +168,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         void test_PID(){
             for (int i = 0; i < 7; i++){
-                Rockxan.set_PID_values(PIDvalues[i][0], PIDvalues[i][1], PIDvalues[i][2]);
-                Rockxan.drive_straight(200, 30);
-                Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_I_value());
+                set_PID_values(PIDvalues[i][0], PIDvalues[i][1], PIDvalues[i][2]);
+                drive_straight(200, 30);
+                Serial.println("new;" + (String)get_P_value() + ";" + (String)get_D_value() + ";" + (String)get_I_value());
                 delay(3000);
         }
 
