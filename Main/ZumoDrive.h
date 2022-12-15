@@ -112,6 +112,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 left_sensor = proxSensors.countsFrontWithLeftLeds();
                 Motors.setSpeeds(0, 0);
             }
+            Motors.setSpeeds(left_speed, right_speed);
         }
         
         //resets pos, angle and encoder counts
@@ -126,7 +127,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             min_speed = 80;
             last_angle_error = 0;
             
-            set_PID_values(1.5, 23, 19);
+            set_PID_values(1.5, 19, 23);
 
             Encoders.getCountsAndResetLeft();
             Encoders.getCountsAndResetRight();
@@ -454,8 +455,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         }
 
-        
-
+    
         void follow_tracks(){
             sort_xy();
             int track_size= 20;          //the distance in the cordinatesystem between the Tracks.
