@@ -8,11 +8,11 @@
 #include "RoutePlanner.h"
 
 
-//The Rockxanne class includes all useful methods for steering the zumo robot
+//The Zumodrive class includes all useful methods for steering the zumo robot
 //Its attributes keep track of variables like current angle and position
 class ZumoDrive: public ZumoCom, public RoutePlanner{
 
-    //Private members can't be accesed with ex. Rockxan."member" 
+    //Private members can't be accesed with ex. ZumoDrive."member" 
     //To get information about private members you need to make public methods that returns the respective value
     protected:
         //Zumo objects
@@ -40,15 +40,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         double gyro_drift_z;
 
         uint16_t brightness_levels[4] = {1, 2 , 3 , 4 };
-        float PIDvalues[9][3] = {{1.5, 19, 25}, 
-                        {1.5, 19, 26}, 
-                        {1.5, 19, 27}, 
-                        {1.5, 19, 28}, 
-                        {1.5, 19, 29}, 
-                        {1.5, 20, 30}, 
-                        {1.5, 21, 35}, 
-                        {1.5, 18, 40}, 
-                        {1.5, 17, 45}};
 
         int min_speed;             //zumo value (minimum speed needed for zumo to drive)
         int counts_rotation;
@@ -61,6 +52,19 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         unsigned long time_offset;
         unsigned long gyro_timer;   //ms
 
+
+        //This can be uncommented and use to test different PID values
+        /*
+        float PIDvalues[9][3] = {{1.5, 19, 25}, 
+                        {1.5, 19, 26}, 
+                        {1.5, 19, 27}, 
+                        {1.5, 19, 28}, 
+                        {1.5, 19, 29}, 
+                        {1.5, 20, 30}, 
+                        {1.5, 21, 35}, 
+                        {1.5, 18, 40}, 
+                        {1.5, 17, 45}};
+        */
 
 
         //---------------------Protected methods---------------------//
@@ -166,6 +170,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             return error_sum;
         }
 
+        //Can be uncommented to test for different PID-values (is commented out to save memory)
+        /*
         void test_PID(){
             for (int i = 0; i < 7; i++){
                 set_PID_values(PIDvalues[i][0], PIDvalues[i][1], PIDvalues[i][2]);
@@ -176,6 +182,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         Serial.println("done");
         }
+        */
+        
+        
         //This function updates the angle according to changes in the gyroscope
         //The function has to be called very often to work well, since it is calculated
         //from movements
