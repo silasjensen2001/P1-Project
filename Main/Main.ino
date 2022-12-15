@@ -11,8 +11,6 @@ Zumo32U4ButtonC But_C;
 
 ZumoDrive Rockxan;
 
-float values[9][2] = {{0.5, 0.5}, {2, 0.5}, {5, 0.5}, {10, 0.5}, {15, 0.5}, {0.5, 2}, {0.5, 5}, {0.5, 10}, {0.5, 15}};
-
 void setup(){
     Serial.begin(9600);
     Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
@@ -43,12 +41,24 @@ void loop(){
     }
 
     if (But_C.isPressed()){
+        /*
+        delay(500);
+        Rockxan.turn_to(90);
+        delay(500);
+        Rockxan.turn_to(-90);
+        delay(500);
+        Rockxan.turn_to(250);
+        delay(500);
+        Rockxan.turn_to(0);
+        */
         delay(500);
         Rockxan.display_print("Free");
         Rockxan.display_print("move", 0, 1);
         Rockxan.free_move();
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
+        Rockxan.turn_to(0);
+        
     }
 }
 /*delay(500);
