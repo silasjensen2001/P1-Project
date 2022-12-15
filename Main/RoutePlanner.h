@@ -19,7 +19,7 @@ class RoutePlanner{
 
     //Lists
     //int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
-    int stone_list[4][2] = {{70, 10},{15, 20},{25,60},{40,50}};
+    int stone_list[4][2] = {{70, 15},{20, 40},{70,60},{50,10}};
 
     //Variables 
     float current_pos[2];      //{x,y} [cm]  
