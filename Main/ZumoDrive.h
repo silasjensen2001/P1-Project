@@ -510,4 +510,15 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             drive_to[1] = 0;
             drive_to_coords(drive_to, 20, 160);    //returns to starting position.
         }
+
+        void free_move_nico(){
+            float list[2];
+            for(int i = 0; i < list_size;i++){
+                list[0] = stone_list[i][0];
+                list[1] = stone_list[i][1];
+                koortilkordinat(list,35);
+                display_print(String(int(list[0])) + "," + String(int(list[1])));
+                delay(5000);
+            }
+        }
 };

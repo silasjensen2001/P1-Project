@@ -40,6 +40,15 @@ class RoutePlanner{
     //Underneath here are all methods/functions defined
     public:
 
+        // Random coordinates function
+        int randomStoneCoords(){
+            for(int i = 0; i < list_size;i++){
+                stone_list[i][0] = (rand() % 16 + 1) * 5;
+                stone_list[i][1] = (rand() % 14 + 1) * 5;
+                delay(200);
+            }
+        }
+
         // Nearest neighbour function
         void nearest_neighbour(){
             current_pos[0] = 0;
