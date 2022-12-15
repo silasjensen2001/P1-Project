@@ -17,7 +17,7 @@ class RoutePlanner{
     //Lists
     //int stone[4][2] = {{20,24},{20,21},{30,35},{40,45}};
     int stone[4][2] = {{70, 10},{15, 20},{25,60},{40,50}};
-    int stone_list[4][2] = {{70, 20},{15, 40},{25,80},{40,70}};
+    int stone_list[10][2] = {{70, 20},{15, 40},{25,70},{40,70}};
 
     //Variables 
     float current_pos[2];      //{x,y} [cm]  
@@ -29,12 +29,21 @@ class RoutePlanner{
     int index = -1;
     int n = sizeof(length_list);
 
-    int list_size = 4; // stoneList.size()/size(float);
+    int list_size = 10; // stoneList.size()/size(float);
     float length_list[3];
     //float route_list[4][2];
 
     //Underneath here are all methods/functions defined
     public:
+
+        // Random coordinates function
+        int randomStoneCoords(){
+            for(int i = 0; i < list_size;i++){
+                stone_list[i][0] = (rand() % 16 + 1) * 5;
+                stone_list[i][1] = (rand() % 14 + 1) * 5;
+                delay(200);
+            }
+        }
 
         // Nearest neighbour function
         void nearest_neighbour(){
@@ -70,11 +79,11 @@ class RoutePlanner{
 
         void SortXY(){
             float UpdateList[4][2]; //another array lokal for this method/function.
-            for(int i = 0; i < 4; i++){ //sets the array UpList=sten.
+            for(int i = 0; i < list_size; i++){ //sets the array UpList=sten.
                 UpdateList[i][0]=stone[i][0];
                 UpdateList[i][1]=stone[i][1];
             }
-            for (size_t i = 0; i < 3; i++){   //makes it check trough the array numStone-1 times.
+            for (size_t i = 0; i < list_size-1; i++){   //makes it check trough the array numStone-1 times.
                 for (size_t S = 0; S < 3; S++){  //Checks trough the array comparing 2 parts of the array that is beside each other each time. 
                     if ((stone[S][0] > stone[S+1][0]) || ((stone[S][0] == stone[S+1][0]) && ((stone[S][1] > stone[S+1][1])))){
                         UpdateList[S][0] = stone[S+1][0];
