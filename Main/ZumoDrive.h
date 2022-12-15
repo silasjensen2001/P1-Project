@@ -287,16 +287,21 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         }
 
         
-            //Method that turns the Zumo to a given angle relative to the Zumo's X-axis (direction of Zumo when calibrated)
+        //Method that turns the Zumo to a given angle relative to the Zumo's X-axis (direction of Zumo when calibrated)
         void turn_to(float end_angle, int speed = 120){
             int i = 0;
             unsigned long t2 = millis();
             
+            if(end_angle < 0){
+                end_angle = 360 + end_angle;
+            }
+
+
             //if(current_angle > 0){
                 //end_angle = ()
             //}
 
-            //Checks whether the Zumo already have the angle (inside the thresholds) or not
+            //Checks whether the Zumo already have the angle (inside the thresholds) or not 
             if (end_angle > current_angle + angle_thresh or end_angle < current_angle - angle_thresh){
                 //A continous loop that runs until right angle is achieved
                 while(true){
