@@ -511,6 +511,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             drive_to_coords(drive_to, 20, 160);    //returns to starting position.
         }
 
+        /*
         void free_move_nico(){
             float list[2];
             for(int i = 0; i < list_size;i++){
@@ -520,5 +521,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 display_print(String(int(list[0])) + "," + String(int(list[1])));
                 delay(5000);
             }
-        }
+        }*/
+        
 };
