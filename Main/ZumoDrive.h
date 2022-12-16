@@ -381,7 +381,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
             //Get motor speed difference using a PID-controller
             //PID terms (the integral term is generally not very useful)
-            float speed_difference = error*kc + ki * integral_error + kd*(error - last_angle_error); //error / 4
+            float speed_difference = error*kc + ki * integral_error + kd*(error - last_angle_error); 
 
             last_angle_error = error;
 

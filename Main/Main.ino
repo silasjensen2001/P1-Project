@@ -11,16 +11,21 @@ Zumo32U4ButtonC But_C;
 
 ZumoDrive Rockxan;
 
+//Setup function is an built-in arduino that must be run
+//It used to initialize the program
 void setup(){
     Serial.begin(9600);
-    Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
     Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
     Rockxan.display_print("Klar");
 }
 
 
+//The loop function is another built-in function
+//As the name suggest the function is a continous loop
 void loop(){
-    if (But_A.isPressed()){      //Initiates Tracs following.
+
+    //If button A is pressed the track following function is run
+    if (But_A.isPressed()){      
         delay(500);
         Rockxan.display_print("Following");
         Rockxan.display_print("Tracks", 0, 1);
@@ -29,7 +34,8 @@ void loop(){
         Rockxan.display_print("", 0, 1);
     }
 
-    if (But_B.isPressed()){         //The Zumo drives straight and returns to the starting position.
+    //If B is pressed the the drive straight function is demonstrated with acceleration and gyro correction
+    if (But_B.isPressed()){         
         delay(500);
         Rockxan.display_print("Driving");
         Rockxan.display_print("Straight", 0, 1);
@@ -40,17 +46,9 @@ void loop(){
         Rockxan.display_print("", 0, 1);
     }
 
+    //Button C starts the freemove function
+    //The coordinates are sorted using neares neighbour
     if (But_C.isPressed()){
-        /*
-        delay(500);
-        Rockxan.turn_to(90);
-        delay(500);
-        Rockxan.turn_to(-90);
-        delay(500);
-        Rockxan.turn_to(250);
-        delay(500);
-        Rockxan.turn_to(0);
-        */
         delay(500);
         Rockxan.display_print("Free");
         Rockxan.display_print("move", 0, 1);
@@ -61,22 +59,4 @@ void loop(){
         
     }
 }
-/*delay(500);
-        Rockxan.drive_straight(200, 40, false);
-        delay(200);
-        //Rockxan.gyro_drift();
 
-        
-        delay(500);
-        for (int i = 0; i < 4; i++){
-            Rockxan.set_PD_values(values[i][0], values[i][1]);
-            Rockxan.drive_straight(200, 25);
-            Serial.println("new;" + (String)Rockxan.get_P_value() + ";" + (String)Rockxan.get_D_value() + ";" + (String)Rockxan.get_error());
-            delay(500);
-            Rockxan.drive_straight(-200, 40, false);
-            delay(500);
-            Rockxan.reset();
-            Rockxan.calibrate_gyro();     
-        }
-        Serial.println("done");
-      */

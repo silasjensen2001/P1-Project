@@ -11,14 +11,15 @@
 //Its attributes keep track of variables like current angle and position
 class ZumoCom{
 
-    //Protected er ligesom private blot at hovedklassen har adgang til dem
+    //Protected members are like private members, except that these can be accesed by antoher when the class i inherited
     protected:
         bool oled = false;
         Zumo32U4LCD LCD;
         Zumo32U4OLED OLED;
         
 
-    //Under public are all functions/methods defined
+
+    //Under public are all methods defined
     public:
 
         //The communication channel has to be initialized and is dependent on whether OLED or LCD is used
@@ -34,6 +35,7 @@ class ZumoCom{
                 
             }
         }
+
 
         //This functions prints to the display
         //It takes into consideration whether a OLED or LCD is used
