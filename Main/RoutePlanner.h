@@ -132,6 +132,7 @@ class RoutePlanner{
                         }
                     }
                 }
+                /*
                     Serial.println("-----");
                     Serial.println(length_total_list[0]);
                     Serial.println(length_total_list[1]);
@@ -139,6 +140,8 @@ class RoutePlanner{
                     Serial.println(length_total_list[3]);
                     Serial.println(length_total_list[4]);
                     Serial.println("-----");
+                */
+
                 // find the longest length and its index
                 for (size_t i = 0; i < list_size; i++){
                     if (longest_length < length_total_list[i]){
@@ -148,15 +151,18 @@ class RoutePlanner{
                 }
                 check_list[longest_length_index] = 1;
 
+                /*
                 Serial.println("-----");
                 Serial.println(longest_length);
                 Serial.println(longest_length_index);
                 Serial.println("-----");
-                
+                */
 
                 for (int j = 0; j < list_size; j++){
                     length_total_list[j] = 0;
                 }
+
+                /*
                 Serial.println("-----");
                 Serial.print(route_list[0][0]);
                 Serial.println(route_list[0][1]);
@@ -169,6 +175,8 @@ class RoutePlanner{
                 Serial.print(route_list[4][0]);
                 Serial.println(route_list[4][1]);
                 Serial.println("-----");
+                */
+
                 // Place the new point in all possible locations (except index 0) of the array and calculate the distance of the route for each instance.
                 for (size_t i = 1; i < list_size; i++){
                     for (size_t t = list_size - 1; t >= i; t--){
@@ -223,6 +231,7 @@ class RoutePlanner{
                 shortest_dist_index = 0;
                 count += 1;
 
+                /*
                 Serial.println("-----");
                 Serial.println("-----");
                 Serial.print(route_list[0][0]);
@@ -242,6 +251,7 @@ class RoutePlanner{
                 Serial.println(check_list[3]);
                 Serial.println(check_list[4]);
                 Serial.println("-----");
+                */
             }
         }
 
