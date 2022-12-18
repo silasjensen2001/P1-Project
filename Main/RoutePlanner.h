@@ -18,7 +18,7 @@ class RoutePlanner{
 
     int index;
     int list_size = 5; 
-    int count = 0;
+    int count = 2;
     int counts = 0;
 
     float length_list[5];
@@ -79,8 +79,8 @@ class RoutePlanner{
         void farthest_insertion(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            int check_list[4] = {0,0,0,0,0};
-            float length_total_list[4] = {0,0,0,0,0};
+            int check_list[5] = {0,0,0,0,0};
+            float length_total_list[5] = {0,0,0,0,0};
             float length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             float longest_length = 0;
             int longest_length_index;
@@ -104,6 +104,7 @@ class RoutePlanner{
             route_list[1][1] = stone_list[index][1];
             check_list[0] = 1;
             check_list[1] = 1;
+            /*
             Serial.println(route_list[0][0]);
             Serial.println(route_list[0][1]);
             Serial.println(route_list[1][0]);
@@ -113,7 +114,9 @@ class RoutePlanner{
             Serial.println(check_list[1]);
             Serial.println(check_list[2]);
             Serial.println(check_list[3]);
+            Serial.println(check_list[4]);
             Serial.println("-----");
+            */
 
             while (count < list_size){
                 // Calculate the distance to all points outside the list to find the point farthest from any point within the list
@@ -128,11 +131,13 @@ class RoutePlanner{
                         }
                         counts += 1;
                     }
+                    /*
                     Serial.println(length_total_list[0]);
                     Serial.println(length_total_list[1]);
                     Serial.println(length_total_list[2]);
                     Serial.println(length_total_list[3]);
                     Serial.println(length_total_list[4]);
+                    */
                 }
                 // find the longest length and its index
                 for (size_t i = 0; i < list_size; i++){
@@ -141,21 +146,34 @@ class RoutePlanner{
                         longest_length_index = i;
                     }
                 }
+                /*
                 Serial.println("-----");
                 Serial.println(longest_length);
                 Serial.println(longest_length_index);
                 Serial.println("-----");
+                */
 
-                float length_total_list[4] = {0,0,0,0,0};
+                float length_total_list[5] = {0,0,0,0,0};
                 
-                // Place the new point in all possible locations of the array and calculate the route for each instance.
-                for (size_t i = 0; i < list_size; i++){
+                // Place the new point in all possible locations (except index 0) of the array and calculate the distance of the route for each instance.
+                for (size_t i = 1; i < list_size; i++){
                     if (check_list[i] == 1){
-                        for (size_t t = list_size - 1; t > i; t--){
+                        for (size_t t = list_size - 1; t >= i; t--){
                             route_list[t][0] = route_list[t-1][0];
                             route_list[t][1] = route_list[t-1][1];
                             check_list[t] = check_list[t-1];
                         }
+                        Serial.print(route_list[0][0]);
+                        Serial.println(route_list[0][1]);
+                        Serial.print(route_list[1][0]);
+                        Serial.println(route_list[1][1]);
+                        Serial.print(route_list[2][0]);
+                        Serial.println(route_list[2][1]);
+                        Serial.print(route_list[3][0]);
+                        Serial.println(route_list[3][1]);
+                        Serial.print(route_list[4][0]);
+                        Serial.println(route_list[4][1]);
+                        Serial.println("-----");
                         route_list[i][0] = stone_list[longest_length_index][0];
                         route_list[i][1] = stone_list[longest_length_index][1];
                         check_list[i] = 1;
@@ -166,19 +184,18 @@ class RoutePlanner{
                         }
                     }
                     // Reset and calculate again
-                    float route_list[4][2] = {{0,0},{0,0},{0,0},{0,0}};
-                    float check_list[4] = {0,0,0,0};
-                    route_list[0][0] = current_pos[0];
-                    route_list[0][1] = current_pos[1];
-                    route_list[1][0] = stone_list[index][0];
-                    route_list[1][1] = stone_list[index][1];
-                    check_list[0] = 1;
-                    check_list[1] = 1;
+                    for (size_t h = i; h < (list_size - i); i++){
+                        route_list[h][0] = route_list[h+1][0];
+                        route_list[h][1] = route_list[h+1][1];
+                        if (h < count) {
+                            check_list[h] = 1;
+                        }
+                    }
                 }
 
                 // Check the length total list and choose the shortest one
-                for (size_t i = 0; i < list_size; i++){
-                    if (shortest_dist < length_total_list[i]){
+                for (size_t i = 1; i < list_size; i++){
+                    if (shortest_dist > length_total_list[i]){
                         shortest_dist = length_total_list[i];
                         shortest_dist_index = i;
                     }
@@ -196,22 +213,37 @@ class RoutePlanner{
                 shortest_dist_index = 0;
                 counts = 0;
                 count += 1;
+                if (count == 3){
+                    Serial.print(route_list[0][0]);
+                    Serial.println(route_list[0][1]);
+                    Serial.print(route_list[1][0]);
+                    Serial.println(route_list[1][1]);
+                    Serial.print(route_list[2][0]);
+                    Serial.println(route_list[2][1]);
+                    Serial.print(route_list[3][0]);
+                    Serial.println(route_list[3][1]);
+                    Serial.print(route_list[4][0]);
+                    Serial.println(route_list[4][1]);
+                }
             }
             Serial.println("-----");
             Serial.println("-----");
-            Serial.println(route_list[0][0]);
+            Serial.print(route_list[0][0]);
             Serial.println(route_list[0][1]);
-            Serial.println(route_list[1][0]);
+            Serial.print(route_list[1][0]);
             Serial.println(route_list[1][1]);
-            Serial.println(route_list[2][0]);
+            Serial.print(route_list[2][0]);
             Serial.println(route_list[2][1]);
-            Serial.println(route_list[3][0]);
+            Serial.print(route_list[3][0]);
             Serial.println(route_list[3][1]);
+            Serial.print(route_list[4][0]);
+            Serial.println(route_list[4][1]);
             Serial.println("-----");
             Serial.println(check_list[0]);
             Serial.println(check_list[1]);
             Serial.println(check_list[2]);
             Serial.println(check_list[3]);
+            Serial.println(check_list[4]);
             Serial.println("-----");
         }
 
