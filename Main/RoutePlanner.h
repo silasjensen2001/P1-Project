@@ -253,6 +253,11 @@ class RoutePlanner{
                 Serial.println("-----");
                 */
             }
+
+            for (size_t i = 0; i < list_size; i++){
+                stone_list[i][0] = route_list[i][0];
+                stone_list[i][1] = route_list[i][1];
+            }
         }
 
 

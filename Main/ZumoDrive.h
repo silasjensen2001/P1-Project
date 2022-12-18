@@ -551,9 +551,13 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         }
         
         //Drives directly to coordinates without taking tracks into account
-        //Sorts the stone list by using nearest neighbour
-        void free_move(){
-            nearest_neighbour(); 
+        //Sorts the stone list by using nearest neighbour (nn) or farthest insertion (fi)
+        void free_move(String sort_function = "nn"){
+            if (sort_function == "nn"){
+                nearest_neighbour(); 
+            } else {
+                farthest_insertion();
+            }             
             
             float drive_to[2] = {0,0};
 
