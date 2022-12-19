@@ -206,7 +206,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //The angle change can now be calculated
             //Every raw reading can be translated to degrees with the factor 0,07 deg/s
             //Datasheet https://www.pololu.com/file/0J731/L3GD20H.pdf)
-            current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z*dt) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
+            current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)//*dt
 
             //Ensure that the angle will not become less than -360 and more than 360
             if (current_angle < -360){
@@ -433,7 +433,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
                 dt = micros() - time;
                 time = micros();
-                gyro_drift_z += (IMU.g.z - gyro_offset_z)/dt;
+                gyro_drift_z += (IMU.g.z - gyro_offset_z); ///dt;
                 delay(50);
             }
 
