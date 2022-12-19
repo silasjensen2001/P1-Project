@@ -26,7 +26,7 @@ class RoutePlanner{
     int current_pos[2];       //{x,y} [cm] 
 
     int index_list[5];
-    int stone_list[5][2] = {{70,15},{20,40},{70,60},{50,10},{10,65}};
+    int stone_list[5][2] = {{0,0},{70,15},{20,40},{70,60},{50,10}};
     
          
 
@@ -36,8 +36,8 @@ class RoutePlanner{
         //Fills the stone
         int randomStoneCoords(){
             for(int i = 0; i < list_size; i++){
-                stone_list[i][0] = (rand() % 16 + 1) * 5;
-                stone_list[i][1] = (rand() % 14 + 1) * 5;
+                stone_list[i][0] = (rand() % 16 + 2) * 5;
+                stone_list[i][1] = (rand() % 14 + 2) * 5;
                 delay(200);
             }
         }

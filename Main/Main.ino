@@ -16,6 +16,7 @@ ZumoDrive Rockxan;
 void setup(){
     Serial.begin(9600);
     Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
+    Rockxan.randomStoneCoords();
     Rockxan.display_print("Klar");
 }
 
