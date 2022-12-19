@@ -34,7 +34,7 @@ class RoutePlanner{
     public:
 
         //Fills the stone
-        int randomStoneCoords(bool same_coords_allowed = true){
+        int random_stone_coords(bool same_coords_allowed = true){
             for(int i = 0; i < list_size; i++){
                 bool repeat = true;
 
