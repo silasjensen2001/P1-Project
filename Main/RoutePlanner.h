@@ -17,16 +17,16 @@ class RoutePlanner{
     float length;
 
     int index;
-    int list_size = 5; 
+    int list_size = 11; 
     int count = 2;
     int counts = 0;
 
-    float length_list[5];
-    int route_list[5][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
+    float length_list[11];
+    int route_list[11][2] = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
     int current_pos[2];       //{x,y} [cm] 
 
-    int index_list[5];
-    int stone_list[5][2] = {{0,0},{70,15},{20,40},{70,60},{50,10}};
+    int index_list[11];
+    int stone_list[11][2] = {{0,0}, {60,20}, {30,90}, {90,20}, {5,65}, {80,95}, {40,90}, {90,5}, {25,80}, {25,70}, {75,5}};
     
          
 
@@ -36,8 +36,8 @@ class RoutePlanner{
         //Fills the stone
         int randomStoneCoords(){
             for(int i = 0; i < list_size; i++){
-                stone_list[i][0] = (rand() % 16 + 2) * 5;
-                stone_list[i][1] = (rand() % 14 + 2) * 5;
+                stone_list[i][0] = (rand() % 19 + 1) * 5;
+                stone_list[i][1] = (rand() % 19 + 1) * 5;
                 delay(200);
             }
         }
@@ -46,7 +46,7 @@ class RoutePlanner{
         void nearest_neighbour(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            float correct_row[4];
+            float correct_row[11];
             int length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             int index = 0;
             for (size_t i = 0; i < list_size; i++){
@@ -79,8 +79,8 @@ class RoutePlanner{
         void farthest_insertion(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            int check_list[5] = {0,0,0,0,0};
-            float length_total_list[5] = {0,0,0,0,0};
+            int check_list[11] = {0,0,0,0,0,0,0,0,0,0,0};
+            float length_total_list[11] = {0,0,0,0,0,0,0,0,0,0,0};
             float length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             float longest_length = 0;
             int longest_length_index;

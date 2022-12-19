@@ -272,7 +272,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //current_angle -= 3.5;
             //time_offset = millis();
 
-            while(abs(dist) > abs(left_counts)){
+            while(abs(dist) >= abs(left_counts)){
                 if(use_prox){
                     check_obstacle();
                 }
@@ -357,7 +357,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 if (current_angle > end_angle-angle_thresh && current_angle < end_angle+angle_thresh){
                     Motors.setSpeeds(0, 0);
                     delay(20);
-                    speed = 70;
+                    speed = 80;
                     i++; 
                 } else if (current_angle > end_angle-angle_thresh) {
                     Motors.setSpeeds(speed, -speed);
