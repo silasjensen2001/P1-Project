@@ -16,7 +16,7 @@ ZumoDrive Rockxan;
 void setup(){
     Serial.begin(9600);
     Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
-    Rockxan.randomStoneCoords();
+    //Rockxan.randomStoneCoords();
     Rockxan.display_print("Klar");
 }
 
@@ -28,7 +28,7 @@ void loop(){
     //If button A is pressed the track following function is run
     if (But_A.isPressed()){
         delay(1000);
-        Rockxan.free_move("none");
+        Rockxan.follow_tracks();
     }
 
     //Button B starts the freemove function

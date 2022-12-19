@@ -25,7 +25,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         Zumo32U4ButtonC But_C;
 
         //Attributes
-        float current_pos[2];      //{x,y} [cm]  
+        //float current_pos[2];      //{x,y} [cm]  
         float current_angle;       //degrees
         float gyro_offset_z;
         float gyro_last_angle;     //degrees
@@ -452,13 +452,17 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int x_vec[2] = {1, 0};
             int x = coords[0] - current_pos[0];
             int y = coords[1] - current_pos[1];
-
+            float angle;
             float norm = sqrt((pow(x, 2) + pow(y, 2)));
-
             float dot_prod = x_vec[0]*x + x_vec[1]*y;
             float norm_prod = sqrt((pow(x_vec[0], 2) + pow(x_vec[1], 2))) * sqrt((pow(x, 2) + pow(y, 2)));
 
-            float angle = acos(dot_prod/norm_prod)*180/M_PI;   //is multiplied by 180/pi to go from radians to degrees. 
+            if(norm_prod == 0){
+                angle = 0;
+            } else {
+                angle = acos(dot_prod/(norm_prod+0.0001))*180/M_PI;   //is multiplied by 180/pi to go from radians to degrees. 
+            }
+            
 
             //The formular above does not take sign into account
             if (current_pos[1] > coords[1]){
@@ -466,9 +470,15 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
             
             //Now it can turn the angle and drive the length
+            Serial.println(angle);
             turn_to(angle, angle_speed);
+            Serial.println("angelok");
+            Serial.println(angle);
             delay(50);
+            Serial.println(norm);
             drive_straight(norm, speed, true, acc, de_acc);
+            Serial.println("straight");
+            Serial.println(norm);
 
             //Update the position
             current_pos[0] = coords[0];
@@ -558,17 +568,21 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         void free_move(String sort_function = "nn"){
             if (sort_function == "nn"){
                 nearest_neighbour(); 
+                Serial.println("nn");
             } else if(sort_function == "fi") {
                 farthest_insertion();
+                Serial.println("fi");
             }             
             
             float drive_to[2] = {0,0};
 
+            delay(1000);
             //drives to every stone and collects them.
             for (size_t i = 0; i < list_size; i++){       
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
                 drive_to_coords(drive_to, 20, 160);
+                Serial.println("her");
                 display_print(String(drive_to[0]) + " " + String(drive_to[1]));
                 delay(3000);
             }

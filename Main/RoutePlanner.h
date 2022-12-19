@@ -250,8 +250,8 @@ class RoutePlanner{
                 Serial.println(check_list[2]);
                 Serial.println(check_list[3]);
                 Serial.println(check_list[4]);
-                Serial.println("-----");
-                */
+                Serial.println("-----");*/
+                
             }
 
             for (size_t i = 0; i < list_size; i++){
