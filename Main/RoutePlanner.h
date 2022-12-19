@@ -34,11 +34,29 @@ class RoutePlanner{
     public:
 
         //Fills the stone
-        int randomStoneCoords(){
+        int randomStoneCoords(bool same_coords_allowed = true){
             for(int i = 0; i < list_size; i++){
-                stone_list[i][0] = (rand() % 19 + 1) * 5;
-                stone_list[i][1] = (rand() % 19 + 1) * 5;
-                delay(200);
+                bool repeat = true;
+
+                while(repeat){
+                    stone_list[i][0] = (rand() % 19 + 1) * 5;
+                    stone_list[i][1] = (rand() % 19 + 1) * 5;
+                    delay(200); 
+
+                    if(same_coords_allowed){
+                        repeat = false;
+                    } else {
+                        for(int j = 0; j < i; j++){
+                            if (stone_list[j][0] == stone_list[i][0] && stone_list[j][0] == stone_list[i][0]) {
+                                break;
+                            } else if (j == i-1){
+                                repeat = false;
+                            }
+                        }
+                    }
+                    
+                }
+                
             }
         }
 
