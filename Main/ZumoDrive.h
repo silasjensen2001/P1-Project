@@ -206,7 +206,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //The angle change can now be calculated
             //Every raw reading can be translated to degrees with the factor 0,07 deg/s
             //Datasheet https://www.pololu.com/file/0J731/L3GD20H.pdf)
-            current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z*dt) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)
+            current_angle += (((float)IMU.g.z - gyro_offset_z - gyro_drift_z) * 70 * dt / 1000000000);   //- (gyro_drift_z/3)//*dt
 
             //Ensure that the angle will not become less than -360 and more than 360
             if (current_angle < -360){
@@ -222,7 +222,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         //Optionally gyro-PID correction can be disabled
         //Acceleration and deaccelaeration can be specified. 
         //When 0 (default) the zumo will use the desired speed instantly    
-        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
+        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0, bool use_prox = false){
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
@@ -273,7 +273,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
-                check_obstacle();
+                if(use_prox){
+                    check_obstacle();
+                }
+                
 
                 left_counts = Encoders.getCountsLeft();
 
@@ -433,7 +436,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
                 dt = micros() - time;
                 time = micros();
-                gyro_drift_z += (IMU.g.z - gyro_offset_z)/dt;
+                gyro_drift_z += (IMU.g.z - gyro_offset_z); ///dt;
                 delay(50);
             }
 
