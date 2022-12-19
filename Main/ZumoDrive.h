@@ -555,7 +555,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         void free_move(String sort_function = "nn"){
             if (sort_function == "nn"){
                 nearest_neighbour(); 
-            } else {
+            } else if(sort_function == "fi") {
                 farthest_insertion();
             }             
             
@@ -566,7 +566,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
                 drive_to_coords(drive_to, 20, 160);
-                display_print("Collecting");
+                display_print(String(drive_to[0]) + " " + String(drive_to[1]));
                 delay(3000);
             }
             

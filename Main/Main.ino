@@ -25,13 +25,9 @@ void setup(){
 void loop(){
 
     //If button A is pressed the track following function is run
-    if (But_A.isPressed()){      
-        delay(500);
-        Rockxan.display_print("Following");
-        Rockxan.display_print("Tracks", 0, 1);
-        Rockxan.follow_tracks(20);
-        Rockxan.display_print("Done");
-        Rockxan.display_print("", 0, 1);
+    if (But_A.isPressed()){
+        delay(1000);
+        Rockxan.free_move("none");
     }
 
     //If B is pressed the the drive straight function is demonstrated with acceleration and gyro correction
@@ -52,7 +48,7 @@ void loop(){
         delay(500);
         Rockxan.display_print("Free");
         Rockxan.display_print("move", 0, 1);
-        Rockxan.free_move();
+        Rockxan.free_move("nn");
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
         Rockxan.turn_to(0);
