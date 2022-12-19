@@ -222,7 +222,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         //Optionally gyro-PID correction can be disabled
         //Acceleration and deaccelaeration can be specified. 
         //When 0 (default) the zumo will use the desired speed instantly    
-        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
+        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0, bool use_prox = false){
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
@@ -273,7 +273,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
-                check_obstacle();
+                if(use_prox){
+                    check_obstacle();
+                }
+                
 
                 left_counts = Encoders.getCountsLeft();
 
