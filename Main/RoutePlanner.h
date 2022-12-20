@@ -17,16 +17,16 @@ class RoutePlanner{
     float length;
 
     int index;
-    int list_size = 5; 
+    int list_size = 7; 
     int count = 2;
     int counts = 0;
 
-    float length_list[5];
-    int route_list[5][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
+    float length_list[7];
+    int route_list[7][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
     int current_pos[2];       //{x,y} [cm] 
 
-    int index_list[5];
-    int stone_list[5][2] = {{0,0},{70,15},{20,40},{70,60},{50,10}};
+    int index_list[7];
+    int stone_list[7][2] = {{70,15},{20,40},{70,60},{50,10},{30,10},{25,15},{15,30}};
     
          
 
@@ -265,7 +265,7 @@ class RoutePlanner{
         //This is useful when the stone must be picked up using the spray tracks
         void sort_xy(){
             //A temporary list 
-            float update_list[4][2];
+            float update_list[7][2];
 
             //Copy the stone list into update list
             for(int i = 0; i < list_size; i++){ 
