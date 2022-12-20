@@ -222,7 +222,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         //Optionally gyro-PID correction can be disabled
         //Acceleration and deaccelaeration can be specified. 
         //When 0 (default) the zumo will use the desired speed instantly    
-        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0){
+        void drive_straight(float dist, float real_speed, bool correction_active = true, float acc = 0, float deacc = 0, bool use_prox = true){
             float start_at = 0;
             float acc_zumo_value = 0;
             float deacc_zumo_value = 0;
@@ -273,7 +273,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
-                check_obstacle();
+                if(use_prox){
+                    check_obstacle();  
+                }
+                
 
                 left_counts = Encoders.getCountsLeft();
 
@@ -443,7 +446,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         //Drives the Zumo to a given {x,y} coordinat relative to 0 (point of calibration) with a given speed [cm/s]
         //Optionally the velocity (in zumo values) when turning, acc-, and deaccelartion can be specified
-        void drive_to_coords(float coords[2], float speed, int angle_speed = 80, float acc = 0.0, float de_acc = 0.0){ 
+        void drive_to_coords(float coords[2], float speed, int angle_speed = 80, float acc = 0.0, float de_acc = 0.0, bool use_prox = true){ 
             //This is used to calculate the angle the Zumo has to turn to get in the direction of the point
             //It is the formular for finding the angle between two vectors
             int x_vec[2] = {1, 0};
@@ -465,7 +468,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //Now it can turn the angle and drive the length
             turn_to(angle, angle_speed);
             delay(50);
-            drive_straight(norm, speed, true, acc, de_acc);
+            drive_straight(norm, speed, true, acc, de_acc, use_prox);
 
             //Update the position
             current_pos[0] = coords[0];
@@ -476,7 +479,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         //This functions drives to stonecoordinats by using tracks
         //The length (cm) between the tracks can be specified (20 on default)
         //This function assumes a rectangular field
-        void follow_tracks(int track_size = 20){     
+        void follow_tracks(int track_size = 20, bool use_prox = true){     
             sort_xy();     
             int x_track = 0;             //the track it goes to
             float drive_to[2] = {0,0};   //the destination we want to go to next
