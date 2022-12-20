@@ -447,7 +447,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         //Drives the Zumo to a given {x,y} coordinat relative to 0 (point of calibration) with a given speed [cm/s]
         //Optionally the velocity (in zumo values) when turning, acc-, and deaccelartion can be specified
-        void drive_to_coords(float coords[2], float speed, int angle_speed = 80, float acc = 0.0, float de_acc = 0.0, bool use_prox = true){ 
+        void drive_to_coords(float coords[2], float speed, int angle_speed = 80, float acc = 0.0, float de_acc = 0.0, bool use_prox = true, bool drive_backwards = false){ 
             //This is used to calculate the angle the Zumo has to turn to get in the direction of the point
             //It is the formular for finding the angle between two vectors
             int x_vec[2] = {1, 0};
@@ -467,7 +467,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
             
             //Now it can turn the angle and drive the length
-            if (int(angle) == 180 || int(angle) == -180){
+            if (drive_backwards){
                 drive_straight(-norm, speed, true, acc, de_acc, use_prox);
             } else {
                 turn_to(angle, angle_speed);
