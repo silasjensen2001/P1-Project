@@ -331,7 +331,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         void turn_to(float end_angle, int speed = 120){
             int i = 0;
             unsigned long t2 = millis();
-
+            target_angle = end_angle;
             float angle_diff = end_angle - current_angle;
 
             //Determines whether it should turn right or left
@@ -342,6 +342,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     current_angle = -360 + current_angle;
                 }
             }
+
 
             //A continous loop that runs until right angle is achieved
             //It uses simple bang-bang an to prevent too much overshoot from momentum
@@ -466,9 +467,14 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
             
             //Now it can turn the angle and drive the length
-            turn_to(angle, angle_speed);
-            delay(50);
-            drive_straight(norm, speed, true, acc, de_acc, use_prox);
+            if (int(angle) == 180 || int(angle) == -180){
+                drive_straight(-norm, speed, true, acc, de_acc, use_prox);
+            } else {
+                turn_to(angle, angle_speed);
+                delay(50);
+                drive_straight(norm, speed, true, acc, de_acc, use_prox); 
+            }
+            
 
             //Update the position
             current_pos[0] = coords[0];
