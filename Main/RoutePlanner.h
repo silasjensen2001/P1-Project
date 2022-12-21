@@ -34,7 +34,7 @@ class RoutePlanner{
     public:
 
         //Fills the stone
-        int randomStoneCoords(){
+        int random_stone_coords(){
             for(int i = 0; i < list_size;i++){
                 stone_list[i][0] = (rand() % 16 + 1) * 5;
                 stone_list[i][1] = (rand() % 14 + 1) * 5;
