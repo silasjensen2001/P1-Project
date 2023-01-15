@@ -22,7 +22,7 @@ class RoutePlanner{
     int counts = 0;
 
     float length_list[10];
-    int route_list[7][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
+    int route_list[10][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
     int current_pos[2];       //{x,y} [cm] 
 
     int index_list[10];

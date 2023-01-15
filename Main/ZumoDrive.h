@@ -561,10 +561,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         
         //Drives directly to coordinates without taking tracks into account
         //Sorts the stone list by using nearest neighbour (nn) or farthest insertion (fi)
-        void free_move(String sort_function = "nn"){
+        void free_move(String sort_function = "nn", bool use_prox=true){
             if (sort_function == "nn"){
                 nearest_neighbour(); 
-            } else {
+            } else if (sort_function == "fi"){
                 farthest_insertion();
             }             
             
@@ -574,7 +574,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             for (size_t i = 0; i < list_size; i++){       
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
-                drive_to_coords(drive_to, 20, 160);
+                drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);
                 display_print("Collecting");
                 delay(3000);
             }
@@ -582,7 +582,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //return to starting position.
             drive_to[0] = 0;
             drive_to[1] = 0;
-            drive_to_coords(drive_to, 20, 160);    
+            drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);    
         }
         
 };

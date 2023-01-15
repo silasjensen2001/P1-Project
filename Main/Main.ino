@@ -51,8 +51,9 @@ void loop(){
     if (But_C.isPressed()){
         delay(500);
         Rockxan.display_print("Free");
+        delay(10000);
         Rockxan.display_print("move", 0, 1);
-        Rockxan.free_move();
+        Rockxan.free_move("none", false);
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
         Rockxan.turn_to(0);
