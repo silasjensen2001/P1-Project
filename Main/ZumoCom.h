@@ -27,7 +27,7 @@ class ZumoCom{
             Wire.begin();
             if (OLED_or_LCD == "OLED"){
                 OLED.clear();
-                OLED.setLayout8x2();
+                OLED.setLayout11x4();
                 oled = true;
                 
             } else if (OLED_or_LCD == "LCD"){

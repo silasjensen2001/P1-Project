@@ -111,11 +111,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         void init_all(String display = "OLED"){
             init_display(display);               
 
-            display_print("Ik Klar", 0, 0);
+            display_print("Ik", 0, 0);
 
             init_drive();
-            
-            display_print("Klar", 0, 0);
         }
 
         //Turns of the motors if obstacle is detected and turns them back on when obstacle is gone
@@ -273,8 +271,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
-                if(use_prox){
-                    check_obstacle();  
+                if(use_prox && ((current_angle < -100)||(-80 < current_angle < 260)||(280 < current_angle))){
+                    check_obstacle(); 
+
                 }
                 
 
@@ -322,7 +321,6 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
 
             Motors.setSpeeds(0,0);
-            //Serial.println("done");
         }
 
         
@@ -453,6 +451,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             int x_vec[2] = {1, 0};
             int x = coords[0] - current_pos[0];
             int y = coords[1] - current_pos[1];
+            float current_pos_prox = coords[1];
 
             float norm = sqrt((pow(x, 2) + pow(y, 2)));
 
@@ -527,7 +526,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     drive_to[0] = stone_list[i][0];
                     drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //The stone is reached.
 
-                    display_print("Collecting");
+                    display_print("Collect");
                     delay(3000);
                     //collects stone.
                     drive_to[0] = x_track; //Drives back to the track, but same y-position.
@@ -535,7 +534,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 }            
                 else{ //if the stone is on track.
                     //Collecting stone.
-                    display_print("Collecting");
+                    display_print("Collect");
                     delay(3000);
                 }
                 //The stone is collected and we are on the track at the y-position of the stone.
@@ -567,7 +566,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             } else if (sort_function == "fi"){
                 farthest_insertion();
             }           
-            
+            Rockxan.display_print((String)current_angle);
             float drive_to[2] = {0,0};
 
             //drives to every stone and collects them.
@@ -575,7 +574,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
                 drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);
-                display_print("Collecting");
+                display_print("Collect");
                 delay(3000);
             }
             
