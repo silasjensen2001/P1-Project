@@ -6,6 +6,7 @@
 #include <Zumo32U4.h>
 #include "ZumoCom.h"
 #include "RoutePlanner.h"
+#include <Stepper.h>
 
 
 //The Zumodrive class includes all useful methods for steering the zumo robot
@@ -23,6 +24,11 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         Zumo32U4ButtonA But_A;
         Zumo32U4ButtonB But_B;
         Zumo32U4ButtonC But_C;
+
+        // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
+        Stepper myStepper = Stepper(2038, 18, 21, 20, 22);
+        
+
 
         //Attributes
         float current_pos[2];      //{x,y} [cm]  
@@ -133,7 +139,12 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             }
             Motors.setSpeeds(left_speed, right_speed);
         }
-        
+
+        void collectStone(){
+            myStepper.setSpeed(12);
+            myStepper.step(2038/2);
+        }
+                
         //Resets all relevant attributes
         void reset(){
             current_pos[0] = 0;
@@ -528,6 +539,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //The stone is reached.
 
                     display_print("Collecting");
+                    collectStone();
                     delay(3000);
                     //collects stone.
                     drive_to[0] = x_track; //Drives back to the track, but same y-position.
@@ -536,6 +548,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 else{ //if the stone is on track.
                     //Collecting stone.
                     display_print("Collecting");
+                    collectStone();
                     delay(3000);
                 }
                 //The stone is collected and we are on the track at the y-position of the stone.

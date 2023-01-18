@@ -27,36 +27,17 @@ void loop(){
     //If button A is pressed the track following function is run
     if (But_A.isPressed()){      
         delay(500);
-        Rockxan.display_print("Following");
-        Rockxan.display_print("Tracks", 0, 1);
         Rockxan.follow_tracks(20, false);
-        Rockxan.display_print("Done");
-        Rockxan.display_print("", 0, 1);
     }
 
     //If B is pressed the the drive straight function is demonstrated with acceleration and gyro correction
-    if (But_B.isPressed()){         
-        delay(500);
-        Rockxan.display_print("Driving");
-        Rockxan.display_print("Straight", 0, 1);
-        Rockxan.drive_straight(120, 35, true, 15, 15); 
-        delay(500);
-        Rockxan.drive_straight(-120, 35);
-        Rockxan.display_print("Done");
-        Rockxan.display_print("", 0, 1);
+    if (But_B.isPressed()){  
+        
     }
 
     //Button C starts the freemove function
     //The coordinates are sorted using neares neighbour
     if (But_C.isPressed()){
-        delay(500);
-        Rockxan.display_print("Free");
-        delay(10000);
-        Rockxan.display_print("move", 0, 1);
-        Rockxan.free_move("none", false);
-        Rockxan.display_print("Done");
-        Rockxan.display_print("", 0, 1);
-        Rockxan.turn_to(0);
         
     }
 }
