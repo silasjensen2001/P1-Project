@@ -17,16 +17,16 @@ class RoutePlanner{
     float length;
 
     int index;
-    int list_size = 10; 
+    int list_size = 5; 
     int count = 2;
     int counts = 0;
 
-    float length_list[10];
-    int route_list[10][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
+    float length_list[5];
+    int route_list[5][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
     int current_pos[2];       //{x,y} [cm] 
 
-    int index_list[10];
-    int stone_list[10][2] = {{70,15},{20,40},{70,60},{50,10},{30,10},{45,40},{15,30},{90,40},{90,15},{35,50}};
+    int index_list[5];
+    int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
     
          
 
@@ -104,20 +104,7 @@ class RoutePlanner{
             route_list[1][1] = stone_list[index][1];
             check_list[0] = 1;
             check_list[index] = 1;
-            /*
-            Serial.println(route_list[0][0]);
-            Serial.println(route_list[0][1]);
-            Serial.println(route_list[1][0]);
-            Serial.println(route_list[1][1]);
-            Serial.println("-----");
-            Serial.println(check_list[0]);
-            Serial.println(check_list[1]);
-            Serial.println(check_list[2]);
-            Serial.println(check_list[3]);
-            Serial.println(check_list[4]);
-            Serial.println("-----");
-            */
-
+            
             while (count < list_size){
                 // Calculate the distance to all points outside the list to find the point farthest from any point within the list
                 for (int j = 0; j < list_size; j++){
@@ -132,15 +119,7 @@ class RoutePlanner{
                         }
                     }
                 }
-                /*
-                    Serial.println("-----");
-                    Serial.println(length_total_list[0]);
-                    Serial.println(length_total_list[1]);
-                    Serial.println(length_total_list[2]);
-                    Serial.println(length_total_list[3]);
-                    Serial.println(length_total_list[4]);
-                    Serial.println("-----");
-                */
+                
 
                 // find the longest length and its index
                 for (size_t i = 0; i < list_size; i++){
@@ -151,12 +130,6 @@ class RoutePlanner{
                 }
                 check_list[longest_length_index] = 1;
 
-                /*
-                Serial.println("-----");
-                Serial.println(longest_length);
-                Serial.println(longest_length_index);
-                Serial.println("-----");
-                */
 
                 for (int j = 0; j < list_size; j++){
                     length_total_list[j] = 0;

@@ -23,27 +23,52 @@ void setup(){
 //The loop function is another built-in function
 //As the name suggest the function is a continous loop
 void loop(){
+    Rockxan.display_print("A = FT or NN");
+    Rockxan.display_print("B = FI, C = FM",0,1);
 
     //If button A is pressed the track following function is run
     if (But_A.isPressed()){      
         delay(500);
-        Rockxan.display_print("Following");
-        Rockxan.display_print("Tracks", 0, 1);
-        Rockxan.follow_tracks(20, false);
-        Rockxan.display_print("Done");
-        Rockxan.display_print("", 0, 1);
+        Rockxan.display_print("A = FT");
+        Rockxan.display_print("B = NN");
+        if (But_A.isPressed()){
+            delay(500);
+            Rockxan.display_print("Following");
+            Rockxan.display_print("Tracks", 0, 1);
+            Rockxan.follow_tracks(20, false);
+            Rockxan.display_print("Done");
+            Rockxan.display_print("", 0, 1);
+        }
+        if (But_B.isPressed()){
+            delay(500);
+            Rockxan.display_print("Nearest");
+            Rockxan.display_print("Neighbour", 0, 1);
+            Rockxan.nearest_neighbour();
+            Rockxan.display_print("Done");
+            Rockxan.display_print("", 0, 1);
+        }
+        if (But_C.isPressed()){
+            delay(500);
+            Rockxan.display_print("Driving");
+            Rockxan.display_print("Straight", 0, 1);
+            Rockxan.drive_straight(120, 35, true, 15, 15); 
+            delay(500);
+            Rockxan.drive_straight(-120, 35);
+            Rockxan.display_print("Done");
+            Rockxan.display_print("", 0, 1);
+        }
+        
     }
 
     //If B is pressed the the drive straight function is demonstrated with acceleration and gyro correction
     if (But_B.isPressed()){         
         delay(500);
-        Rockxan.display_print("Driving");
-        Rockxan.display_print("Straight", 0, 1);
-        Rockxan.drive_straight(120, 35, true, 15, 15); 
-        delay(500);
-        Rockxan.drive_straight(-120, 35);
+        Rockxan.display_print("Farthest");
+        Rockxan.display_print("Insertion", 0, 1);
+        Rockxan.farthest_insertion();
         Rockxan.display_print("Done");
         Rockxan.display_print("", 0, 1);
+        
     }
 
     //Button C starts the freemove function
@@ -51,7 +76,6 @@ void loop(){
     if (But_C.isPressed()){
         delay(500);
         Rockxan.display_print("Free");
-        delay(10000);
         Rockxan.display_print("move", 0, 1);
         Rockxan.free_move("none", false);
         Rockxan.display_print("Done");

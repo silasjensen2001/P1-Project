@@ -566,7 +566,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 nearest_neighbour(); 
             } else if (sort_function == "fi"){
                 farthest_insertion();
-            }             
+            }           
             
             float drive_to[2] = {0,0};
 
