@@ -271,7 +271,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
-                if(use_prox && ((current_angle < -100)||(-80 < current_angle < 260)||(280 < current_angle))){
+                if(use_prox && ((current_angle < -135)||(-80 < current_angle ))){   //< 260)||(280 < current_angle
                     check_obstacle(); 
 
                 }
@@ -566,7 +566,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             } else if (sort_function == "fi"){
                 farthest_insertion();
             }           
-            Rockxan.display_print((String)current_angle);
+            display_print((String)current_angle);
             float drive_to[2] = {0,0};
 
             //drives to every stone and collects them.
