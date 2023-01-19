@@ -20,7 +20,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         Zumo32U4Encoders Encoders;
         Zumo32U4IMU IMU;
         Zumo32U4Motors Motors;
-        Zumo32U4ProximitySensors proxSensors;
+        //Zumo32U4ProximitySensors proxSensors;
         Zumo32U4ButtonA But_A;
         Zumo32U4ButtonB But_B;
         Zumo32U4ButtonC But_C;
@@ -103,8 +103,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             IMU.init();
             IMU.enableDefault();
             IMU.configureForTurnSensing();
-            proxSensors.initThreeSensors();
-            proxSensors.setBrightnessLevels(brightness_levels, 4);
+            //proxSensors.initThreeSensors();
+            //proxSensors.setBrightnessLevels(brightness_levels, 4);
 
             set_PID_values(1.5, 19, 23);
             calibrate_gyro();
@@ -126,7 +126,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         //Turns of the motors if obstacle is detected and turns them back on when obstacle is gone
         //Is called during the drive_straight() function
-        void check_obstacle(){
+        /*void check_obstacle(){
             proxSensors.read();
             int right_sensor = proxSensors.countsFrontWithRightLeds();
             int left_sensor = proxSensors.countsFrontWithLeftLeds();
@@ -138,7 +138,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 Motors.setSpeeds(0, 0);
             }
             Motors.setSpeeds(left_speed, right_speed);
-        }
+        }*/
 
         void collectStone(){
             myStepper.setSpeed(12);
@@ -284,9 +284,9 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //time_offset = millis();
 
             while(abs(dist) > abs(left_counts)){
-                if(use_prox){
-                    check_obstacle();  
-                }
+                //if(use_prox){
+                    //check_obstacle();  
+                //}
                 
 
                 left_counts = Encoders.getCountsLeft();
@@ -496,7 +496,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         //This functions drives to stonecoordinats by using tracks
         //The length (cm) between the tracks can be specified (20 on default)
         //This function assumes a rectangular field
-        void follow_tracks(int track_size = 20, bool use_prox = true){     
+        void follow_tracks(int track_size = 20, bool use_prox = false){     
             sort_xy();     
             int x_track = 0;             //the track it goes to
             float drive_to[2] = {0,0};   //the destination we want to go to next
@@ -509,41 +509,41 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     if (on_track == false){            //this if statement is runned trough if the stone is on another track than the one just used.
                         drive_to[0] = x_track;
                         drive_to[1] = 0; 
-                        drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //Drives to the Track.
+                        drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives to the Track.
                 }}
                 else if ((stone_list[i][0] % track_size) <= track_size/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
                     x_track = stone_list[i][0] - (stone_list[i][0] % track_size);
                     if (on_track == false){
                         drive_to[0] = x_track;
                         drive_to[1] = 0;
-                        drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //Drives to the Track.
+                        drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives to the Track.
                 }}
                 else { //Wheen the stone is closest to the Track to the right.
                     x_track = stone_list[i][0] + (track_size - (stone_list[i][0] % track_size));
                     if (on_track == false){
                         drive_to[0] = x_track;
                         drive_to[1] = 0;
-                        drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //Drives to the Track.
+                        drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives to the Track.
                 }}
                 delay(200);
 
                 // Zumo is at the Track and y-position is y = 0.
                 drive_to[0] = x_track;
                 drive_to[1] = stone_list[i][1]; //defines the GoTo y-value to the stones y-value.
-                drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //Drives up the track to the y-position. 
+                drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives up the track to the y-position. 
 
                 delay(200);
                 // Zumo is on the Track on the same y-position as the stone.
                 if (x_track != stone_list[i][0]){ //If the stone does not lay on the track.
                     drive_to[0] = stone_list[i][0];
-                    drive_to_coords(drive_to, 20, 160, 0, 0, use_prox); //The stone is reached.
+                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //The stone is reached.
 
                     display_print("Collecting");
                     collectStone();
                     delay(3000);
                     //collects stone.
                     drive_to[0] = x_track; //Drives back to the track, but same y-position.
-                    drive_to_coords(drive_to, 20, 160, 0, 0, use_prox, true);
+                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox, true);
                 }            
                 else{ //if the stone is on track.
                     //Collecting stone.
@@ -555,7 +555,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 if (i == list_size - 1){ //if its the last stone, it drives down the track to the y-position=0.
                     drive_to[0] = x_track;
                     drive_to[1] = 0;
-                    drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);  //Drives down to y-position = 0. 
+                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);  //Drives down to y-position = 0. 
                 }
                 else if ((((x_track - (track_size/2))) < stone_list[i+1][0] ) && (stone_list[i+1][0]<= (x_track + (track_size/2)))){  //If the next stone is located closest to the current track. 
                     on_track = true;
@@ -564,12 +564,12 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     on_track = false;
                     drive_to[0] = x_track;
                     drive_to[1] = 0;
-                    drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);
+                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);
                 }
             }
             drive_to[0] = 0;  
             drive_to[1] = 0; 
-            drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);   //drives to origo (0,0).
+            drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);   //drives to origo (0,0).
         }
         
         //Drives directly to coordinates without taking tracks into account
@@ -587,15 +587,16 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             for (size_t i = 0; i < list_size; i++){       
                 drive_to[0] = stone_list[i][0];
                 drive_to[1] = stone_list[i][1];
-                drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);
+                drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);
                 display_print("Collecting");
+                collectStone();
                 delay(3000);
             }
             
             //return to starting position.
             drive_to[0] = 0;
             drive_to[1] = 0;
-            drive_to_coords(drive_to, 20, 160, 0, 0, use_prox);    
+            drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);    
         }
         
 };

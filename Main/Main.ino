@@ -15,7 +15,7 @@ ZumoDrive Rockxan;
 //It used to initialize the program
 void setup(){
     Serial.begin(9600);
-    Rockxan.init_all("OLED");  //If its the OLED version write that, else write LCD.
+    Rockxan.init_all("LCD");  //If its the OLED version write that, else write LCD.
     Rockxan.display_print("Klar");
 }
 
@@ -38,7 +38,8 @@ void loop(){
     //Button C starts the freemove function
     //The coordinates are sorted using neares neighbour
     if (But_C.isPressed()){
-        
+        delay(500);
+        Rockxan.drive_straight(20, 30);
     }
 }
 
