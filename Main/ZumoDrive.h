@@ -560,10 +560,10 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
         
         //Drives directly to coordinates without taking tracks into account
         //Sorts the stone list by using nearest neighbour (nn) or farthest insertion (fi)
-        void free_move(String sort_function = "nn", bool use_prox=true){
+        void free_move(String sort_function = "fi", bool use_prox=true){
             if (sort_function == "nn"){
                 nearest_neighbour(); 
-            } else if (sort_function == "fi"){
+            } else{
                 farthest_insertion();
             }           
             display_print((String)current_angle);
