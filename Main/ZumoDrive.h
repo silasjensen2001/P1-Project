@@ -142,7 +142,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
 
         void collectStone(){
             myStepper.setSpeed(12);
-            myStepper.step(2038/2);
+            myStepper.step(2038/2+4);
         }
                 
         //Resets all relevant attributes
@@ -152,7 +152,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             current_angle = 0;        
             left_counts = 0;
             right_counts = 0;
-            angle_thresh = 0.2;
+            angle_thresh = 0.05 ;
             gyro_correction_time = 1;
             min_speed = 70;
             last_angle_error = 0;
@@ -358,7 +358,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             //A continous loop that runs until right angle is achieved
             //It uses simple bang-bang an to prevent too much overshoot from momentum
             //the desired angle must be met through over 10 iterations
-            while(i != 10){
+            while(i != 4){
                 update_angle_gyro();
 
                 if (50 < millis()-t2){
@@ -369,7 +369,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 if (current_angle > end_angle-angle_thresh && current_angle < end_angle+angle_thresh){
                     Motors.setSpeeds(0, 0);
                     delay(20);
-                    speed = 70;
+                    speed = 50;
                     i++; 
                 } else if (current_angle > end_angle-angle_thresh) {
                     Motors.setSpeeds(speed, -speed);
@@ -509,41 +509,41 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     if (on_track == false){            //this if statement is runned trough if the stone is on another track than the one just used.
                         drive_to[0] = x_track;
                         drive_to[1] = 0; 
-                        drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives to the Track.
+                        drive_to_coords(drive_to, 18, 100, 0, 0, use_prox); //Drives to the Track.
                 }}
                 else if ((stone_list[i][0] % track_size) <= track_size/2){ //When the stone is placed on the right side of the Track closet to it. Note: if the stone is just between to rows it will be collected from the row to the left.
                     x_track = stone_list[i][0] - (stone_list[i][0] % track_size);
                     if (on_track == false){
                         drive_to[0] = x_track;
                         drive_to[1] = 0;
-                        drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives to the Track.
+                        drive_to_coords(drive_to, 18, 100, 0, 0, use_prox); //Drives to the Track.
                 }}
                 else { //Wheen the stone is closest to the Track to the right.
                     x_track = stone_list[i][0] + (track_size - (stone_list[i][0] % track_size));
                     if (on_track == false){
                         drive_to[0] = x_track;
                         drive_to[1] = 0;
-                        drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives to the Track.
+                        drive_to_coords(drive_to, 18, 100, 0, 0, use_prox); //Drives to the Track.
                 }}
                 delay(200);
 
                 // Zumo is at the Track and y-position is y = 0.
                 drive_to[0] = x_track;
                 drive_to[1] = stone_list[i][1]; //defines the GoTo y-value to the stones y-value.
-                drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //Drives up the track to the y-position. 
+                drive_to_coords(drive_to, 18, 100, 0, 0, use_prox); //Drives up the track to the y-position. 
 
                 delay(200);
                 // Zumo is on the Track on the same y-position as the stone.
                 if (x_track != stone_list[i][0]){ //If the stone does not lay on the track.
                     drive_to[0] = stone_list[i][0];
-                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox); //The stone is reached.
+                    drive_to_coords(drive_to, 18, 100, 0, 0, use_prox); //The stone is reached.
 
                     display_print("Collecting");
                     collectStone();
                     delay(3000);
                     //collects stone.
                     drive_to[0] = x_track; //Drives back to the track, but same y-position.
-                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox, true);
+                    drive_to_coords(drive_to, 18, 100, 0, 0, use_prox, true);
                 }            
                 else{ //if the stone is on track.
                     //Collecting stone.
@@ -555,7 +555,7 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 if (i == list_size - 1){ //if its the last stone, it drives down the track to the y-position=0.
                     drive_to[0] = x_track;
                     drive_to[1] = 0;
-                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);  //Drives down to y-position = 0. 
+                    drive_to_coords(drive_to, 18, 100, 0, 0, use_prox);  //Drives down to y-position = 0. 
                 }
                 else if ((((x_track - (track_size/2))) < stone_list[i+1][0] ) && (stone_list[i+1][0]<= (x_track + (track_size/2)))){  //If the next stone is located closest to the current track. 
                     on_track = true;
@@ -564,12 +564,12 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                     on_track = false;
                     drive_to[0] = x_track;
                     drive_to[1] = 0;
-                    drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);
+                    drive_to_coords(drive_to, 18, 100, 0, 0, use_prox);
                 }
             }
             drive_to[0] = 0;  
             drive_to[1] = 0; 
-            drive_to_coords(drive_to, 30, 160, 0, 0, use_prox);   //drives to origo (0,0).
+            drive_to_coords(drive_to, 18, 100, 0, 0, use_prox);   //drives to origo (0,0).
         }
         
         //Drives directly to coordinates without taking tracks into account
