@@ -25,7 +25,8 @@ class RoutePlanner{
     int current_pos[2];       //{x,y} [cm] 
 
     int index_list[5];
-    int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
+    //int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
+    int stone_list[5][2] = {{0,0},{70,15},{20,40},{70,60},{50,10}};
     
          
 
