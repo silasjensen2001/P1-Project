@@ -86,6 +86,7 @@ class RoutePlanner{
             float route_dist = 0;
             float shortest_dist = 1000000;
             int index = 0;
+
             // Find and calculate distance to the farthest point from Zumo
             for (size_t i = 0; i < list_size; i++){
                 for (size_t j = 0; j < list_size; j++){
@@ -161,17 +162,7 @@ class RoutePlanner{
                             route_list[t][1] = route_list[t-1][1];
                             check_list[t] = check_list[t-1];
                         }
-                        Serial.print(route_list[0][0]);
-                        Serial.println(route_list[0][1]);
-                        Serial.print(route_list[1][0]);
-                        Serial.println(route_list[1][1]);
-                        Serial.print(route_list[2][0]);
-                        Serial.println(route_list[2][1]);
-                        Serial.print(route_list[3][0]);
-                        Serial.println(route_list[3][1]);
-                        Serial.print(route_list[4][0]);
-                        Serial.println(route_list[4][1]);
-                        Serial.println("-----");
+                        
                         route_list[i][0] = stone_list[longest_length_index][0];
                         route_list[i][1] = stone_list[longest_length_index][1];
                         check_list[i] = 1;
@@ -211,38 +202,9 @@ class RoutePlanner{
                 shortest_dist_index = 0;
                 counts = 0;
                 count += 1;
-                if (count == 3){
-                    Serial.print(route_list[0][0]);
-                    Serial.println(route_list[0][1]);
-                    Serial.print(route_list[1][0]);
-                    Serial.println(route_list[1][1]);
-                    Serial.print(route_list[2][0]);
-                    Serial.println(route_list[2][1]);
-                    Serial.print(route_list[3][0]);
-                    Serial.println(route_list[3][1]);
-                    Serial.print(route_list[4][0]);
-                    Serial.println(route_list[4][1]);
-                }
+                
             }
-            Serial.println("-----");
-            Serial.println("-----");
-            Serial.print(route_list[0][0]);
-            Serial.println(route_list[0][1]);
-            Serial.print(route_list[1][0]);
-            Serial.println(route_list[1][1]);
-            Serial.print(route_list[2][0]);
-            Serial.println(route_list[2][1]);
-            Serial.print(route_list[3][0]);
-            Serial.println(route_list[3][1]);
-            Serial.print(route_list[4][0]);
-            Serial.println(route_list[4][1]);
-            Serial.println("-----");
-            Serial.println(check_list[0]);
-            Serial.println(check_list[1]);
-            Serial.println(check_list[2]);
-            Serial.println(check_list[3]);
-            Serial.println(check_list[4]);
-            Serial.println("-----");
+            
         }
 
 
