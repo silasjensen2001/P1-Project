@@ -12,7 +12,7 @@ class RoutePlanner{
 
     //Protected is like private members except that inherited classes can access these members
     protected:
-
+    /*
     float length;
 
     int index;
@@ -27,6 +27,19 @@ class RoutePlanner{
     int index_list[5];
     //int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
     int stone_list[5][2] = {{0,0},{70,15},{20,40},{70,60},{50,10}};
+    */
+    float length;
+    int count = 2;
+    int counts = 0;
+    int index;
+    int list_size = 4; 
+
+    float length_list[4];
+    float route_list[4][2];
+    float current_pos[2];       //{x,y} [cm] 
+
+    int index_list[4];
+    int stone_list[4][2] = {{70, 15},{20, 40},{70,60},{50,10}};
     
          
 
