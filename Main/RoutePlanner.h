@@ -1,7 +1,6 @@
 //This header file contains the "Rockxanne" class with its respective attributes and methods
 //This is a comment for testing GIT :O
 //First a few libraries need to be imported
-
 #include "arduino.h"
 #include <Wire.h>
 #include <Zumo32U4.h>
@@ -21,11 +20,11 @@ class RoutePlanner{
     int count = 2;
     int counts = 0;
 
-    float length_list[10];
-    int route_list[10][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
+    float length_list[5];
+    int route_list[5][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
     int current_pos[2];       //{x,y} [cm] 
 
-    int index_list[10];
+    int index_list[5];
     int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
     
          
@@ -88,6 +87,7 @@ class RoutePlanner{
             float route_dist = 0;
             float shortest_dist = 1000000;
             int index = 0;
+
             // Find and calculate distance to the farthest point from Zumo
             for (size_t i = 0; i < list_size; i++){
                 for (size_t j = 0; j < list_size; j++){

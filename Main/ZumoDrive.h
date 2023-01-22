@@ -579,7 +579,12 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
                 nearest_neighbour(); 
             } else if (sort_function == "fi"){
                 farthest_insertion();
-            }             
+            }   
+
+            for(int i = 0; i<5; i++){
+                Serial.println(stone_list[i][0]);
+                Serial.println(stone_list[i][1]);
+            }          
             
             float drive_to[2] = {0,0};
 
