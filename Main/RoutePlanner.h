@@ -12,7 +12,7 @@ class RoutePlanner{
 
     //Protected is like private members except that inherited classes can access these members
     protected:
-    /*
+    
     float length;
 
     int index;
@@ -25,9 +25,8 @@ class RoutePlanner{
     int current_pos[2];       //{x,y} [cm] 
 
     int index_list[5];
-    //int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
-    int stone_list[5][2] = {{0,0},{70,15},{20,40},{70,60},{50,10}};
-    */
+    int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
+    /*
     float length;
     int count = 2;
     int counts = 0;
@@ -40,7 +39,7 @@ class RoutePlanner{
 
     int index_list[4];
     int stone_list[4][2] = {{70, 15},{20, 40},{70,60},{50,10}};
-    
+    */
          
 
     //Underneath here are all public methods defined
@@ -208,8 +207,8 @@ class RoutePlanner{
         void farthest_insertion(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            int check_list[5] = {0,0,0,0,0};
-            float length_total_list[5] = {0,0,0,0,0};
+            int check_list[6] = {0,0,0,0,0,0};
+            float length_total_list[6] = {0,0,0,0,0,0};
             float length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             float longest_length = 0;
             int longest_length_index;
@@ -234,19 +233,6 @@ class RoutePlanner{
             route_list[1][1] = stone_list[index][1];
             check_list[0] = 1;
             check_list[1] = 1;
-            /*
-            Serial.println(route_list[0][0]);
-            Serial.println(route_list[0][1]);
-            Serial.println(route_list[1][0]);
-            Serial.println(route_list[1][1]);
-            Serial.println("-----");
-            Serial.println(check_list[0]);
-            Serial.println(check_list[1]);
-            Serial.println(check_list[2]);
-            Serial.println(check_list[3]);
-            Serial.println(check_list[4]);
-            Serial.println("-----");
-            */
 
             while (count < list_size){
                 // Calculate the distance to all points outside the list to find the point farthest from any point within the list
@@ -261,14 +247,8 @@ class RoutePlanner{
                         }
                         counts += 1;
                     }
-                    /*
-                    Serial.println(length_total_list[0]);
-                    Serial.println(length_total_list[1]);
-                    Serial.println(length_total_list[2]);
-                    Serial.println(length_total_list[3]);
-                    Serial.println(length_total_list[4]);
-                    */
                 }
+                
                 // find the longest length and its index
                 for (size_t i = 0; i < list_size; i++){
                     if (longest_length < length_total_list[i]){
@@ -276,14 +256,8 @@ class RoutePlanner{
                         longest_length_index = i;
                     }
                 }
-                /*
-                Serial.println("-----");
-                Serial.println(longest_length);
-                Serial.println(longest_length_index);
-                Serial.println("-----");
-                */
 
-                float length_total_list[5] = {0,0,0,0,0};
+                float length_total_list[6] = {0,0,0,0,0,0};
                 
                 // Place the new point in all possible locations (except index 0) of the array and calculate the distance of the route for each instance.
                 for (size_t i = 1; i < list_size; i++){
