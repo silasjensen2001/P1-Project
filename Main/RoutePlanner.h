@@ -16,31 +16,17 @@ class RoutePlanner{
     float length;
 
     int index;
-    int list_size = 5; 
+    int list_size = 6; 
     int count = 2;
     int counts = 0;
-
-    float length_list[5];
-    int route_list[5][2] = {{0,0},{0,0},{0,0},{0,0},{0,0}};
+    
+    float length_list[6];
+    int route_list[7][2] = {{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}};
     int current_pos[2];       //{x,y} [cm] 
 
-    int index_list[5];
-    int stone_list[5][2] = {{80,80},{30,10},{60,90},{20,40},{70,15}};
-    /*
-    float length;
-    int count = 2;
-    int counts = 0;
-    int index;
-    int list_size = 4; 
-
-    float length_list[4];
-    float route_list[4][2];
-    float current_pos[2];       //{x,y} [cm] 
-
-    int index_list[4];
-    int stone_list[4][2] = {{70, 15},{20, 40},{70,60},{50,10}};
-    */
-         
+    int index_list[6] = {0,0,0,0,0,0};
+    int stone_list[6][2] = {{0,0}, {80,80},{30,10},{60,80},{20,40},{70,15}};
+          
 
     //Underneath here are all public methods defined
     public:
@@ -58,11 +44,11 @@ class RoutePlanner{
         void nearest_neighbour(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            float correct_row[4];
+            //float correct_row[4];
             int length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             int index = 0;
-            for (size_t i = 0; i < list_size; i++){
-                for (size_t j = 0; j < list_size; j++){
+            for (size_t i = 1; i < list_size; i++){
+                for (size_t j = 1; j < list_size; j++){
                     if (index_list[j] == 0){
                         if ((length >= (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)))) || (length == 0)){    //length == 0 since the lenght needs to be updated in the beginning.
                             length = (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)));
@@ -75,7 +61,7 @@ class RoutePlanner{
                 }
                 length = 0;
                 index_list[index] = 1;
-                correct_row[i] = index;
+                //correct_row[i] = index;
                 current_pos[0] = stone_list[index][0];
                 current_pos[1] = stone_list[index][1];
                 route_list[i][0] = stone_list[index][0];
@@ -85,15 +71,18 @@ class RoutePlanner{
                 stone_list[i][0] = route_list[i][0];
                 stone_list[i][1] = route_list[i][1];
             }
+
+            current_pos[0] = 0;
+            current_pos[1] = 0;
         }
         
-        /*
+        
         // Farthest Insertion function
         void farthest_insertion(){
             current_pos[0] = 0;
             current_pos[1] = 0;
-            int check_list[5] = {0,0,0,0,0};
-            float length_total_list[5] = {0,0,0,0,0};
+            int check_list[6] = {0,0,0,0,0,0};
+            float length_total_list[6] = {0,0,0,0,0,0};
             float length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
             float longest_length = 0;
             int longest_length_index;
@@ -181,6 +170,7 @@ class RoutePlanner{
                         shortest_dist_index = i;
                     }
                 }
+
                 // Place the point in its respective place
                 for (size_t j = list_size - 1; j > shortest_dist_index; j--){
                     route_list[j][0] = route_list[j-1][0];
@@ -201,116 +191,8 @@ class RoutePlanner{
                 stone_list[i][0] = route_list[i][0];
                 stone_list[i][1] = route_list[i][1];
             }
-        }*/
-
-        // Farthest Insertion function
-        void farthest_insertion(){
-            current_pos[0] = 0;
-            current_pos[1] = 0;
-            int check_list[6] = {0,0,0,0,0,0};
-            float length_total_list[6] = {0,0,0,0,0,0};
-            float length = sqrt(pow((stone_list[0][0] - current_pos[0]), 2) + pow((stone_list[0][1] - current_pos[1]), 2));
-            float longest_length = 0;
-            int longest_length_index;
-            int shortest_dist_index;
-            float route_dist = 0;
-            float shortest_dist = 1000000;
-            int index = 0;
-
-            // Find and calculate distance to the farthest point from Zumo
-            for (size_t i = 0; i < list_size; i++){
-                for (size_t j = 0; j < list_size; j++){
-                    if ((length <= (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2))))){ 
-                        length = (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)));
-                        index = j;
-                    }
-                }
-            }
-            // Place the first two points in the route list
-            route_list[0][0] = current_pos[0];
-            route_list[0][1] = current_pos[1];
-            route_list[1][0] = stone_list[index][0];
-            route_list[1][1] = stone_list[index][1];
-            check_list[0] = 1;
-            check_list[1] = 1;
-
-            while (count < list_size){
-                // Calculate the distance to all points outside the list to find the point farthest from any point within the list
-                while(counts < list_size){
-                    for (size_t i = 0; i < list_size; i++){
-                        for (size_t j = 0; j < list_size; j++){
-                            if (check_list[j] == 0 && check_list[i] == 1){
-                                length = (sqrt(pow((stone_list[j][0] - route_list[i][0]), 2) + pow((stone_list[j][1] - route_list[i][1]), 2)));
-                                index = j;
-                                length_total_list[j] += length;
-                            }
-                        }
-                        counts += 1;
-                    }
-                }
-                
-                // find the longest length and its index
-                for (size_t i = 0; i < list_size; i++){
-                    if (longest_length < length_total_list[i]){
-                        longest_length = length_total_list[i];
-                        longest_length_index = i;
-                    }
-                }
-
-                float length_total_list[6] = {0,0,0,0,0,0};
-                
-                // Place the new point in all possible locations (except index 0) of the array and calculate the distance of the route for each instance.
-                for (size_t i = 1; i < list_size; i++){
-                    if (check_list[i] == 1){
-                        for (size_t t = list_size - 1; t >= i; t--){
-                            route_list[t][0] = route_list[t-1][0];
-                            route_list[t][1] = route_list[t-1][1];
-                            check_list[t] = check_list[t-1];
-                        }
-                        
-                        route_list[i][0] = stone_list[longest_length_index][0];
-                        route_list[i][1] = stone_list[longest_length_index][1];
-                        check_list[i] = 1;
-                        for (size_t j = 0; j < list_size; j++){
-                            if (check_list[j] == 1 && check_list[j+1] == 1){
-                                length_total_list[i] += (sqrt(pow((route_list[j+1][0] - route_list[j][0]), 2) + pow((stone_list[j+1][1] - route_list[j][1]), 2)));
-                            }
-                        }
-                    }
-                    // Reset and calculate again
-                    for (size_t h = i; h < (list_size - i); i++){
-                        route_list[h][0] = route_list[h+1][0];
-                        route_list[h][1] = route_list[h+1][1];
-                        if (h < count) {
-                            check_list[h] = 1;
-                        }
-                    }
-                }
-
-                // Check the length total list and choose the shortest one
-                for (size_t i = 1; i < list_size; i++){
-                    if (shortest_dist > length_total_list[i]){
-                        shortest_dist = length_total_list[i];
-                        shortest_dist_index = i;
-                    }
-                }
-                // Place the point in its respective place
-                for (size_t j = list_size - 1; j > shortest_dist_index; j--){
-                    route_list[j][0] = route_list[j-1][0];
-                    route_list[j][1] = route_list[j-1][1];
-                }
-                route_list[shortest_dist_index][0] = stone_list[longest_length_index][0];
-                route_list[shortest_dist_index][1] = stone_list[longest_length_index][1];
-                longest_length = 0;
-                longest_length_index = 0;
-                shortest_dist = 0;
-                shortest_dist_index = 0;
-                counts = 0;
-                count += 1;
-                
-            }
-            
         }
+
 
 
         //This method sorts the stone coordinates according to the X-axis
