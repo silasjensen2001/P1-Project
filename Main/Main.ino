@@ -37,12 +37,14 @@ void loop(){
                 Rockxan.display_print(" ", 0, 0);
                 Rockxan.display_print("FI",0,1);
                 Rockxan.free_move("fi");
+                Rockxan.turn_to(0);
             }
             if (But_B.isPressed()){
                 delay(500);
                 Rockxan.display_print(" ", 0, 0);
                 Rockxan.display_print("NN",0,1);
                 Rockxan.free_move("nn");
+                Rockxan.turn_to(0);
             }
         }
     }
@@ -61,9 +63,7 @@ void loop(){
     //The coordinates are sorted using neares neighbour
     if (But_C.isPressed()){
         delay(500);
-        //Rockxan.follow_tracks();
-        float coord[2] = {0,0};
-        Rockxan.drive_to_coords(coord, 20);
+        Rockxan.follow_tracks();
     }
 }
 

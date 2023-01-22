@@ -199,7 +199,7 @@ class RoutePlanner{
         //This is useful when the stone must be picked up using the spray tracks
         void sort_xy(){
             //A temporary list 
-            float update_list[5][2];
+            float update_list[6][2];
 
             //Copy the stone list into update list
             for(int i = 0; i < list_size; i++){ 
