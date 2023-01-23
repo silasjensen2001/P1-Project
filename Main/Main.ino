@@ -38,6 +38,7 @@ void loop(){
                 Rockxan.display_print("FI",0,1);
                 Rockxan.free_move("fi");
                 Rockxan.turn_to(0);
+                break;
             }
             if (But_B.isPressed()){
                 delay(500);
@@ -45,6 +46,7 @@ void loop(){
                 Rockxan.display_print("NN",0,1);
                 Rockxan.free_move("nn");
                 Rockxan.turn_to(0);
+                break;
             }
         }
     }
