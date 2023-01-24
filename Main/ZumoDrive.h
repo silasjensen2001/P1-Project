@@ -256,7 +256,8 @@ class ZumoDrive: public ZumoCom, public RoutePlanner{
             if(acc != 0){
                 acc_zumo_value = applied_speed(acc);  //zumo values pr. sec.
                 left_speed = right_speed = min_speed;
-            } else {
+            } 
+            else {
                 left_speed = right_speed = speed;
             } 
             if(deacc != 0){

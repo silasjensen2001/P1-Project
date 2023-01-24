@@ -56,9 +56,6 @@ class RoutePlanner{
                             length = (sqrt(pow((stone_list[j][0] - current_pos[0]), 2) + pow((stone_list[j][1] - current_pos[1]), 2)));
                             index = j;
                         }
-                        else{
-                            //empty
-                        }
                     }
                 }
                 length = 0;
